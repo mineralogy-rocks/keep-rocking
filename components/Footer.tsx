@@ -3,25 +3,11 @@ import Image from 'next/image';
 import styles from '../styles/Utils.module.css';
 
 
+const ExternalLink = ({ href, children }) => (
+  <a className="hover:underline underline-offset-2 decoration-gray-300" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+)
+
 export default function Footer() {
-  const links = [
-    {
-      link: 'https://uniba.sk/en/',
-      name: 'Comenius University'
-    },
-    {
-      link: 'https://marie-sklodowska-curie-actions.ec.europa.eu/',
-      name: 'Marie Skłodowska-Curie Actions'
-    },
-    {
-      link: 'https://fns.uniba.sk/en/',
-      name: 'Faculty of Natural Sciences'
-    },
-    {
-      link: 'https://kmplg.sk/?lang=en',
-      name: 'KMPLG'
-    },
-  ]
 
   return (
     <footer className="min-h-4 bottom-0 z-20 mx-auto mt-20 w-full bg-black shadow-xl">
@@ -32,16 +18,16 @@ export default function Footer() {
               <h2 className="text-base md:text-lg font-bold text-slate-100">Links</h2>
               <ul className="mt-3 space-y-2">
                  <li>
-                   <a className={styles.underlineAnimation} href="https://uniba.sk/en/" target="_blank" rel="noreferrer">Comenius University</a>
+                  <ExternalLink href="https://uniba.sk/en/">Comenius University</ExternalLink>
                  </li>
                  <li>
-                   <a className={styles.underlineAnimation} href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">Marie Skłodowska-Curie Actions</a>
+                  <ExternalLink href="https://marie-sklodowska-curie-actions.ec.europa.eu/">Marie Skłodowska-Curie Actions</ExternalLink>
                  </li>
                  <li>
-                   <a className={styles.underlineAnimation} href="https://fns.uniba.sk/en/" target="_blank" rel="noreferrer">Faculty of Natural Sciences</a>
+                  <ExternalLink href="https://fns.uniba.sk/en/">Faculty of Natural Sciences</ExternalLink>
                  </li>
                  <li>
-                   <a className={styles.underlineAnimation} href="https://kmplg.sk/?lang=en" target="_blank" rel="noreferrer">Our Department</a>
+                  <ExternalLink href="https://kmplg.sk/?lang=en">Our Department</ExternalLink>
                  </li>
               </ul>
             </div>
@@ -54,14 +40,14 @@ export default function Footer() {
               <h2 className="text-base md:text-lg font-bold text-slate-100">Contribute</h2>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <a className={styles.underlineAnimation} href="https://uniba.sk/en/" target="_blank" rel="noreferrer">Research</a>
+                  <ExternalLink href="https://www.researchgate.net/profile/Liubomyr-Gavryliv">Research Gate</ExternalLink>
                 </li>
                 <li>
-                  <a className={styles.underlineAnimation} href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">Donate data</a>
+                  <ExternalLink href="https://github.com/mineralogy-rocks">Git Hub</ExternalLink>
                 </li>
                 <li>
                   <a href="https://ko-fi.com/I2I43R998" target="_blank" rel="noreferrer" className="flex items-center">
-                    <span className="underline-animation mr-2">Buy us a Coffee</span>
+                    <span className="hover:underline underline-offset-2 decoration-gray-300 mr-2">Buy us a Coffee</span>
                     <Image src="/assets/kofilogo_bluebg.png" alt="Buy us a coffee at ko-fi.com"  width="30" height="30" />
                   </a>
                 </li>
@@ -76,13 +62,13 @@ export default function Footer() {
               <h2 className="text-base md:text-lg font-bold text-slate-100">Legal</h2>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <a className={styles.underlineAnimation} href="https://uniba.sk/en/" target="_blank" rel="noreferrer">Privacy Policy</a>
+                  <ExternalLink href="https://uniba.sk/en/">Privacy Policy</ExternalLink>
                 </li>
                 <li>
-                  <a className={styles.underlineAnimation} href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">Terms of Service</a>
+                  <ExternalLink href="https://marie-sklodowska-curie-actions.ec.europa.eu/">Terms of Service</ExternalLink>
                 </li>
                 <li>
-                  <a className={styles.underlineAnimation} href="https://fns.uniba.sk/en/" target="_blank" rel="noreferrer">Infrastructure</a>
+                  <ExternalLink href="https://uniba.sk/en/">Infrastructure</ExternalLink>
                 </li>
               </ul>
             </div>
