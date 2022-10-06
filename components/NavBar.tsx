@@ -1,10 +1,12 @@
 import Link from 'next/link';
+
 import styles from '../styles/Utils.module.css';
+
 
 export default function Navbar() {
   return (
-    <header className="min-h-2 sm:min-h-3 sticky top-0 z-20 w-full bg-black shadow-xl">
-      <div className=" mx-auto">
+    <header className="flex h-14 sticky top-0 z-20 w-full bg-black shadow-xl items-center">
+      <div className="flex mx-auto">
         <div className="mx-4 py-2 lg:mx-2">
           <nav className="flex items-center justify-between text-sm sm:justify-around sm:text-lg md:text-xl">
             <ul className="flex font-semibold text-white">
