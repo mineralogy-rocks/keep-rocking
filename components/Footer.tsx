@@ -1,10 +1,10 @@
 import Image from 'next/image';
 
-import styles from '../styles/Utils.module.css';
+import utilsStyles from '../styles/Utils.module.css';
 
 
 const ExternalLink = ({ href, children }) => (
-  <a className="hover:underline underline-offset-2 decoration-gray-300" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+  <a className={utilsStyles.hoverUnderline} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 )
 
 export default function Footer() {
