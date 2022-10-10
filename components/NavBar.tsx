@@ -1,7 +1,20 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import cn from 'classnames';
 
-import utilsStyle from '../styles/Utils.module.css';
+import utilsStyle from 'styles/Utils.module.css';
 
+
+function NavItem({href, text}) {
+  const router = useRouter();
+  const isActive = router.asPath === href;
+
+  return (
+      <Link href={href}>
+        <a className={cn(isActive ? '' : '', utilsStyle.hoverUnderline)}>{text}</a>
+      </Link>
+  );
+}
 
 export default function Navbar() {
   return (
