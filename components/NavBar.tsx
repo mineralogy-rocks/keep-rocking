@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import cn from 'classnames';
-
+import cx from 'clsx';
 import utilsStyle from 'styles/Utils.module.css';
 
 
@@ -11,7 +10,7 @@ function NavItem({href, text}) {
 
   return (
       <Link href={href}>
-        <a className={cn(isActive ? '' : '', utilsStyle.hoverUnderline)}>{text}</a>
+        <a className={cx({ 'font-bold underline': isActive }, utilsStyle.hoverLink)}>{text}</a>
       </Link>
   );
 }
@@ -26,20 +25,14 @@ export default function Navbar() {
               <div className="mr-0.5 self-center bg-white text-center">
                 <span className="text-black">M</span>
               </div>
-              <a className={'cursor-pointer ' + utilsStyle.hoverUnderline}>ineralogy.rocks</a>
+              <a className={'cursor-pointer ' + utilsStyle.hoverLink}>ineralogy.rocks</a>
             </div>
           </Link>
         </ul>
         <ul className="flex space-x-2 font-semibold text-white sm:space-x-6 md:space-x-10">
-          <Link href="/explore">
-            <a className={utilsStyle.hoverUnderline}>Explore</a>
-          </Link>
-          <Link href="/about">
-            <a className={utilsStyle.hoverUnderline}>About</a>
-          </Link>
-          <Link href="/contact">
-            <a className={utilsStyle.hoverUnderline}>Contact us</a>
-          </Link>
+          <NavItem href="/explore" text="Explore" />
+          <NavItem href="/about" text="About" />
+          <NavItem href="/contact" text="Contact" />
         </ul>
       </nav>
     </header>
