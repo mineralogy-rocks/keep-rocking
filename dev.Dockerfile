@@ -2,8 +2,8 @@ FROM node:16.17.1
 ENV REFRESHED_AT "15-02-2021"
 
 WORKDIR /app
-COPY package.json package.json
-COPY yarn.lock yarn.lock
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn install
 
 EXPOSE 8080

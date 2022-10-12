@@ -10,7 +10,7 @@ function NavItem({href, text}) {
 
   return (
       <Link href={href}>
-        <a className={cx({ 'text-zinc-100/90': isActive }, utilsStyle.link)}>{text}</a>
+        <a className={cx({ 'text-zinc-100/90': isActive }, 'hover:text-zinc-100 transition-all duration-300 ease-in-out')}>{text}</a>
       </Link>
   );
 }
@@ -25,7 +25,7 @@ export default function Navbar() {
               <div className="mr-0.5 self-center bg-white text-center">
                 <span className="text-black">M</span>
               </div>
-              <a className={'cursor-pointer ' + utilsStyle.link}>ineralogy.rocks</a>
+              <a className='cursor-pointer hover:text-zinc-100 transition-all duration-300 ease-in-out'>ineralogy.rocks</a>
             </div>
           </Link>
         </ul>

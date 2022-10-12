@@ -3,7 +3,11 @@
 }
 
 .link {
-  @apply hover:text-zinc-100 transition-all duration-300 ease-in-out;
+  @apply font-bold text-blue-700 hover:text-blue-800 cursor-pointer;
+}
+
+.linkExternal {
+  @apply text-blue-700 hover:text-blue-800 cursor-pointer visited:text-purple-800
 }
 
 .subtleLink {
