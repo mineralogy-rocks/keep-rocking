@@ -3,11 +3,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import cx from 'clsx'
 
-import { IoLocationSharp } from 'react-icons/io5';
+import { IoLocationSharp, IoCheckmarkCircleSharp } from 'react-icons/io5';
 import { BiTimeFive } from 'react-icons/bi';
-import { HiArrowRight } from "react-icons/hi";
+import { HiArrowRight, HiOutlineArrowDown } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
-import utilsStyles from '../styles/Utils.module.css'
+import { SiAtom } from "react-icons/si";
+
+import Terminal from '../components/content/Terminal';
+import utilsStyles from '../styles/Utils.module.scss'
 
 
 export default function Home() {
@@ -32,7 +35,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-sm md:text-base text-center mt-7">
+            <p className="text-sm md:text-base text-left mt-7">
               <span className="font-bold">Mineralogy.rocks</span> provide seamless and simple way to access and filter mineralogical and related data.
               Our platform is designed both for researchers and developers.
             </p>
@@ -41,25 +44,24 @@ export default function Home() {
       </header>
 
       <section>
-        <div className="text-center mt-20 mx-auto max-w-6xl">
+        <div className="mt-20 mx-auto max-w-6xl">
           <div className="flex justify-center items-center">
               <div className="flex self-center items-center justify-center bg-teal-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
                   <BsSearch size="20" />
               </div>
               <h3 id="explore" className="font-bold text-2xl md:text-4xl">Explore</h3>
           </div>
-          <h2 className="font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h2>
-          <p className="text-sm md:text-base px-4 md:px-6 text-center mt-7">
+          <h2 className="text-center font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h2>
+          <p className="text-sm md:text-base px-4 md:px-6 text-start mt-7">
               The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
-              Start with finding the right subset of data and exploring the relations between minerals.
+              Find the right data subset and explore the relations between minerals.
           </p>
 
           <div className="px-4 md:px-6 md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
               <div className="md:col-span-6 flex flex-col">
-                  <h4 className="font-bold text-xl md:text-3xl">Researcher?</h4>
-                  <p className="text-sm md:text-base text-justify mt-5">
-                      Check out our filtering system at <Link href="/explore"><a className={utilsStyles.link}>mineralogy.rocks/explore</a>
-                      </Link>.
+                  <h4 className="font-bold text-xl md:text-2xl">Researcher?</h4>
+                  <p className="text-sm md:text-base text-left mt-5">
+                      Check out our filtering system at <Link href="/explore"><a className={utilsStyles.link}>mineralogy.rocks/explore</a></Link>.
                       You are able to make complex queries, combine those and explore the results.
                   </p>
               </div>
@@ -79,12 +81,12 @@ export default function Home() {
                           <p className="font-semibold text-xs sm:text-sm md:text-base">198 minerals</p>
                       </div>
                       <div className="flex items-center">
-                          <span className="mdi text-black text-base sm:text-lg md:text-xl mdi-atom mr-2"></span>
+                          <SiAtom size="1.2rem" className="mr-2" />
                           <p className="text-xs sm:text-sm md:text-base">Mineral formula contains As<sup>5+</sup></p>
                       </div>
-                      <span className="mdi text-black text-base sm:text-lg md:text-xl mdi-arrow-down-thin mr-2"></span>
+                      <HiOutlineArrowDown size="1.2rem" className="my-2" />
                       <div className="flex items-center">
-                          <span className="mdi text-black text-base sm:text-lg md:text-xl mdi-check-circle mr-2"></span>
+                          <IoCheckmarkCircleSharp size="1.2rem" className="mr-2" />
                           <p className="font-semibold text-xs sm:text-sm md:text-base">Vicanite-(Ce)</p>
                       </div>
                   </div>
@@ -94,42 +96,33 @@ export default function Home() {
 
           <div className="px-4 md:px-6 md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
               <div className="md:col-span-6 flex flex-col">
-                  <h4 className="font-bold text-xl md:text-3xl">Developer?</h4>
+                  <h4 className="font-bold text-xl md:text-2xl">Developer?</h4>
                   <p className="text-sm md:text-base text-justify mt-5">
-                      The data is accessible via <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://api.mineralogy.rocks" target="_blank">api.mineralogy.rocks</a> through your favourite <span className="font-semibold">http client</span>! Check out current state of
-                      <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://api.mineralogy.rocks/docs" target="_blank">API documentation</a>.
+                      The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a> through your favourite <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">http client</code>. Check out current state of <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks/docs" target="_blank" rel="noopener noreferrer">API documentation</a>.
                   </p>
               </div>
 
               <div className="md:col-span-6">
-                  <div className="overflow-hidden shadow-xl flex bg-red-50 h-38 max-h-40 sm:max-h-[none] rounded-xl">
-                      <div className="w-full flex flex-col">
-                          <div className="flex-none border-b border-gray-500/30">
-                              <div className="flex items-center bg-gray-600 h-8 space-x-1.5 px-3">
-                                  <div className="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-                                  <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
-                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                              </div>
-                          </div>
-                          <div className="min-h-0 flex-auto flex flex-col">
-                              <div className="w-full flex-auto flex min-h-0 overflow-auto">
-                                  <div className="w-full flex-auto">
-                                      <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-bold text-gray-900 flex ligatures-none overflow-auto">
-                                        <code className="flex-none min-w-full p-5">
-                                          <span className="flex">
-                                            <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-                                            <span className="flex-auto"><span className="text-indigo-700">curl</span> -X GET \
-        -H &quot;Content-type: application/json&quot; \
-        -H &quot;Accept: application/json&quot; \
-        -d &quot;offset=10&quot; \
-        -d &quot;ordering=status_id&quot; \
-        &quot;https://api.mineralogy.rocks/v1/status&quot;</span></span></code>
-                                      </pre>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+              <Terminal>
+                  <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-normal md:font-semibold text-gray-900 flex ligatures-none overflow-auto">
+                    <code className="flex-none min-w-full p-5">
+                      <span className="flex">
+                        <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
+                          <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                        </svg>
+                        <span className="flex-auto">
+                          <span className="text-indigo-700">curl</span>
+                          <span> -X GET \</span>{'\n'}
+                          <span>     -H &quot;Content-type: application/json&quot; \</span>{'\n'}
+                          <span>     -H &quot;Accept: application/json&quot; \</span>{'\n'}
+                          <span>     -d &quot;offset=10&quot; \</span>{'\n'}
+                          <span>     -d &quot;ordering=status_id&quot; \</span>{'\n'}
+                          <span>     &quot;https://api.mineralogy.rocks/status&quot; </span>
+                        </span>
+                      </span>
+                    </code>
+                  </pre>
+                </Terminal>
               </div>
           </div>
           </div>
@@ -151,19 +144,8 @@ export default function Home() {
           <div className="max-w-5xl mx-auto px-4 md:px-6 md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
 
               <div className="md:col-span-6">
-                  <div className="overflow-hidden shadow-xl flex bg-red-50 h-38 max-h-40 sm:max-h-[none] rounded-xl">
-                      <div className="w-full flex flex-col">
-                          <div className="flex-none border-b border-gray-500/30">
-                              <div className="flex items-center bg-gray-600 h-8 space-x-1.5 px-3">
-                                  <div className="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-                                  <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
-                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                              </div>
-                          </div>
-                          <div className="min-h-0 flex-auto flex flex-col">
-                              <div className="w-full flex-auto flex min-h-0 overflow-auto">
-                                  <div className="w-full flex-auto">
-                                      <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-bold text-gray-900 flex ligatures-none overflow-auto"><code className="flex-none min-w-full p-5"><span className="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg><span className="flex-auto"><span className="text-indigo-700">query params</span> = &#123;
+                <Terminal>
+                  <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-bold text-gray-900 flex ligatures-none overflow-auto"><code className="flex-none min-w-full p-5"><span className="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg><span className="flex-auto"><span className="text-indigo-700">query params</span> = &#123;
       <span className="text-pink-600">color</span>: &quot;blue&quot;,
       <span className="text-pink-600">cations__in</span>: [&quot;Cu2+&quot;],
       <span className="text-pink-600">anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],
@@ -171,11 +153,7 @@ export default function Home() {
       ...
     &#125;</span></span></code>
                                       </pre>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                </Terminal>
               </div>
 
               <div className="md:col-span-6 flex flex-col space-y-2 md:space-y-4">

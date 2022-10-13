@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cx from 'clsx';
-import utilsStyle from 'styles/Utils.module.css';
+import utilsStyle from 'styles/Utils.module.scss';
 
 
 function NavItem({href, text}) {

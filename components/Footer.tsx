@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import cx from 'clsx';
 
-import utilsStyles from '../styles/Utils.module.css';
+import utilsStyles from '../styles/Utils.module.scss';
 
 
 const ExternalLink = ({ href, children }) => (
