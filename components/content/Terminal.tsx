@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function Header({ text, isHover }) {
-    return <div className="mr-5 transition-all duration-500 text-white font-medium justify-end">{text}</div>;
+    return <div className="mr-5 transition-all duration-500 text-white font-medium text-xs md:text-sm justify-end">{text}</div>;
 }
 
 export default function Terminal({ children }) {
