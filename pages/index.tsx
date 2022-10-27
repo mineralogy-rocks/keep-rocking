@@ -1,13 +1,8 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import cx from 'clsx'
 
-import { IoLocationSharp, IoCheckmarkCircleSharp } from 'react-icons/io5';
-import { BiTimeFive } from 'react-icons/bi';
-import { HiArrowRight, HiOutlineArrowDown } from "react-icons/hi";
+import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
-import { SiAtom } from "react-icons/si";
 
 import Terminal from '../components/content/Terminal';
 import utilsStyles from '../styles/Utils.module.scss'
@@ -68,25 +63,22 @@ export default function Home() {
             <div className="md:col-span-6 flex flex-col">
                 <div className="text-left text-sm">
                     <div className="flex items-center">
-                        <BiTimeFive size="1.2rem" className="mr-2" />
+                        <span className="bg-black/50 text-white w-5 h-5 rounded-full justify-center font-semibold flex items-center mr-2">1</span>
                         <p className="text-xs sm:text-sm md:text-base">Discovery year between 1999 and 2001</p>
-                        <HiArrowRight size="1.2rem" className="mx-2" />
                         <p className="font-semibold text-xs sm:text-sm md:text-base">1, 401 species</p>
                     </div>
                     <div className="flex items-center">
-                        <IoLocationSharp size="1.2rem" className="mr-2" />
+                        <span className="bg-black/60 text-white w-5 h-5 rounded-full justify-center font-semibold flex items-center mr-2">2</span>
                         <p className="text-xs sm:text-sm md:text-base">Discovery country in EU</p>
-                        <HiArrowRight size="1.2rem" className="mx-2" />
                         <p className="font-semibold text-xs sm:text-sm md:text-base">198 minerals</p>
                     </div>
                     <div className="flex items-center">
-                        <SiAtom size="1.2rem" className="mr-2" />
+                        <span className="bg-black/70 text-white w-5 h-5 rounded-full justify-center font-semibold flex items-center mr-2">3</span>
                         <p className="text-xs sm:text-sm md:text-base">Mineral formula contains As<sup>5+</sup></p>
                     </div>
-                    <HiOutlineArrowDown size="1.2rem" className="my-2" />
                     <div className="flex items-center">
-                        <IoCheckmarkCircleSharp size="1.2rem" className="mr-2" />
-                        <p className="font-semibold text-xs sm:text-sm md:text-base">Vicanite-(Ce)</p>
+                      <span className="bg-black text-white w-5 h-5 rounded-full justify-center flex font-semibold items-center mr-2">4</span>
+                      <p className="font-semibold text-xs sm:text-sm md:text-base">Vicanite-(Ce)</p>
                     </div>
                 </div>
             </div>
@@ -130,18 +122,18 @@ export default function Home() {
     <section>
       <div className="mt-20 mx-auto max-w-6xl px-6 sm:px-8">
         <div className="flex justify-center items-center">
-            <div className="flex self-center justify-center bg-pink-200 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
-                <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
-            </div>
-            <h3 className="font-bold text-2xl md:text-4xl">Extract</h3>
+          <div className="flex self-center justify-center bg-pink-200 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
+            <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
+          </div>
+          <h3 className="font-bold text-2xl md:text-4xl">Extract</h3>
         </div>
         <h2 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Download the data</h2>
         <p className="text-sm md:text-base text-left mt-5">
-          The platform makes the <strong>data extraction</strong> easy and simple. No matter what data you need -
+          The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
         </p>
 
-        <div className="max-w-5xl mx-auto md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
+        <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
           <div className="md:col-span-6">
             <Terminal>
               <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
@@ -165,26 +157,26 @@ export default function Home() {
             </Terminal>
           </div>
 
-            <div className="md:col-span-6 flex flex-col space-y-2 md:space-y-4">
-                <div>
-                    <div className="flex items-center">
-                        <h4 className="font-bold text-xl md:text-3xl">Fetch data flexibly<span className="mdi text-2xl md:text-3xl mdi-code-tags ml-2"></span></h4>
-                    </div>
-                    <p className="text-sm md:text-base mt-5">
-                        Export the data in a preferred format or connect your application directly to our <strong>API</strong>.
-                        We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
-                    </p>
+          <div className="md:col-span-6 flex flex-col space-y-2 md:space-y-4">
+            <div>
+              <div className="flex items-center">
+                <h4 className="font-bold text-xl md:text-3xl">Fetch data flexibly<span className="mdi text-2xl md:text-3xl mdi-code-tags ml-2"></span></h4>
+              </div>
+              <p className="text-sm md:text-base mt-5">
+                  Export the data in a preferred format or connect your application directly to our <strong>API</strong>.
+                  We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
+              </p>
 
-                </div>
-                <div>
-                    <div className="flex">
-                        <h4 className="font-bold text-xl md:text-3xl">Share the query<span className="mdi text-2xl md:text-3xl mdi-check-circle-outline ml-2"></span></h4>
-                    </div>
-                    <p className="text-sm md:text-base mt-5">
-                        All filtering systems are connected to the query params of the <strong>URL string</strong> - you’ll <em>never</em> loose your results once you obtained them.
-                    </p>
-                </div>
             </div>
+            <div>
+              <div className="flex">
+                <h4 className="font-bold text-xl md:text-3xl">Share the query<span className="mdi text-2xl md:text-3xl mdi-check-circle-outline ml-2"></span></h4>
+              </div>
+              <p className="text-sm md:text-base mt-5">
+                  All filtering systems are connected to the query params of the <strong>URL string</strong> - you’ll <em>never</em> loose your results once you obtained them.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -192,40 +184,37 @@ export default function Home() {
     <section>
       <div className="mt-20 mx-auto max-w-6xl px-6 sm:px-8">
         <div className="flex justify-center items-center">
-            <div className="flex self-center justify-center bg-yellow-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
-                <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
-            </div>
-            <h3 className="font-bold text-2xl md:text-4xl">Research</h3>
+          <div className="flex self-center justify-center bg-yellow-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
+            <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
+          </div>
+          <h3 className="font-bold text-2xl md:text-4xl">Research</h3>
         </div>
         <h2 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Do research with us</h2>
         <p className="text-sm md:text-base mt-7">
-            We will gladly assist you in finding the right data in a right format.
-            We believe in open science and open source - things that make our lives better.
+          We will gladly assist you in finding the right data in a right format.
+          We believe in open science and open source - things that make our lives better.
         </p>
 
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-0 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14">
-            <div className="md:col-span-6">
-                <div className="flex items-center">
-                    <h4 className="font-bold text-xl md:text-3xl">Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
-                </div>
-                <p className="text-sm md:text-base text-justify mt-5">
-                    Join our computing community
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a>
-                    and start contributing as a member. For code-related threads and suggestions, visit our
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer">GitHub Discussions Channel</a>.
-                </p>
+          <div className="md:col-span-6">
+            <div className="flex items-center">
+              <h4 className="font-bold text-xl md:text-3xl">Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
-            <div className="md:col-span-6">
-                <div className="flex items-center">
-                    <h4 className="font-bold text-xl md:text-3xl">Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
-                </div>
-                <p className="text-sm md:text-base text-justify mt-5">
-                    The core team includes world className researchers in the area of mineralogy, geochemistry, petrology and geology from
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
-                    and <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
-                </p>
+            <p className="text-sm md:text-base text-justify mt-5">
+              Join our computing community <a className={utilsStyles.linkExternal} href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
+              <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
+            </p>
+          </div>
+          <div className="md:col-span-6">
+            <div className="flex items-center">
+              <h4 className="font-bold text-xl md:text-3xl">Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
+            <p className="text-sm md:text-base text-justify mt-5">
+              The core team includes world className researchers in the area of mineralogy, geochemistry, petrology and geology from <a className={utilsStyles.linkExternal} href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
+              <a className={utilsStyles.linkExternal} href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
+              and <a className={utilsStyles.linkExternal} href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
+            </p>
+          </div>
         </div>
       </div>
     </section>

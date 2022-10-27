@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import cx from 'clsx';
+
+import Logo from './common/Logo';
 
 
 function NavItem({href, text}) {
@@ -16,14 +18,17 @@ function NavItem({href, text}) {
 }
 
 export default function Navbar() {
+
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <header className="flex h-14 sticky top-0 z-20 w-full bg-black drop-shadow-xl">
       <nav className="flex w-full items-center justify-around text-sm sm:text-lg md:text-base">
         <ul className="flex font-semibold text-zinc-300/70 text-sm sm:text-lg md:text-lg">
           <Link href="/">
-            <div className="flex items-end">
+            <div className="flex items-end" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
               <div className="mr-0.5">
-                <Image src="/assets/logo.svg" width={40} height={40} alt="logo" />
+                <Logo isHovered={isHovered} />
               </div>
               <span className='cursor-pointer hover:text-zinc-100 transition-all duration-300 ease-in-out'>ineralogy.rocks</span>
             </div>

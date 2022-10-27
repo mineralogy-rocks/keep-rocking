@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import cx from 'clsx';
 
+import Logo from './common/Logo';
 import utilsStyles from '../styles/Utils.module.scss';
 
 
@@ -49,7 +49,6 @@ export default function Footer() {
                 <li>
                   <a href="https://ko-fi.com/I2I43R998" target="_blank" rel="noreferrer" className="flex items-center">
                     <span className={cx(utilsStyles.subtleLink, 'mr-2')}>Buy us a Coffee</span>
-                    <Image src="/assets/kofilogo_bluebg.png" alt="Buy us a coffee at ko-fi.com"  width="30" height="30" />
                   </a>
                 </li>
               </ul>
@@ -77,7 +76,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-row justify-center text-xs md:text-sm text-zinc-200 border-t border-zinc-300 pt-5">
-          <Image src="/assets/logo.svg" width={20} height={20} alt="logo" />
+          <Logo />
           <span className="font-light">©2022—present mineralogy.rocks. All rights reserved.</span>
         </div>
       </div>
