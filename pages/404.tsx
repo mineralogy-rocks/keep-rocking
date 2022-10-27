@@ -9,8 +9,8 @@ export default function NotFound() {
         </h1>
 
         <p className="mt-3 text-2xl">
-          <Link href="/">
-            <a className="text-blue-600 hover:text-blue-500">Go home</a>
+          <Link href="/" className="text-blue-600 hover:text-blue-500">
+            Go home
           </Link>
         </p>
       </main>

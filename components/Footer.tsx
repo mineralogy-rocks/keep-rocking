@@ -77,10 +77,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-row justify-center text-xs md:text-sm text-zinc-200 border-t border-zinc-300 pt-5">
-          <div className="mr-1 self-center bg-gray-50 text-center px-0.5">
-            <span className="text-black">M</span>
-          </div>
-          <span className="font-light">©2022-present mineralogy.rocks. All rights reserved.</span>
+          <Image src="/assets/logo.svg" width={20} height={20} alt="logo" />
+          <span className="font-light">©2022—present mineralogy.rocks. All rights reserved.</span>
         </div>
       </div>
     </footer>
