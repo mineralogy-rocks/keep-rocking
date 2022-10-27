@@ -210,9 +210,9 @@ export default function Home() {
                 </div>
                 <p className="text-sm md:text-base text-gray-500 text-justify mt-5">
                     Join our computing community
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/mineralogy-rocks" target="_blank">mineralogy-rocks</a>
+                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a>
                     and start contributing as a member. For code-related threads and suggestions, visit our
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank">GitHub Discussions Channel</a>.
+                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer">GitHub Discussions Channel</a>.
                 </p>
             </div>
             <div className="md:col-span-6">
@@ -221,9 +221,9 @@ export default function Home() {
                 </div>
                 <p className="text-sm md:text-base text-gray-500 text-justify mt-5">
                     The core team includes world className researchers in the area of mineralogy, geochemistry, petrology and geology from
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://uniba.sk" target="_blank">Comenius University (Slovakia) 🇸🇰</a>,
-                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.unibe.ch/index_eng.html" target="_blank">University of Bern (Switzerland) 🇨🇭</a>
-                    and <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.oulu.fi/en" target="_blank">University of Oulu (Finland) 🇫🇮</a>.
+                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
+                    <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
+                    and <a className="text-blue-600 visited:text-purple-600 hover:underline" href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
                 </p>
             </div>
         </div>
