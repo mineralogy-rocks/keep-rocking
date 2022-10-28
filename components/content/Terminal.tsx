@@ -13,24 +13,24 @@ export default function Terminal({ children }) {
          onMouseEnter={() => setIsHovered(true)}
          onMouseLeave={() => setIsHovered(false)}>
       <div className="group w-full flex flex-col">
-          <div className="flex-none border-b border-gray-500/30 bg-gray-600 group-hover:bg-gray-700 transition-all duration-500">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center h-8 space-x-1.5 px-3">
-                  <div className="w-2.5 h-2.5 bg-red-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
-                  <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
+        <div className="flex-none border-b border-gray-500/30 bg-gray-600 group-hover:bg-gray-700 transition-all duration-500">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center h-8 space-x-1.5 px-3">
+              <div className="w-2.5 h-2.5 bg-red-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
+              <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
+              <div className="w-2.5 h-2.5 bg-green-500 rounded-full group-hover:scale-125 transition-all duration-500"></div>
+            </div>
+            <Header text="~/home" isHovered={isHovered} />
+          </div>
+        </div>
+          <div className="min-h-0 flex-auto flex flex-col">
+            <div className="w-full flex-auto flex min-h-0 overflow-auto">
+              <div className="w-full flex-auto">
+                {children}
               </div>
-              <Header text="~/home" isHovered={isHovered} />
             </div>
           </div>
-          <div className="min-h-0 flex-auto flex flex-col">
-              <div className="w-full flex-auto flex min-h-0 overflow-auto">
-                  <div className="w-full flex-auto">
-                        {children}
-                  </div>
-              </div>
-          </div>
       </div>
-  </div>
+    </div>
   )
 }

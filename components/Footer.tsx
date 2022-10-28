@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-row justify-center text-xs md:text-sm text-zinc-200 border-t border-zinc-300 pt-5">
+        <div className="mt-12 flex flex-row justify-center items-center text-xs md:text-sm text-zinc-200 border-t border-zinc-300 pt-5">
           <Logo />
           <span className="font-light">©2022—present mineralogy.rocks. All rights reserved.</span>
         </div>
