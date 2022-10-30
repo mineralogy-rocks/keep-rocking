@@ -13,7 +13,7 @@ export default function Footer() {
   return (
     <footer className="min-h-4 bottom-0 z-20 mx-auto mt-20 w-full bg-black text-zinc-400/70 font-semibold drop-shadow-xl">
       <div className="md:px-18 mx-auto max-w-7xl px-10 py-6 sm:px-16">
-        <div className="mt-4 flex flex-col gap-y-6 text-sm md:text-sm sm:flex-row">
+        <div className="mt-4 flex flex-col gap-y-6 text-sm md:text-base sm:flex-row">
           <div className="w-full flex-none justify-center space-y-10 px-2 sm:w-1/3 sm:space-y-8 lg:flex lg:space-y-0">
             <div className="lg:flex-none">
               <h2 className="text-slate-100">Links</h2>

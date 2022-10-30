@@ -4,7 +4,7 @@ export default function Logo({isHovered}: {isHovered?: boolean}) {
   return (
     <>
       <svg width="32" height="35" viewBox="0 0 32 35" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer">
-        <g className={cx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-2 -translate-y-1.5 duration-500 animate-pulse': isHovered })} >
+        <g className={cx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-2 -translate-y-1.5 duration-500': isHovered })} >
           <g filter="url(#filter0_f_1318_1487)">
             <circle cx="21" cy="17" r="4" fill={isHovered ? '#F5CA5B' : '#EDD69C'}/>
           </g>

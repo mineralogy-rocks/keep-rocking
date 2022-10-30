@@ -1,5 +1,7 @@
-import Link from 'next/link'
-import cx from 'clsx'
+import Link from 'next/link';
+import Head from 'next/head';
+import Image from 'next/image';
+import cx from 'clsx';
 
 import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
@@ -10,6 +12,10 @@ import utilsStyles from '../styles/Utils.module.scss'
 
 export default function Home() {
   return <>
+    <Head>
+      <title>mineralogy.rocks</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center mt-24 text-center justify-center">
@@ -61,21 +67,24 @@ export default function Home() {
             </div>
 
             <div className="md:col-span-6 flex flex-col">
-              <div className="flex flex-col gap-2 text-left text-sm">
+              <div className="flex flex-col gap-2 text-left text-base md:text-lg leading-normal">
                 <div className="flex flex-wrap items-center">
-                  <span className="bg-black/50 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">1</span>
-                  <p className="flex-1 text-base md:text-lg leading-normal">
+                  <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">1</span>
+                  <p className="flex-1">
                     <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">WHERE</code> discovery year <em>between</em> 1999 and 2001
                   </p>
                 </div>
                 <div className="flex flex-row">
-                  <span className="ml-8">found <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">1, 401 species</code></span>
+                  <span className="ml-8">🤖 found 1, 401 species</span>
                 </div>
                 <div className="flex flex-wrap items-center">
-                    <span className="bg-black/60 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">2</span>
-                    <p className="text-base md:text-lg leading-normal">
-                      <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">AND</code> discovery country <em>in</em> EU <strong>198 minerals</strong>
+                    <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">2</span>
+                    <p className="flex-1">
+                      <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">AND</code> discovery country <em>in</em> EU
                     </p>
+                </div>
+                <div className="flex flex-row">
+                  <span className="ml-8">🤖 found 198 species</span>
                 </div>
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">3</span>
@@ -83,9 +92,8 @@ export default function Home() {
                       <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">AND</code> mineral formula <em>contains</em> As<sup>5+</sup>
                     </p>
                 </div>
-                <div className="flex flex-wrap items-center">
-                  <span className="bg-black text-white w-6 h-6 rounded-full justify-center flex font-semibold items-center mr-2">4</span>
-                  <p className="font-semibold text-base md:text-lg leading-normal">Vicanite-(Ce)</p>
+                <div className="flex flex-row">
+                  <span className="ml-8">🤖 found 1 species — Vicanite-(Ce)</span>
                 </div>
               </div>
             </div>
@@ -206,7 +214,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className="font-bold text-xl md:text-3xl">Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg leading-normal text-justify mt-5">
+            <p className="text-base md:text-lg leading-normal mt-5">
               Join our computing community <a className={utilsStyles.linkExternal} href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
               <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
             </p>
@@ -215,7 +223,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className="font-bold text-xl md:text-3xl">Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg leading-normal text-justify mt-5">
+            <p className="text-base md:text-lg leading-normal mt-5">
               The core team includes world className researchers in the area of mineralogy, geochemistry, petrology and geology from <a className={utilsStyles.linkExternal} href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
               <a className={utilsStyles.linkExternal} href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
               and <a className={utilsStyles.linkExternal} href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
@@ -224,5 +232,32 @@ export default function Home() {
         </div>
       </div>
     </section>
+
+    <section className="px-6 sm:px-8 mt-40 mx-auto">
+      <div className="flex flex-col justify-center items-center">
+        <h3 className="font-bold text-2xl md:text-4xl">Supported by</h3>
+        <div className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-10 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly">
+          <a href="https://www.sav.sk/" target="_blank" rel="noreferrer">
+            <Image src="/assets/SAV_logo.jpg" alt="SAV" width={0} height={0} className="w-24 h-auto" />
+          </a>
+          <a href="https://uniba.sk" target="_blank" rel="noreferrer">
+            <Image src="/assets/UK_logo.png" alt="UK" width={200} height={200} className="w-52 h-auto" />
+          </a>
+          <a href="https://fns.uniba.sk/" target="_blank" rel="noreferrer">
+            <Image src="/assets/UK_FNS_logo.png" alt="PrifUK" width={230} height={100} className="w-auto h-auto" />
+          </a>
+          <a href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">
+            <Image src="/assets/MSCA.png" alt="MSCA" width={50} height={80} className="w-auto h-auto" />
+          </a>
+        </div>
+
+        <div className="max-w-screen-md text-center mt-10">
+          <p className="text-base md:text-lg">
+            This project 3007/01/01 has received funding from the European Union&apos;s Horizon 2020 research and innovation programme under the <strong>Marie Skłodowska-Curie grant agreement No 945478</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
   </>;
 }
