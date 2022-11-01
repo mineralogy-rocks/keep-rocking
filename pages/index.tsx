@@ -7,7 +7,12 @@ import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
 
 import Terminal from '../components/content/Terminal';
-import utilsStyles from '../styles/Utils.module.scss'
+import utilsStyles from '../styles/Utils.module.scss';
+
+import SAVLogo from 'public/assets/SAV_logo.jpg';
+import UKLogo from 'public/assets/UK_logo.png';
+import FNSLogo from 'public/assets/UK_FNS_logo.png';
+import MSCALogo from 'public/assets/MSCA.png';
 
 
 export default function Home() {
@@ -238,22 +243,23 @@ export default function Home() {
         <h3 className="font-bold text-2xl md:text-4xl">Supported by</h3>
         <div className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-10 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly">
           <a href="https://www.sav.sk/" target="_blank" rel="noreferrer">
-            <Image src="/assets/SAV_logo.jpg" alt="SAV" width={0} height={0} className="w-24 h-auto" />
+            <Image src={SAVLogo} alt="SAV" className="w-24 h-auto" />
           </a>
           <a href="https://uniba.sk" target="_blank" rel="noreferrer">
-            <Image src="/assets/UK_logo.png" alt="UK" width={200} height={200} className="w-52 h-auto" />
+            <Image src={UKLogo} alt="UK" className="w-52 h-auto" />
           </a>
           <a href="https://fns.uniba.sk/" target="_blank" rel="noreferrer">
-            <Image src="/assets/UK_FNS_logo.png" alt="PrifUK" width={230} height={100} className="w-auto h-auto" />
+            <Image src={FNSLogo} alt="PrifUK" className="w-60 h-auto" />
           </a>
           <a href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">
-            <Image src="/assets/MSCA.png" alt="MSCA" width={50} height={80} className="w-auto h-auto" />
+            <Image src={MSCALogo} alt="MSCA" className="w-14 h-auto" />
           </a>
         </div>
 
         <div className="max-w-screen-md text-center mt-10">
           <p className="text-base md:text-lg">
-            This project 3007/01/01 has received funding from the European Union&apos;s Horizon 2020 research and innovation programme under the <strong>Marie Skłodowska-Curie grant agreement No 945478</strong>.
+            This project 3007/01/01 has received funding from the European Union&apos;s Horizon 2020 research and innovation programme
+            under the <strong>Marie Skłodowska-Curie grant agreement No 945478</strong>.
           </p>
         </div>
       </div>
