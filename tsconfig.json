@@ -6,6 +6,14 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./components/*"],
+      "@/hooks/*": ["./hooks/*"],
+      // "@constants": ["./constants/index.js"],
+      // "@helpers/*": ["./src/helpers/*"],
+      // "@utils": ["./src/utils/index.js"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -26,5 +34,5 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

@@ -6,8 +6,9 @@ import cx from 'clsx';
 import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
 
-import Terminal from '../components/content/Terminal';
-import utilsStyles from '../styles/Utils.module.scss';
+import Terminal from '@/components/content/Terminal';
+import utilsStyles from '../styles/utils.module.scss';
+import contentStyles from '../styles/content.module.scss';
 
 import SAVLogo from 'public/assets/SAV_logo.jpg';
 import UKLogo from 'public/assets/UK_logo.png';
@@ -33,9 +34,9 @@ export default function Home() {
 
         <div className="mx-auto px-6 sm:px-8 mt-14 md:mt-20">
           <div className="flex justify-center">
-            <Link href="/explore" legacyBehavior>
+            <Link href="/explore">
                 <span className={cx(utilsStyles.link, 'group flex items-center')}>Start Exploring
-                  <HiArrowRight size="1.5rem" className="ml-2 group-hover:translate-x-2 group-hover:transition-all ease-in-out duration-300" />
+                  <HiArrowRight size="1.5rem" className="ml-2 group-hover:animate-[wiggle_1s_infinite]" />
                 </span>
             </Link>
           </div>
@@ -49,7 +50,7 @@ export default function Home() {
     </header>
 
     <section>
-      <div className="mt-20 mx-auto max-w-6xl px-6 sm:px-8">
+      <div className={contentStyles.section}>
         <div className="flex justify-center items-center">
             <div className="flex self-center items-center justify-center bg-teal-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
                 <BsSearch size="20" />
@@ -139,7 +140,7 @@ export default function Home() {
     </section>
 
     <section>
-      <div className="mt-20 mx-auto max-w-6xl px-6 sm:px-8">
+      <div className={contentStyles.section}>
         <div className="flex justify-center items-center">
           <div className="flex self-center justify-center bg-pink-200 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
             <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
@@ -179,7 +180,7 @@ export default function Home() {
           <div className="md:col-span-6 flex flex-col space-y-2 md:space-y-4">
             <div>
               <div className="flex items-center">
-                <h4 className="font-bold text-xl md:text-3xl">Fetch data flexibly<span className="mdi text-2xl md:text-3xl mdi-code-tags ml-2"></span></h4>
+                <h4 className="font-bold text-xl md:text-3xl">Flexible data fetching</h4>
               </div>
               <p className="text-base md:text-lg leading-normal mt-5">
                   Export the data in a preferred format or connect your application directly to our <strong>API</strong>.
@@ -189,7 +190,7 @@ export default function Home() {
             </div>
             <div>
               <div className="flex">
-                <h4 className="font-bold text-xl md:text-3xl">Share the query<span className="mdi text-2xl md:text-3xl mdi-check-circle-outline ml-2"></span></h4>
+                <h4 className="font-bold text-xl md:text-3xl">Share the query</h4>
               </div>
               <p className="text-base md:text-lg leading-normal mt-5">
                   All filtering systems are connected to the query params of the <strong>URL string</strong> - you’ll <em>never</em> loose your results once you obtained them.
@@ -201,7 +202,7 @@ export default function Home() {
     </section>
 
     <section>
-      <div className="mt-20 mx-auto max-w-6xl px-6 sm:px-8">
+      <div className={contentStyles.section}>
         <div className="flex justify-center items-center">
           <div className="flex self-center justify-center bg-yellow-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
             <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>

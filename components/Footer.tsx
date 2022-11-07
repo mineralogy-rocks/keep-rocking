@@ -1,7 +1,7 @@
 import cx from 'clsx';
 
-import Logo from './common/Logo';
-import utilsStyles from '../styles/Utils.module.scss';
+import Logo from '@/components/common/Logo';
+import utilsStyles from '../styles/utils.module.scss';
 
 
 const ExternalLink = ({ href, children }) => (

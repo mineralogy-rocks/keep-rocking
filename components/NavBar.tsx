@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import cx from 'clsx';
 
-import Logo from './common/Logo';
+import Logo from '@/components/common/Logo';
 
 
 function NavItem({href, text}) {
   const router = useRouter();
-  const isActive = router.asPath === href;
+  const isActive = router.pathname === href;
 
   return (
       <Link href={href}>
