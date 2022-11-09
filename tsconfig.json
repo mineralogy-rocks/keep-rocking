@@ -10,6 +10,7 @@
     "paths": {
       "@/components/*": ["./components/*"],
       "@/hooks/*": ["./hooks/*"],
+      "@/lib/*": ["./lib/*"],
       // "@constants": ["./constants/index.js"],
       // "@helpers/*": ["./src/helpers/*"],
       // "@utils": ["./src/utils/index.js"]
