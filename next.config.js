@@ -2,13 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // publicRuntimeConfig: {
-  //   API_KEY: process.env.API_KEY,
-  // },
 }
 
 const env = {
   API_KEY: process.env.API_KEY,
+  API_URL: process.env.API_URL,
 }
 
 module.exports = () => {

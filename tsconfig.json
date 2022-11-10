@@ -12,7 +12,7 @@
       "@/hooks/*": ["./hooks/*"],
       "@/lib/*": ["./lib/*"],
       // "@constants": ["./constants/index.js"],
-      // "@helpers/*": ["./src/helpers/*"],
+      "@/helpers/*": ["./helpers/*"],
       // "@utils": ["./src/utils/index.js"]
     },
     "allowJs": true,

@@ -3,77 +3,42 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
-import fetcher from '@/lib/fetcher';
+import fetcher from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
 import SearchInput from '@/components/SearchInput';
 
 
 export default function Explore() {
   const router = useRouter();
-  const initialSearch = (router.query.q || '').toString();
+  let initialSearch = (router.query.q || '').toString();
 
-  const [searchValue, setSearchValue] = useState(initialSearch);
-  const [isSearching, setIsSearching] = useState(false);
-  // const [results, setResults] = useState([]);
-  // const [error, setError] = useState(null);
-
+  const [searchValue, setSearchValue] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    setSearchValue(initialSearch);
+  }, [initialSearch]);
+
+  const resetRouter = () => {
+    router.replace({ query: {  } });
+  };
 
   const handleSearch = (value) => {
       setSearchValue(value);
-      // if (value === "") setError(null);
-      router.replace({ query: { q: value } });
+      if (value) router.replace({ query: { q: value } });
+      else resetRouter();
   };
 
   const resetSearch = () => {
       setSearchValue('');
-      // setError(null);
-      router.replace({ query: {  } });
+      resetRouter();
   };
 
-  const { data, error } = useSWR(`http://api.dev.mineralogy.rocks/mineral?q=${debouncedSearchValue}`, fetcher, {revalidateOnFocus: false});
+  const { data, error } = useSWRImmutable(debouncedSearchValue ? `/mineral/?q=${debouncedSearchValue}` : null, fetcher);
 
-  // const species = data ? [].concat(...data) : [];
   console.log(data)
-
-  const searchNames = (search: string): Promise<any[]> => {
-    const apiKey:string = process.env.API_KEY;
-
-    return fetch(
-      `http://api.dev.mineralogy.rocks/mineral?q=${search}`,
-      {
-        method: "GET",
-        headers: {
-          'Authorization': `Api-Key ${apiKey}`,
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-      .then(r => r.json())
-      .then((r) => {
-        console.log(r)
-        return r.results;
-      })
-      .catch((error) => {
-        // setError(error);
-        return [];
-      });
-  }
-
-  // useEffect(() => {
-  //   console.log(initialSearch)
-  //   if (debouncedSearchValue) {
-  //     setIsSearching(true);
-  //     searchNames(debouncedSearchValue).then((results) => {
-  //       setIsSearching(false);
-  //       setResults(results);
-  //     });
-  //   } else {
-  //     setResults([]);
-  //   }
-  // }, [debouncedSearchValue, initialSearch]);
 
   return (
     <>
@@ -81,10 +46,18 @@ export default function Explore() {
         <title>Explore</title>
       </Head>
       <div className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto mt-20">
-        <SearchInput placeholder='Start typing...' searchValue={initialSearch} onChange={handleSearch} onReset={resetSearch} />
+        <SearchInput placeholder='Start typing...' searchValue={searchValue} onChange={handleSearch} onReset={resetSearch} />
       </div>
-      {error && <div className="mt-5 text-red-500 text-center">An error occurred. Please, contact the admin.</div>}
-      {/* {species.map((specie) => specie.name).join(', ')} */}
+      {(!error && !data && debouncedSearchValue) && <div className="text-center">Loading...</div>}
+      {!!error && <div className="mt-5 text-red-500 text-center">An error occurred. Please, contact the admin.</div>}
+      {data && data.results.map((item) => {
+        return (
+          <div key={item.id} className="mt-5">
+            <h1 className="text-2xl font-bold">{item.name}</h1>
+            <p className="text-sm">{item.description}</p>
+          </div>
+        );
+      })}
     </>
   );
 }
