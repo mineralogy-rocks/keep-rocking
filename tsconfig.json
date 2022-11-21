@@ -13,6 +13,7 @@
       "@/lib/*": ["./lib/*"],
       // "@constants": ["./constants/index.js"],
       "@/helpers/*": ["./helpers/*"],
+      "@/styles/*": ["./styles/*"],
       // "@utils": ["./src/utils/index.js"]
     },
     "allowJs": true,

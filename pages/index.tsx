@@ -7,8 +7,8 @@ import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
 
 import Terminal from '@/components/content/Terminal';
-import utilsStyles from '../styles/utils.module.scss';
-import contentStyles from '../styles/content.module.scss';
+import utilsStyles from '@/styles/utils.module.scss';
+import contentStyles from '@/styles/content.module.scss';
 
 import SAVLogo from 'public/assets/SAV_logo.jpg';
 import UKLogo from 'public/assets/UK_logo.png';

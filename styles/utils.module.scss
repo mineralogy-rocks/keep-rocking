@@ -14,3 +14,7 @@
 .subtleLink {
   @apply hover:underline decoration-zinc-500/90 hover:underline-offset-2 hover:text-zinc-200/90 transition-all duration-100 ease-in-out;
 }
+
+.secondaryText {
+  @apply text-gray-600;
+}
