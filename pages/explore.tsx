@@ -2,26 +2,31 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 
 import useSWRImmutable from 'swr/immutable';
+import cx from 'clsx';
 
 import fetcher from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
 import SearchInput from '@/components/SearchInput';
 import MineralCard from '@/components/MineralCard';
 
+import utilsStyles  from '@/styles/utils.module.scss';
 
 export default function Explore() {
   const router = useRouter();
 
   const [searchValue, setSearchValue] = useState('');
+  // const [searchParams, setSearchParams] = useState({ q: '', cursor: '' });
+
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
   useEffect(() => {
     if(!router.isReady) return;
     if (router.query.q) {
-      console.log(router.query.q)
       setSearchValue(router.query.q.toString());
+      // setSearchParams({ q: router.query.q.toString(), cursor: router.query.cursor?.toString() });
     }
   }, [router.isReady]);
 
@@ -59,13 +64,15 @@ export default function Explore() {
           {data && data.results.map((item) => {
             return (
               <MineralCard key={item.id} mineral={item} />
-              // <div key={item.id} className="bg-gray-50 rounded-sm p-2 border border-l-4 border-l-green-700/70 max-w-4xl mx-auto">
-              //   <h1 className="text-2xl font-bold">{item.name}</h1>
-              //   <p className="text-sm">{item.description}</p>
-              // </div>
             );
           })}
         </div>
+        {/* {data && (
+          <div className="flex justify-center mt-5">
+            {data.previous && <Link className={cx(utilsStyles.link)} href={data.previous}>Previous page</Link>}
+            {data.next && <Link className={cx(utilsStyles.link)} href={data.next}>Next page</Link>}
+          </div>
+        )} */}
       </div>
     </>
   );

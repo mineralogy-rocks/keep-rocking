@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Image from 'next/image';
 import cx from 'clsx';
 
-import { HiArrowRight } from "react-icons/hi";
 import { BsSearch } from "react-icons/bs";
 
 import Terminal from '@/components/content/Terminal';
@@ -36,7 +35,9 @@ export default function Home() {
           <div className="flex justify-center">
             <Link href="/explore">
                 <span className={cx(utilsStyles.link, 'group flex items-center')}>Start Exploring
-                  <HiArrowRight size="1.5rem" className="ml-2 group-hover:animate-[wiggle_1s_infinite]" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggle_1s_infinite]">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                </svg>
                 </span>
             </Link>
           </div>

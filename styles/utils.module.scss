@@ -18,3 +18,10 @@
 .secondaryText {
   @apply text-gray-600;
 }
+
+.truncateText {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}

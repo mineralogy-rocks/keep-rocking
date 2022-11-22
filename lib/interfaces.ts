@@ -20,12 +20,15 @@ export interface Hierarchy extends BaseIdName {
 }
 
 export interface CrystalSystem extends BaseIdName {
-  counts?: number;
+  count?: number;
 }
 
 export interface Status {
-  id: number;
-  group: BaseIdName,
+  status_id: number;
+  group: {
+    id: number;
+    name: string;
+  };
   description_short: string;
   description_long: string;
 }
