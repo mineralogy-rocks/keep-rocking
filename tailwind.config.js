@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
       },
+      fontSize: {
+        'xxs': '0.65rem',
+      },
       keyframes: {
         wiggle: {
           "0%,100%": {

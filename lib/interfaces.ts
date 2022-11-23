@@ -39,10 +39,10 @@ export interface Relation {
   group: BaseIdName;
 }
 
-export interface DiscoveryCountry extends BaseIdName {
+export interface Discovery extends BaseIdName {
   region: string;
   iso_code: string;
-  counts?: number;
+  count?: number;
 }
 
 export interface History {
