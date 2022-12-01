@@ -1,4 +1,4 @@
-import { mineralApiResponse } from '@/lib/types';
+import { exploreApiResponse } from '@/lib/types';
 import { CrystalSystem, Discovery, History, Relation, Hierarchy } from '@/lib/interfaces';
 
 import clsx from 'clsx';
@@ -143,12 +143,12 @@ function SnippetWrapper({ title, children }) {
   )
 };
 
-export default function MineralCard({ mineral } : { mineral: mineralApiResponse }) {
+export default function MineralCard({ mineral } : { mineral: exploreApiResponse }) {
 
   const mineralFormula = getRelevantFormula(mineral.formulas);
 
   return (
-    <div id={mineral.id} key={mineral.id} className="relative bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 max-w-4xl lg:max-w-5xl mx-auto h-auto hover:border-gray-400 transition-all duration-200">
+    <div id={mineral.id} key={mineral.id} className="relative bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 max-w-4xl lg:max-w-5xl mx-auto h-auto hover:border-gray-400 hover:shadow transition-all duration-200">
       {mineral.ns_index && <span className="absolute top-1 right-1 text-emerald-700 font-medium text-xs bg-emerald-100 px-2 py-0.5 rounded-full ml-0">{mineral.ns_index}</span>}
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
