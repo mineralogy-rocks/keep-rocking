@@ -8,6 +8,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        '8xl': '88rem',
+      },
+      lineClamp: {
+        10: '10',
+      },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
       },
@@ -29,5 +35,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
 }

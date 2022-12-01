@@ -1,4 +1,4 @@
-import { Formula, Hierarchy, CrystalSystem, Status, Relation, Discovery, History } from './interfaces';
+import { Formula, Hierarchy, CrystalSystem, Status, Relation, Discovery, History, Link } from './interfaces';
 
 export type paginatedApiResponse = {
   results: any[];
@@ -25,4 +25,5 @@ export type mineralApiResponse = {
   relations: Relation[];
   discovery_countries: Discovery[];
   history: History;
+  links: Link[];
 }

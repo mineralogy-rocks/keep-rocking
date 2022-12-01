@@ -35,7 +35,7 @@ export interface Status {
 
 export interface Relation {
   id: string;
-  counts: number;
+  count: number;
   group: BaseIdName;
 }
 
@@ -54,4 +54,9 @@ export interface History {
   discovery_year_note: string;
   first_usage_date: number;
   first_known_use: string;
+}
+
+export interface Link {
+  name: string;
+  link: string;
 }

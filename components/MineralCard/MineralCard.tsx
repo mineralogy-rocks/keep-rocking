@@ -1,20 +1,27 @@
 import { mineralApiResponse } from '@/lib/types';
-import { CrystalSystem, Discovery } from '@/lib/interfaces';
+import { CrystalSystem, Discovery, History, Relation, Hierarchy } from '@/lib/interfaces';
 
-import cx from 'clsx';
+import clsx from 'clsx';
 import utilsStyles  from '@/styles/utils.module.scss';
 import Chip from '@/components/Chip';
+import { InternalLink, ExternalLink } from '@/components/Link';
 
 import { getStatusColor, getRelevantFormula } from './MineralCard.helpers';
+
+function NoData() {
+  return (
+    <span className="flex text-xs">No data</span>
+  );
+};
 
 function CrystallographySnippet({ data} : { data: CrystalSystem[] }) {
   if (data.length > 0) {
     return (
-      <div className="flex flex-wrap mt-2 space-x-1">
+      <div className="flex flex-wrap space-x-1">
         {data.map((item, id) => {
           return (
             <Chip key={id}>
-              <span>{item.name}</span>
+              <span className="font-normal">{item.name}</span>
               {item.count ? (
                 <>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
@@ -30,33 +37,110 @@ function CrystallographySnippet({ data} : { data: CrystalSystem[] }) {
       </div>
     )
   };
-  return (<span className="flex text-xs">No data</span>);
+  return <NoData />;
 };
 
-function DiscoverySnippet({ data } : { data: Discovery[] }) {
+function DiscoverySnippet({ discoveryCountries, history } : { discoveryCountries: Discovery[], history: History}) {
+  if (discoveryCountries.length > 0 || history) {
+    return (
+      <>
+      {discoveryCountries.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {discoveryCountries.map((item, id) => {
+            return (
+              <Chip key={id}>
+                <span className="font-normal">{item.name}</span>
+                {item.count && (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span className="font-medium">
+                      {item.count}
+                    </span>
+                  </>)
+                }
+              </Chip>
+            )
+          })}
+        </div>
+      )}
+      {(history?.discovery_year || history?.publication_year) && (
+        <div className={clsx("text-xs", discoveryCountries.length > 0 ? 'mt-1': '')}>
+          {history?.discovery_year && (<p>Discovered in <span className="font-medium">{history.discovery_year}</span></p>)}
+          {history?.publication_year && (<p>Published in <span className="font-medium">{history.publication_year}</span></p>)}
+        </div>
+      )}
+      </>
+    )
+  };
+  return <NoData />;
+};
+
+function RelationSnippet({ data } : { data: Relation[] }) {
   if (data.length > 0) {
     return (
-      <div className="flex flex-wrap mt-2 space-x-1">
+      <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
           return (
-            <Chip backgroundColor='bg-green-200/50' key={id}>
-              <span>{item.name}</span>
-              {item.count ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span className="font-medium">
-                  {item.count}
-                </span>
-              </>) : null}
+            <Chip key={id}>
+              <span className="font-normal">{item.group.name}</span>
+              {item.count && (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <span className="font-medium">
+                    {item.count}
+                  </span>
+                </>)
+              }
             </Chip>
           )
         })}
       </div>
     )
   };
-  return null //(<span className="flex text-xs">No data</span>);
+  return <NoData />;
+};
+
+function HierarchySnippet({ data } : { data: Hierarchy[] }) {
+  if (data.length > 0) {
+    return (
+      <div className="flex flex-wrap gap-1">
+        {data.map((item, id) => {
+          return (
+            <InternalLink key={id} href={item.url} text={item.name} />
+          )
+        })}
+      </div>
+    )
+  };
+  return <NoData />;
+};
+
+function LinksSnippet({ data }) {
+  if (data.length > 0) {
+    return (
+      <div className="flex flex-wrap gap-1">
+        {data.map((item, id) => {
+          return (
+            <ExternalLink key={id} href={item.link} text={item.name} />
+          )})
+        }
+      </div>
+    )
+  };
+  return <NoData />;
+};
+
+function SnippetWrapper({ title, children }) {
+  return (
+    <div className="flex flex-col">
+      <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
+      {children}
+    </div>
+  )
 };
 
 export default function MineralCard({ mineral } : { mineral: mineralApiResponse }) {
@@ -64,42 +148,51 @@ export default function MineralCard({ mineral } : { mineral: mineralApiResponse 
   const mineralFormula = getRelevantFormula(mineral.formulas);
 
   return (
-    <div key={mineral.id} className="bg-gray-50 border rounded-sm p-2 max-w-4xl mx-auto h-auto hover:border-gray-400 transition-all duration-200">
+    <div id={mineral.id} key={mineral.id} className="relative bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 max-w-4xl lg:max-w-5xl mx-auto h-auto hover:border-gray-400 transition-all duration-200">
+      {mineral.ns_index && <span className="absolute top-1 right-1 text-emerald-700 font-medium text-xs bg-emerald-100 px-2 py-0.5 rounded-full ml-0">{mineral.ns_index}</span>}
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
           <span className="italic text-base">{mineral.ima_symbol}</span>
           <div className="ml-5 space-y-1">
             <div className="flex">
-              <div className={cx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-              <h1 className="text-2xl font-bold ml-2">{mineral.name}</h1>
+              <div className={clsx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
+              <h1 className="text-2xl font-bold ml-2">
+                <a href={`#${mineral.id}`}>{mineral.name}</a>
+              </h1>
             </div>
-            {mineralFormula && <h2 className="" dangerouslySetInnerHTML={{ __html: mineralFormula}}></h2>}
+            {mineralFormula && <h2 className="" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
 
             {mineral.description && (
-              <div className={cx("h-auto w-auto")}>
-                <p className={cx(utilsStyles.secondaryText, "text-xs")} dangerouslySetInnerHTML={{ __html: mineral.description }}></p>
-              </div>
+              <>
+                <div className={clsx("h-fit w-auto line-clamp-10")}>
+                  <p className={clsx(utilsStyles.secondaryText, "text-xs")} dangerouslySetInnerHTML={{ __html: mineral.description }}></p>
+                </div>
+              </>
             )}
           </div>
           <hr className="my-2 md:hidden" />
         </div>
 
-        <div className="col-span-2 grid grid-rows-2 grid-flow-col gap-1">
-          <div className="">
-            <h3 className="text-sm font-medium text-center">Crystallography</h3>
+        <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
+          <SnippetWrapper title="Crystallography">
             <CrystallographySnippet data={mineral.crystal_systems} />
-          </div>
-          <div className="">
-            <h3 className="text-sm font-medium text-center">Discovery</h3>
-            {(mineral.discovery_countries || mineral.history) && (<>
-                <DiscoverySnippet data={mineral.discovery_countries} />
-                <div className="mt-1 text-xs">
-                  {mineral.history?.discovery_year && (<p>Discovered in <span className="font-medium">{mineral.history.discovery_year}</span></p>)}
-                  {mineral.history?.publication_year && (<p>Published in <span className="font-medium">{mineral.history.publication_year}</span></p>)}
-                </div>
-              </>)
-            }
-          </div>
+          </SnippetWrapper>
+
+          <SnippetWrapper title="Discovery">
+            <DiscoverySnippet discoveryCountries={mineral.discovery_countries} history={mineral.history} />
+          </SnippetWrapper>
+
+          <SnippetWrapper title="Relations">
+            <RelationSnippet data={mineral.relations} />
+          </SnippetWrapper>
+
+          <SnippetWrapper title="Hierarchy">
+            <HierarchySnippet data={mineral.hierarchy} />
+          </SnippetWrapper>
+
+          <SnippetWrapper title="Links">
+            <LinksSnippet data={mineral.links} />
+          </SnippetWrapper>
         </div>
       </div>
 

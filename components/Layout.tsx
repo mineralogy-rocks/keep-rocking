@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   return (
     <>
       <NavBar />
-        <main>{children}</main>
+        <main className="max-w-8xl mx-auto relative pt-10">{children}</main>
       <Footer />
     </>
   );
