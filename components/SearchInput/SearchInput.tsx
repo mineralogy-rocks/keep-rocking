@@ -6,7 +6,7 @@ export default function SearchInput({ placeholder="Search", searchValue, onChang
              type='text'
              placeholder={placeholder}
              value={searchValue}
-             onChange={(e) => onChange(e.target.value)} />
+             onChange={(e) => onChange(e)} />
         <svg className="absolute w-5 h-5 text-gray-600 left-2 top-2.5 dark:text-gray-300"
              xmlns="http://www.w3.org/2000/svg"
              fill="none"

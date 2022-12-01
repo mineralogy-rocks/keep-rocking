@@ -8,7 +8,7 @@ export type paginatedApiResponse = {
 
 
 
-export type mineralApiResponse = {
+export type exploreApiResponse = {
   id: string;
   name: string;
   url: string;
@@ -27,3 +27,8 @@ export type mineralApiResponse = {
   history: History;
   links: Link[];
 }
+
+export type exploreApiRequest = {
+  q?: string;
+  cursor?: string;
+};
