@@ -11,7 +11,7 @@ export function ExternalLink({ href, text } : { href: string, text: string }) {
   )
 };
 
-export default function InternalLink({ href, text } : { href: string, text: string }) {
+export function InternalLink({ href, text } : { href: string, text: string }) {
   return (
     <Link href={href} className="flex group items-center" target="_blank">
       <span className="text-xs text-blue-700 font-medium hover:text-blue-800 hover:underline cursor-pointer">{text}</span>
