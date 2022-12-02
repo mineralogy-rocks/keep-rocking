@@ -87,9 +87,12 @@ export default function Explore() {
 
       <div className="max-w-6xl mx-auto px-4 md:px-10">
         <div className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto mt-10 lg:mt-20">
-          <SearchInput placeholder='Start typing...' searchValue={queryParams.q} onChange={(e) => handleSearch({ q: e.target.value })} onReset={resetSearch} />
+          <SearchInput placeholder='Start typing...'
+                       isLoading={(!error && !data && debouncedSearchValue.q) && true}
+                       searchValue={queryParams.q}
+                       onChange={(value) => handleSearch({ q: value })}
+                       onReset={resetSearch} />
         </div>
-        {(!error && !data && debouncedSearchValue.q) && <div className="text-center">Loading...</div>}
         {!!error && (
           <div className="flex mt-5 text-red-500 justify-center items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
