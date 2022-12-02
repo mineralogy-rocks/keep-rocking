@@ -41,6 +41,17 @@ module.exports = {
             "animation-timing-function": "ease-in-out"
            },
         },
+        loading: {
+          "0%": {
+            opacity: 0.2,
+          },
+          "20%": {
+            opacity: 1,
+          },
+          to: {
+            opacity: 0.2,
+          }
+        }
       }
     },
   },
