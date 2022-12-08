@@ -1,7 +1,7 @@
 import LoadingDots from '@/components/LoadingDots';
 
 
-export default function SearchInput({ placeholder="Search", isLoading, searchValue, onChange, onReset }:
+export default function SearchInput({ placeholder="Search", isLoading=false, searchValue, onChange, onReset }:
   { placeholder?: string, isLoading?: boolean, searchValue: string, onChange: (value: string) => void, onReset: () => void }) {
   return (
     <div className='group relative flex items-center justify-center w-full h-full'>

@@ -1,11 +1,13 @@
 import { exploreApiResponse } from '@/lib/types';
 import { CrystalSystem, Discovery, History, Relation, Hierarchy } from '@/lib/interfaces';
 
+import { useRef, useEffect } from 'react';
+import { useIntersection } from 'react-use';
 import clsx from 'clsx';
+
 import utilsStyles  from '@/styles/utils.module.scss';
 import Chip from '@/components/Chip';
 import { InternalLink, ExternalLink } from '@/components/Link';
-
 import { getStatusColor, getRelevantFormula } from './MineralCard.helpers';
 
 function NoData() {
@@ -143,12 +145,24 @@ function SnippetWrapper({ title, children }) {
   )
 };
 
-export default function MineralCard({ mineral } : { mineral: exploreApiResponse }) {
+export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
 
+  const intersectionRef = useRef(null);
+  const intersection = useIntersection(intersectionRef, {
+    rootMargin: '-56px 0px 0px 0px',
+    threshold: 0.5
+  });
   const mineralFormula = getRelevantFormula(mineral.formulas);
 
+  useEffect(() => {
+    if (intersection?.isIntersecting) isVisible(true);
+    else isVisible(false);
+    return;
+  }, [intersection?.isIntersecting]);
+
+
   return (
-    <div id={mineral.id} key={mineral.id} className="relative bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 max-w-4xl lg:max-w-5xl mx-auto h-auto hover:border-gray-400 hover:shadow transition-all duration-200">
+    <div ref={intersectionRef} id={'mineral-card-' + index} className="relative scroll-mt-16 bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 max-w-4xl lg:max-w-5xl mx-auto h-auto hover:border-gray-400 hover:shadow transition-all duration-200">
       {mineral.ns_index && <span className="absolute top-1 right-1 text-emerald-700 font-medium text-xs bg-emerald-100 px-2 py-0.5 rounded-full ml-0">{mineral.ns_index}</span>}
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
@@ -156,8 +170,8 @@ export default function MineralCard({ mineral } : { mineral: exploreApiResponse 
           <div className="ml-5 space-y-1">
             <div className="flex">
               <div className={clsx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-              <h1 className="text-2xl font-bold ml-2">
-                <a href={`#${mineral.id}`}>{mineral.name}</a>
+              <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2">
+                <span>{mineral.name}</span>
               </h1>
             </div>
             {mineralFormula && <h2 className="" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
