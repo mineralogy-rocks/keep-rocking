@@ -71,8 +71,8 @@ export default function Explore() {
       <Head>
         <title>Explore</title>
       </Head>
-      <div className="max-w-8xl mx-auto px-4 md:px-10">
-        <div className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto mt-10 lg:mt-20">
+      <div className="max-w-full mx-auto px-4 sm:px-10 md:px-5">
+        <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
                        isLoading={(!error && !data && debouncedSearchValue.q) && true}
                        searchValue={queryParams.q}
@@ -80,8 +80,8 @@ export default function Explore() {
                        onReset={resetSearch} />
         </div>
 
-        <div className="grid grid-cols-5 gap-1 mt-10">
-          <div className="col-start-1 col-span-5 xl:col-span-5">
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
+          <div className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
             {!!error && (
               <div className="flex mt-5 text-red-500 justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
@@ -89,6 +89,12 @@ export default function Explore() {
                 </svg>
                 <span>An error occurred. Please, contact the admin.</span>
               </div>)}
+
+            {!!data && data.results.length === 0 && (
+              <div className="flex mt-5 text-gray-500 justify-center items-center">
+                No results found.
+              </div>
+            )}
 
             <div className="space-y-3">
               {data && data.results.map((item, index) => {
@@ -101,29 +107,17 @@ export default function Explore() {
             {data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>
 
-          {/* <aside className="col-start-5 col-span-1 self-start hidden xl:block sticky top-20 right-0 mr-10 bg-white/90 rounded-sm">
+          <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 bg-white/90 rounded-sm">
             {data?.results && (
               <>
-                <TableOfContents items={data.results} activeItems={inView} selectorId="mineral-card" />
+                <TableOfContents items={data.results} activeItems={inView} selectorId="mineralCard" />
                 <div className="mt-1">
                   <SmallPaginator previous={data.previous} next={data.next} pageChange={handlePageChange} />
                 </div>
               </>
             )}
-          </aside> */}
+          </aside>
         </div>
-
-        <aside className="self-start fixed top-20 right-10 mr-10 bg-white/90 rounded-sm">
-          {data?.results && (
-            <>
-              <TableOfContents items={data.results} activeItems={inView} selectorId="mineral-card" />
-              <div className="mt-1">
-                <SmallPaginator previous={data.previous} next={data.next} pageChange={handlePageChange} />
-              </div>
-            </>
-          )}
-        </aside>
-
       </div>
     </>
   );

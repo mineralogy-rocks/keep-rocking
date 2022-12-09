@@ -5,7 +5,7 @@ export default function SearchInput({ placeholder="Search", isLoading=false, sea
   { placeholder?: string, isLoading?: boolean, searchValue: string, onChange: (value: string) => void, onReset: () => void }) {
   return (
     <div className='group relative flex items-center justify-center w-full h-full'>
-      <input className='w-full h-10 px-8 py-2 text-gray-700 bg-white border border-gray-300 rounded focus:outline-none focus:border-gray-500 focus:bg-gray-100/50 group-hover:bg-gray-100/50'
+      <input className='w-full h-10 px-8 py-2 text-gray-700 bg-white border border-gray-300 rounded focus:outline-1 outline-gray-600 md:focus:outline-none md:focus:border focus:border-gray-600 focus:bg-gray-100/50 group-hover:bg-gray-100/50'
              type='text'
              placeholder={placeholder}
              value={searchValue}
