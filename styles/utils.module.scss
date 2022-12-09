@@ -6,6 +6,10 @@
   @apply font-bold text-blue-700 hover:text-blue-800 cursor-pointer;
 }
 
+.linkSmall {
+  @apply font-medium text-blue-700 hover:text-blue-800 cursor-pointer;
+}
+
 .linkExternal {
   @extend .link;
   @apply visited:text-purple-800;

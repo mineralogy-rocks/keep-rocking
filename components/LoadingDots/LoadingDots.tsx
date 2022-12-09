@@ -8,9 +8,9 @@ export default function LoadingDots({ className, isSmall=false }: { className?: 
 
   return (
     <div className={clsx(className, "flex items-center justify-center space-x-0.5")}>
-      <rect className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_infinite]")} />
-      <rect className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_0.2s_infinite]")} />
-      <rect className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_0.4s_infinite]")} />
+      <span className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_infinite]")} />
+      <span className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_0.2s_infinite]")} />
+      <span className={clsx(size, "bg-gray-600 rounded-full animate-[loading_1.4s_ease-in-out_0.4s_infinite]")} />
     </div>
   )
 };
