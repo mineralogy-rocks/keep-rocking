@@ -19,6 +19,7 @@ export default function Explore() {
   const router = useRouter();
   const [queryParams, setQueryParams] = useState({ q: '', cursor: '' });
   const [inView, setInView] = useState<number[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const debouncedSearchValue = useDebounce(queryParams, 500);
   const _queryParams = filter(debouncedSearchValue, (key, value) => value !== '' && value !== null);
@@ -38,6 +39,8 @@ export default function Explore() {
       value = filter(value, (key, val) => val !== '' && val !== undefined);
 
       if (Object.keys(value).length > 0) {
+        if (isSearching) controller.abort();
+        setIsSearching(true);
         if (value.q) {
           setQueryParams({ ...queryParams , ...value, cursor: '' });
           router.replace({ query: { ...value } });
@@ -49,6 +52,7 @@ export default function Explore() {
   };
 
   const resetSearch = () => {
+      setIsSearching(false);
       setQueryParams({ q: '', cursor: '' });
       resetRouter();
   };
@@ -64,7 +68,16 @@ export default function Explore() {
     else setInView((inView) => inView.filter(item_ => item_ !== item));
   };
 
-  const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher);
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, (url) => fetcher(url, { signal }));
+
+
+  useEffect(() => {
+    if (data) setIsSearching(false);
+    return;
+  }, [data])
 
   return (
     <>
@@ -74,7 +87,8 @@ export default function Explore() {
       <div className="max-w-full mx-auto px-4 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
-                       isLoading={(!error && !data && debouncedSearchValue.q) && true}
+                       isLoading={isSearching}
+                      //  isLoading={(!error && !data && debouncedSearchValue.q) && true}
                        searchValue={queryParams.q}
                        onChange={(value) => handleSearch({ q: value })}
                        onReset={resetSearch} />
