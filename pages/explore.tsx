@@ -22,7 +22,7 @@ export default function Explore() {
   const [inView, setInView] = useState<number[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  const debouncedSearchValue = useDebounce(queryParams, 500);
+  const debouncedSearchValue = useDebounce(queryParams, 600);
   const _queryParams = filter(debouncedSearchValue, (key, value) => value !== '' && value !== null);
 
   useEffect(() => {
@@ -71,9 +71,9 @@ export default function Explore() {
   const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher, { use: [ abortableMiddleware ] });
 
   useEffect(() => {
-    if (data) setIsSearching(false);
+    if (data || error) setIsSearching(false);
     return;
-  }, [data])
+  }, [data, error])
 
   return (
     <>
@@ -83,7 +83,7 @@ export default function Explore() {
       <div className="max-w-full mx-auto px-4 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
-                       isLoading={(!error && !data && debouncedSearchValue.q && true) || isSearching}
+                       isLoading={isSearching}
                        searchValue={queryParams.q}
                        onChange={(value) => handleSearch({ q: value })}
                        onReset={resetSearch} />

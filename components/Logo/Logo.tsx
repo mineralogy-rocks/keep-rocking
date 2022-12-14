@@ -1,10 +1,10 @@
-import cx from 'clsx';
+import clsx from 'clsx';
 
-export default function Logo({isHovered}: {isHovered?: boolean}) {
+export function Logo({isHovered}: {isHovered?: boolean}) {
   return (
     <>
       <svg width="32" height="35" viewBox="0 0 32 35" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer">
-        <g className={cx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-2 -translate-y-1.5 duration-500': isHovered })} >
+        <g className={clsx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-2 -translate-y-1.5 duration-500': isHovered })} >
           <g filter="url(#filter0_f_1318_1487)">
             <circle cx="21" cy="17" r="4" fill={isHovered ? '#F5CA5B' : '#EDD69C'}/>
           </g>
@@ -20,12 +20,12 @@ export default function Logo({isHovered}: {isHovered?: boolean}) {
                 stroke="black"
                 strokeWidth={0.5}
                 fill="white"
-                className={cx('transition-transform duration-500', { 'transition-transform ease-in-out translate-x-1.5 duration-500': isHovered })} />
+                className={clsx('transition-transform duration-500', { 'transition-transform ease-in-out translate-x-1.5 duration-500': isHovered })} />
           <path d="M14.75 7L21 18H8.5L14.75 7Z"
                 stroke="black"
                 strokeWidth={0.5}
                 fill="white"
-                className={cx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-1.5 duration-500': isHovered })} />
+                className={clsx('transition-transform duration-500', { 'transition-transform ease-in-out -translate-x-1.5 duration-500': isHovered })} />
         </g>
         <defs>
           <filter id="filter0_f_1318_1487" x="11" y="11" width="20" height="20" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
@@ -61,3 +61,14 @@ export default function Logo({isHovered}: {isHovered?: boolean}) {
     </>
   );
 }
+
+export function LogoCube({isHovered}: {isHovered?: boolean}) {
+  return (
+    <>
+      <div className="flex items-center justify-center rounded bg-red-200/20 drop-shadow-md border w-6 h-6 font-semibold text-gray-700">
+        M
+      </div>
+    </>
+  )
+};
+
