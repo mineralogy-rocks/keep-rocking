@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
@@ -8,6 +8,7 @@ import filter from 'just-filter-object';
 import { exploreApiRequest } from '@/lib/types';
 import fetcher from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
+import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import SearchInput from '@/components/SearchInput';
 import MineralCard from '@/components/MineralCard';
@@ -39,7 +40,6 @@ export default function Explore() {
       value = filter(value, (key, val) => val !== '' && val !== undefined);
 
       if (Object.keys(value).length > 0) {
-        if (isSearching) controller.abort();
         setIsSearching(true);
         if (value.q) {
           setQueryParams({ ...queryParams , ...value, cursor: '' });
@@ -68,11 +68,7 @@ export default function Explore() {
     else setInView((inView) => inView.filter(item_ => item_ !== item));
   };
 
-  const controller = new AbortController();
-  const signal = controller.signal;
-
-  const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, (url) => fetcher(url, { signal }));
-
+  const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher, { use: [ abortableMiddleware ] });
 
   useEffect(() => {
     if (data) setIsSearching(false);
@@ -87,8 +83,7 @@ export default function Explore() {
       <div className="max-w-full mx-auto px-4 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
-                       isLoading={isSearching}
-                      //  isLoading={(!error && !data && debouncedSearchValue.q) && true}
+                       isLoading={(!error && !data && debouncedSearchValue.q && true) || isSearching}
                        searchValue={queryParams.q}
                        onChange={(value) => handleSearch({ q: value })}
                        onReset={resetSearch} />
@@ -96,7 +91,7 @@ export default function Explore() {
 
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
           <div className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
-            {!!error && (
+            {(!!error && !isSearching) && (
               <div className="flex mt-5 text-red-500 justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
                   <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
