@@ -65,7 +65,8 @@ export function Logo({isHovered}: {isHovered?: boolean}) {
 export function LogoCube({isHovered}: {isHovered?: boolean}) {
   return (
     <>
-      <div className="flex items-center justify-center rounded bg-red-200/20 drop-shadow-md border w-6 h-6 font-semibold text-gray-700">
+      <div className="flex items-center justify-center rounded bg-rose-200/20 shadow-sm shadow-black/30 border border-rose-200/40 w-6 h-6 font-bold text-gray-700
+                      bg-gradient-to-r from-sky-500 via-violet-600 to-orange-700 bg-clip-text text-transparent">
         M
       </div>
     </>
