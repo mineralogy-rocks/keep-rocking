@@ -7,3 +7,14 @@
   @apply transition delay-150 duration-500 ease-in-out;
   filter: drop-shadow(0px -7px 5px rgb(255, 255, 255));
 }
+
+.logo {
+  background-image: linear-gradient(
+    75deg,
+    hsl(240deg 100% 29%) 34%,
+    hsl(284deg 97% 35%) 79%,
+    hsl(327deg 92% 42%) 92%,
+    hsl(11deg 89% 48%) 98%,
+    hsl(55deg 85% 55%) 100%
+  );
+}
