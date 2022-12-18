@@ -20,7 +20,20 @@ module.exports = {
       fontSize: {
         'xxs': '0.65rem',
       },
+      animation: {
+        gradientLogo: 'gradientLogo 10s ease infinite',
+      },
       keyframes: {
+        gradientLogo: {
+          "0%, 100%": {
+            backgroundSize:"200% 400%",
+            backgroundPosition:"60% 0%",
+          },
+          "50%": {
+            backgroundSize:"200% 400%",
+            backgroundPosition:"100% 0%",
+          },
+        },
         wiggleLeft: {
           "0%,100%": {
             transform: "translateX(0%)",

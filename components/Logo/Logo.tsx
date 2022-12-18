@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import logoStyles from '@/styles/logo.module.scss';
+
 export function Logo({isHovered}: {isHovered?: boolean}) {
   return (
     <>
@@ -62,10 +64,13 @@ export function Logo({isHovered}: {isHovered?: boolean}) {
   );
 }
 
-export function LogoCube({isHovered}: {isHovered?: boolean}) {
+export function LogoCube({ animate = true, isHovered = false}: { animate?: boolean, isHovered?: boolean }) {
   return (
     <>
-      <div className="flex items-center justify-center rounded bg-red-200/20 drop-shadow-md border w-6 h-6 font-semibold text-gray-700">
+      <div className={clsx(animate && "animate-gradientLogo",
+                           isHovered ? "shadow shadow-black/60" : "shadow-sm shadow-black/40",
+                           logoStyles.logo,
+                           "flex items-center justify-center rounded transition ease-in-out duration-500  w-6 h-6 font-extrabold text-gray-100 text-lg")}>
         M
       </div>
     </>
