@@ -56,9 +56,9 @@ export default function Home() {
             <div className="flex self-center items-center justify-center bg-teal-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
                 <BsSearch size="20" />
             </div>
-            <h3 id="explore" className="font-bold text-2xl md:text-4xl">Explore</h3>
+            <h2 id="explore" className="font-bold text-2xl md:text-4xl">Explore</h2>
         </div>
-        <h2 className="text-center font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h2>
+        <h3 className="text-center font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
         <p className="text-base md:text-lg leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
             Find the right data subset and explore the relations between minerals.
@@ -108,7 +108,7 @@ export default function Home() {
 
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
           <div className="md:col-span-6 flex flex-col">
-            <h4 className="font-bold text-xl md:text-3xl">Developer?</h4>
+            <h3 className="font-bold text-xl md:text-3xl">Developer?</h3>
             <p className="text-base md:text-lg leading-normal mt-5">
               The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a> through your favourite <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">http client</code>. Check out current state of <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks/docs" target="_blank" rel="noopener noreferrer">API documentation</a>.
             </p>
@@ -146,9 +146,9 @@ export default function Home() {
           <div className="flex self-center justify-center bg-pink-200 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
             <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
           </div>
-          <h3 className="font-bold text-2xl md:text-4xl">Extract</h3>
+          <h2 className="font-bold text-2xl md:text-4xl">Extract</h2>
         </div>
-        <h2 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Download the data</h2>
+        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Download the data</h3>
         <p className="text-base md:text-lg leading-normal text-left mt-5">
           The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
@@ -165,10 +165,10 @@ export default function Home() {
                     </svg>
                     <span className="flex-auto">
                       <span className="text-indigo-600"><span className="text-violet-800">let</span> queryParams</span> = &#123;{'\n'}
-                      <span className="text-pink-600">   color</span>: &quot;blue&quot;,{'\n'}
-                      <span className="text-pink-600">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
-                      <span className="text-pink-600">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
-                      <span className="text-pink-600">   discovery_year_max</span>: 1998,{'\n'}
+                      <span className="text-rose-700">   color</span>: &quot;blue&quot;,{'\n'}
+                      <span className="text-rose-700">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
+                      <span className="text-rose-700">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
+                      <span className="text-rose-700">   discovery_year_max</span>: 1998,{'\n'}
                       <span>   ...</span>{'\n'}
                       <span>&#125;</span>
                     </span>
@@ -208,9 +208,9 @@ export default function Home() {
           <div className="flex self-center justify-center bg-yellow-300 rounded-full h-10 w-10 md:h-14 md:w-14 mr-3">
             <span className="mdi text-3xl md:text-5xl mdi-cloud-download"></span>
           </div>
-          <h3 className="font-bold text-2xl md:text-4xl">Research</h3>
+          <h2 className="font-bold text-2xl md:text-4xl">Research</h2>
         </div>
-        <h2 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Do research with us</h2>
+        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-center mt-4">Do research with us</h3>
         <p className="text-base md:text-lg leading-normal mt-7">
           We will gladly assist you in finding the right data in a right format.
           We believe in open science and open source - things that make our lives better.
@@ -242,7 +242,7 @@ export default function Home() {
 
     <section className="px-6 sm:px-8 mt-40 mx-auto">
       <div className="flex flex-col justify-center items-center">
-        <h3 className="font-bold text-2xl md:text-4xl">Supported by</h3>
+        <h2 className="font-bold text-2xl md:text-4xl">Supported by</h2>
         <div className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-10 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly">
           <a href="https://www.sav.sk/" target="_blank" rel="noreferrer">
             <Image src={SAVLogo} alt="SAV" className="w-24 h-auto" />

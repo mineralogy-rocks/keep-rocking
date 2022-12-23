@@ -26,13 +26,13 @@ module.exports = {
       keyframes: {
         gradientLogo: {
           "0%, 100%": {
-            backgroundSize:"200% 400%",
-            backgroundPosition:"60% 0%",
+            backgroundSize:"150% 100%",
+            backgroundPosition:"100% 50%",
           },
           "50%": {
-            backgroundSize:"200% 400%",
-            backgroundPosition:"100% 0%",
-          },
+            backgroundSize:"300% 100%",
+            backgroundPosition:"30% 50%",
+          }
         },
         wiggleLeft: {
           "0%,100%": {
@@ -65,7 +65,20 @@ module.exports = {
             opacity: 0.2,
           }
         }
-      }
+      },
+      boxShadow: ({ theme }) => ({
+        "surface-low": `
+          0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
+          0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
+          0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);
+        `,
+        "surface-medium": `
+          0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.19),
+          0.9px 1.8px 2.5px -0.5px hsl(210deg 12% 67% / 0.24),
+          2px 4px 5.6px -1.1px hsl(210deg 12% 67% / 0.29),
+          4.6px 9.1px 12.8px -1.6px hsl(210deg 12% 67% / 0.35);
+        `,
+      })
     },
   },
   plugins: [

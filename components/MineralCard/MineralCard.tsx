@@ -162,7 +162,9 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
 
 
   return (
-    <div ref={intersectionRef} id={'mineralCard-' + index} className="relative scroll-mt-16 bg-white shadow-sm shadow-blue-50 border rounded-sm p-2 mx-auto h-auto hover:border-gray-400 hover:shadow transition-all duration-200">
+    <div ref={intersectionRef}
+         id={'mineralCard-' + index}
+         className="relative scroll-mt-16 bg-white shadow-surface-low rounded p-2 mx-auto h-auto transition-all duration-200">
       {mineral.ns_index && <span className="absolute top-1 right-1 text-emerald-700 font-medium text-xs bg-emerald-100 px-2 py-0.5 rounded-full ml-0">{mineral.ns_index}</span>}
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
