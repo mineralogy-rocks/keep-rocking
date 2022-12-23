@@ -116,7 +116,7 @@ export default function Explore() {
             {data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>
 
-          <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 bg-white/90 rounded-sm">
+          <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 rounded-sm">
             {data?.results && (
               <>
                 <TableOfContents items={data.results} activeItems={inView} selectorId="mineralCard" />

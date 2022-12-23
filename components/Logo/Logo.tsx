@@ -70,10 +70,9 @@ export function LogoCube({ animate = true, isHovered = false}: { animate?: boole
       <div className={clsx(animate && "animate-gradientLogo",
                            isHovered ? "shadow shadow-black/60" : "shadow-sm shadow-black/40",
                            logoStyles.logo,
-                           "flex items-center justify-center rounded transition ease-in-out duration-500  w-6 h-6 font-extrabold text-gray-100 text-lg")}>
-        M
+                           "relative flex items-center justify-center rounded transition-shadow ease duration-500 w-6 h-6 font-extrabold text-gray-100 text-lg")}>
+        <span>M</span>
       </div>
     </>
   )
 };
-
