@@ -16,11 +16,12 @@ import MSCALogo from 'public/assets/MSCA.png';
 
 
 export default function Home() {
-  return <>
+  return (
+  <>
     <Head>
       <title>mineralogy.rocks</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
+
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center mt-24 text-center justify-center">
@@ -266,6 +267,5 @@ export default function Home() {
         </div>
       </div>
     </section>
-
-  </>;
-}
+  </>
+  )};

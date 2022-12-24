@@ -7,7 +7,6 @@ export default function Document () {
     <Html lang="en">
       <Head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <meta name="author" content="mineralogy.rocks" />
         <meta name="description" content="A service provides access to mineralogical and related data." />
