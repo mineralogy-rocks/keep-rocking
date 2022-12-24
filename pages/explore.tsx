@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
@@ -78,8 +78,9 @@ export default function Explore() {
   return (
     <>
       <Head>
-        <title>Explore</title>
+        <title>mineralogy.rocks - explore</title>
       </Head>
+
       <div className="max-w-full mx-auto px-4 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'

@@ -48,7 +48,7 @@ export default function Navbar() {
             </li>
           <li>
             <NavItem href="/contact" text="Contact" />
-            </li>
+          </li>
         </ul>
       </nav>
     </header>
