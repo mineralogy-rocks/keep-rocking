@@ -21,18 +21,18 @@ module.exports = {
         'xxs': '0.65rem',
       },
       animation: {
-        gradientLogo: 'gradientLogo 10s ease infinite',
+        gradientLogo: 'gradientLogo 2s ease infinite',
       },
       keyframes: {
         gradientLogo: {
-          "0%, 100%": {
-            backgroundSize:"150% 100%",
-            backgroundPosition:"100% 50%",
+          "0%,100%": {
+            backgroundPosition: "0% 10%",
+            backgroundSize: "200% 200%",
           },
           "50%": {
-            backgroundSize:"300% 100%",
-            backgroundPosition:"30% 50%",
-          }
+            backgroundPosition: "50% 10%",
+            backgroundSize: "200% 200%",
+          },
         },
         wiggleLeft: {
           "0%,100%": {

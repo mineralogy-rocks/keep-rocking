@@ -23,6 +23,9 @@ export default function Home() {
           <p className="text-sm md:text-base leading-relaxed indent-4 text-left mt-2">
             If you have any suggestions, questions or a collaboration request, you are welcome to send us an email at{' '}
             <a className={utilsStyles.linkExternal} href="mailto:admin@mineralogy.rocks">admin@mineralogy.rocks</a>.
+            <br />
+            Additionally, feel free to drop your ideas and suggestions in our{' '}
+            <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
           </p>
         </div>
       </div>
