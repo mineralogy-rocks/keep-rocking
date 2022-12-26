@@ -21,16 +21,16 @@ module.exports = {
         'xxs': '0.65rem',
       },
       animation: {
-        gradientLogo: 'gradientLogo 2s ease infinite',
+        gradientLogo: 'gradientLogo 10s ease infinite',
       },
       keyframes: {
         gradientLogo: {
           "0%,100%": {
-            backgroundPosition: "0% 10%",
+            backgroundPosition: "0% 30%",
             backgroundSize: "200% 200%",
           },
           "50%": {
-            backgroundPosition: "50% 10%",
+            backgroundPosition: "70% 30%",
             backgroundSize: "200% 200%",
           },
         },

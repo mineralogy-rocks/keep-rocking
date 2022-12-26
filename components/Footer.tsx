@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import cx from 'clsx';
 
 import { LogoCube } from '@/components/Logo';
@@ -7,6 +9,10 @@ import utilsStyles from '../styles/utils.module.scss';
 const ExternalLink = ({ href, children }) => (
   <a className={utilsStyles.subtleLink} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 )
+
+const InternalLink = ({ href, children }) => (
+  <Link href={href} className={utilsStyles.subtleLink}>{children}</Link>
+);
 
 export default function Footer() {
 
@@ -62,10 +68,10 @@ export default function Footer() {
               <h2 className="text-gray-700 font-semibold">Legal</h2>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <ExternalLink href="https://uniba.sk/en/">Privacy Policy</ExternalLink>
+                  <InternalLink href='/privacy-policy'>Privacy Policy</InternalLink>
                 </li>
                 <li>
-                  <ExternalLink href="https://marie-sklodowska-curie-actions.ec.europa.eu/">Terms of Service</ExternalLink>
+                  <InternalLink href="/terms-of-service">Terms of Service</InternalLink>
                 </li>
                 <li>
                   <ExternalLink href="https://uniba.sk/en/">Infrastructure</ExternalLink>
