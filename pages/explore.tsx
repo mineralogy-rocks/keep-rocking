@@ -22,7 +22,7 @@ export default function Explore() {
   const [inView, setInView] = useState<number[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  const debouncedSearchValue = useDebounce(queryParams, 600);
+  const debouncedSearchValue = useDebounce(queryParams, 800);
   const _queryParams = filter(debouncedSearchValue, (key, value) => value !== '' && value !== null);
 
   useEffect(() => {

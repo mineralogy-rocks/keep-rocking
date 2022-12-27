@@ -1,6 +1,9 @@
 import Head from 'next/head';
 
+import clsx from 'clsx';
+
 import utilsStyles from '@/styles/utils.module.scss';
+import typographyStyles from '@/styles/typography.module.scss';
 
 
 export default function Home() {
@@ -20,10 +23,11 @@ export default function Home() {
 
       <div className="mx-auto mt-14 md:mt-16 grid grid-cols-3">
         <div className="col-span-3 lg:col-span-2">
-          <p className="text-sm md:text-base leading-relaxed indent-4 text-left mt-2">
+          <p className={typographyStyles.Paragraph}>
             If you have any suggestions, questions or a collaboration request, you are welcome to send us an email at{' '}
             <a className={utilsStyles.linkExternal} href="mailto:admin@mineralogy.rocks">admin@mineralogy.rocks</a>.
-            <br />
+          </p>
+          <p className={clsx(typographyStyles.Paragraph, "mt-5")}>
             Additionally, feel free to drop your ideas and suggestions in our{' '}
             <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
           </p>

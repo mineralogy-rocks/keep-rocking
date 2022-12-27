@@ -73,9 +73,6 @@ export default function Footer() {
                 <li>
                   <InternalLink href="/terms-of-service">Terms of Service</InternalLink>
                 </li>
-                <li>
-                  <ExternalLink href="https://uniba.sk/en/">Infrastructure</ExternalLink>
-                </li>
               </ul>
             </div>
           </div>
