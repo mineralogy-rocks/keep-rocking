@@ -20,26 +20,29 @@ export interface Hierarchy extends BaseIdName {
 }
 
 export interface CrystalSystem extends BaseIdName {
-  counts?: number;
+  count?: number;
 }
 
 export interface Status {
-  id: number;
-  group: BaseIdName,
+  status_id: number;
+  group: {
+    id: number;
+    name: string;
+  };
   description_short: string;
   description_long: string;
 }
 
 export interface Relation {
   id: string;
-  counts: number;
+  count: number;
   group: BaseIdName;
 }
 
-export interface DiscoveryCountry extends BaseIdName {
+export interface Discovery extends BaseIdName {
   region: string;
   iso_code: string;
-  counts?: number;
+  count?: number;
 }
 
 export interface History {
@@ -51,4 +54,9 @@ export interface History {
   discovery_year_note: string;
   first_usage_date: number;
   first_known_use: string;
+}
+
+export interface Link {
+  name: string;
+  link: string;
 }

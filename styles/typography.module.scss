@@ -1,0 +1,23 @@
+.Section {
+  @apply mt-20 mx-auto max-w-6xl px-6 sm:px-8;
+}
+
+.Paragraph {
+  @apply text-base md:text-lg leading-relaxed text-left;
+}
+
+.List {
+  @apply list-[upper-latin] list-outside space-y-2 mt-2 pl-5 text-base sm:text-lg;
+}
+
+.ListItem {
+  @apply pl-2 text-base md:text-lg;
+}
+
+.Header3 {
+  @apply font-bold text-indigo-700 text-lg sm:text-xl mt-5 mb-3;
+}
+
+.Header4 {
+  @apply font-bold text-black text-base sm:text-lg mt-2 mb-1;
+}

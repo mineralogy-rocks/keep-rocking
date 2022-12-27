@@ -7,3 +7,34 @@
   @apply transition delay-150 duration-500 ease-in-out;
   filter: drop-shadow(0px -7px 5px rgb(255, 255, 255));
 }
+
+.logo {
+  background-image: linear-gradient(
+    55deg,
+    hsl(240deg 100% 20%) 0%,
+    hsl(283deg 100% 21%) 17%,
+    hsl(308deg 100% 24%) 39%,
+    hsl(322deg 100% 31%) 53%,
+    hsl(331deg 100% 38%) 63%,
+    hsl(338deg 100% 43%) 70%,
+    hsl(355deg 89% 58%) 77%,
+    hsl(12deg 100% 60%) 82%,
+    hsl(26deg 100% 56%) 87%,
+    hsl(39deg 100% 50%) 92%,
+    hsl(47deg 100% 50%) 96%,
+    hsl(55deg 100% 50%) 100%
+  );
+  &::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 0.5px;
+      left: 2px;
+      right: 2px;
+      height: 10%;
+      background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+      border-radius: 33px 33px 100px 100px/14px 14px 30px 30px;
+      pointer-events: none;
+  }
+}
+
