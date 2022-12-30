@@ -6,7 +6,7 @@ import useSWRImmutable from 'swr/immutable';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
-import fetcher from '@/helpers/fetcher.helpers';
+import { fetcher, mindatFetcher } from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
@@ -69,6 +69,14 @@ export default function Explore() {
   };
 
   const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher, { use: [ abortableMiddleware ] });
+
+  const { data: mindatData, error: mindatError } = useSWRImmutable(
+    `/mr-items/?id__in=${data?.results.filter(item => item.mindat_id !== null).map(item => item.mindat_id).join(",")}`,
+    mindatFetcher,
+    { use: [ abortableMiddleware ] }
+  );
+
+  console.log(mindatData);
 
   useEffect(() => {
     if (data || error) setIsSearching(false);
