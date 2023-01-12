@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
@@ -70,10 +71,10 @@ export default function Explore() {
 
   const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher, { use: [ abortableMiddleware ] });
 
-  const { data: mindatData, error: mindatError } = useSWRImmutable(
+  const { data: mindatData, error: mindatError } = useSWR(
     `/mr-items/?id__in=${data?.results.filter(item => item.mindat_id !== null).map(item => item.mindat_id).join(",")}`,
     mindatFetcher,
-    { use: [ abortableMiddleware ] }
+    { use: [ abortableMiddleware ], dedupingInterval: 1000 }
   );
 
   console.log(mindatData);
@@ -98,6 +99,11 @@ export default function Explore() {
                        onReset={resetSearch} />
         </div>
 
+        <div className="mt-2 flex justify-center items-center">
+          {(data && !mindatData && !!mindatError) && <div>Fetching from mindat</div>}
+          {(!!mindatError && !mindatData && data) && <div>Failed to fetch from mindat</div>}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
           <div className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
             {(!!error && !isSearching) && (
@@ -116,8 +122,14 @@ export default function Explore() {
 
             <div className="space-y-3">
               {data && data.results.map((item, index) => {
+                let mindatContext = mindatData?.results.filter((item, index_) => index_ === index);
+
                 return (
-                  <MineralCard key={item.id} index={index} mineral={item} isVisible={(e) => handleVisibleItems(e, index)} />
+                  <MineralCard key={item.id}
+                               index={index}
+                               mineral={item}
+                               mindatContext={mindatContext ? mindatContext[0] : null}
+                               isVisible={(e) => handleVisibleItems(e, index)} />
                 );
               })}
             </div>

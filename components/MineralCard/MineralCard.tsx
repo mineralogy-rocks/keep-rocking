@@ -145,7 +145,7 @@ function SnippetWrapper({ title, children }) {
   )
 };
 
-export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
+export default function MineralCard({ index, mineral, mindatContext = [], isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
 
   const intersectionRef = useRef(null);
   const intersection = useIntersection(intersectionRef, {
@@ -220,6 +220,8 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <path fillRule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" clipRule="evenodd" />
           </svg>
           <span className="ml-1 text-xxs">{mineral.seen}</span>
+          <span>{mindatContext?.strunz_index}</span>
+          <span>{mindatContext?.dana_index}</span>
         </div>
       </div>
     </div>
