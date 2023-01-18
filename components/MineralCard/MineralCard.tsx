@@ -136,6 +136,42 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
+function ClassificationSnippet({ data }) {
+  if (data?.strunz_index || data?.dana_index || data?.ima_status) {
+    const { strunz_index, dana_index, ima_status } = data;
+    return (
+      <div className="flex flex-col gap-1">
+        {ima_status && (
+          <div className="flex flex-nowrap text-xs">
+            <h4 className="font-medium">IMA Status</h4>
+            {ima_status.map((item, id) => {
+                return (
+                  <Chip key={id} backgroundColor="bg-green-300">
+                    <span className="font-normal">{item}</span>
+                  </Chip>
+                )
+              })
+            }
+          </div>
+        )}
+        {strunz_index && (
+          <div className="flex text-xs">
+            <h4 className="font-medium">Nickel-Strunz (10th)</h4>
+            <span className="ml-1">{strunz_index}</span>
+          </div>
+        )}
+        {dana_index && (
+          <div className="flex text-xs">
+            <h4 className="font-medium">Dana</h4>
+            <span className="ml-1">{dana_index}</span>
+          </div>
+        )}
+      </div>
+    )
+  };
+  return <NoData />;
+};
+
 function SnippetWrapper({ title, children }) {
   return (
     <div className="flex flex-col">
@@ -190,6 +226,9 @@ export default function MineralCard({ index, mineral, mindatContext = [], isVisi
         </div>
 
         <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
+          <SnippetWrapper title="Classification">
+            <ClassificationSnippet data={mindatContext} />
+          </SnippetWrapper>
           <SnippetWrapper title="Crystallography">
             <CrystallographySnippet data={mineral.crystal_systems} />
           </SnippetWrapper>
@@ -220,8 +259,6 @@ export default function MineralCard({ index, mineral, mindatContext = [], isVisi
             <path fillRule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" clipRule="evenodd" />
           </svg>
           <span className="ml-1 text-xxs">{mineral.seen}</span>
-          <span>{mindatContext?.strunz_index}</span>
-          <span>{mindatContext?.dana_index}</span>
         </div>
       </div>
     </div>

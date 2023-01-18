@@ -1,4 +1,4 @@
-import LoadingDots from '@/components/LoadingDots';
+import Spinner from '@/components/Spinner';
 
 
 export default function SearchInput({ placeholder="Search", isLoading=false, searchValue, onChange, onReset }:
@@ -20,7 +20,7 @@ export default function SearchInput({ placeholder="Search", isLoading=false, sea
                 strokeWidth={2}
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-      {isLoading && <LoadingDots className="absolute right-10 bottom-3" />}
+      {isLoading && <Spinner className="absolute right-10 bottom-2.5" />}
       {searchValue && (
         <div className="absolute right-3 cursor-pointer" onClick={onReset}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

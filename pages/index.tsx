@@ -62,7 +62,7 @@ export default function Home() {
         <h3 className="text-center font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
         <p className="text-base md:text-lg leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
-            Find the right data subset and explore the relations between minerals.
+            Find the proper data subset and explore the relations between minerals.
         </p>
 
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
@@ -114,6 +114,9 @@ export default function Home() {
               The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
               through your favourite <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">http client</code>.
               Check out current state of <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks/schema/redoc" target="_blank" rel="noopener noreferrer">API documentation</a>.
+            </p>
+            <p className="text-base md:text-lg leading-normal mt-2">
+              Additionally, we are utilising <a className={utilsStyles.linkExternal} href="https://api.mindat.org" target="_blank" rel="noopener noreferrer">Mindat API</a>, which is a fascinating and well-documented resource!
             </p>
           </div>
 

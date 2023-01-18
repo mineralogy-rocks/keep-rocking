@@ -3,59 +3,83 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 import useSWRImmutable from 'swr/immutable';
-import useSWR from 'swr';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
-import { fetcher, mindatFetcher } from '@/helpers/fetcher.helpers';
+import { fetcher } from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
+import { useMindatApi } from '@/hooks/use-mindat-api';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import SearchInput from '@/components/SearchInput';
+import LoadingDots from '@/components/LoadingDots';
+import Checkbox from '@/components/Checkbox';
 import MineralCard from '@/components/MineralCard';
 import { Paginator, SmallPaginator } from '@/components/Paginator';
 import TableOfContents from '@/components/TableOfContents';
 
+const initialSearchQueryParams = {
+  q: '',
+  cursor: '',
+};
+
+const initialQueryParams = {
+  ...initialSearchQueryParams,
+  ima_only: false
+};
 
 export default function Explore() {
   const router = useRouter();
-  const [queryParams, setQueryParams] = useState({ q: '', cursor: '' });
+  const [queryParams, setQueryParams] = useState(initialQueryParams);
   const [inView, setInView] = useState<number[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  const debouncedSearchValue = useDebounce(queryParams, 800);
-  const _queryParams = filter(debouncedSearchValue, (key, value) => value !== '' && value !== null);
+  const debouncedQueryParams = useDebounce(queryParams, 800);
+  const cleanQueryParams = filter(debouncedQueryParams, (key, value) => value !== '' && value !== null);
 
   useEffect(() => {
     if(!router.isReady) return;
-    if (router.query.q) {
-      setQueryParams({ q: router.query.q.toString(), cursor: router.query.cursor?.toString() ?? '' });
+    if (router.query.q || router.query.ima_only) {
+      setQueryParams({
+        q: router.query.q?.toString() ?? '',
+        cursor: router.query.cursor?.toString() ?? '',
+        ima_only: router.query.ima_only?.toString() === 'true' ?? false
+      });
     }
   }, [router.isReady]);
 
-  const resetRouter = () => {
-    router.replace({ query: {  } });
-  };
-
   const handleSearch = (value: exploreApiRequest) => {
+      let persistantQueryParams = filter(queryParams, (key, val) => !['q', 'cursor',].includes(key));
       value = filter(value, (key, val) => val !== '' && val !== undefined);
-
       if (Object.keys(value).length > 0) {
+        if ('ima_only' in value) {
+          if (queryParams.q) {
+            setIsSearching(true);
+            setQueryParams({ ...queryParams , ...value, cursor: '' });
+            router.replace({ query: { ...value, q: queryParams.q } });
+          } else {
+            setQueryParams({ ...queryParams , ...value });
+            router.replace({ query: { ...value } });
+          }
+          return;
+        };
+
         setIsSearching(true);
         if (value.q) {
           setQueryParams({ ...queryParams , ...value, cursor: '' });
-          router.replace({ query: { ...value } });
+          router.replace({ query: { ...persistantQueryParams, ...value } });
         } else {
           setQueryParams({ ...queryParams , ...value });
           router.replace({ query: { ...router.query, ...value } });
-        }
+        };
       } else resetSearch();
   };
 
   const resetSearch = () => {
       setIsSearching(false);
-      setQueryParams({ q: '', cursor: '' });
-      resetRouter();
+      setQueryParams({...queryParams, ...initialSearchQueryParams});
+      router.replace({ query: {...filter(queryParams, (key, val) => !['q', 'cursor',].includes(key))} });
+      mutate(null, false);
   };
 
   const handlePageChange = (url: string) => {
@@ -69,18 +93,20 @@ export default function Explore() {
     else setInView((inView) => inView.filter(item_ => item_ !== item));
   };
 
-  const { data, error } = useSWRImmutable(debouncedSearchValue.q ? `/mineral/?${new URLSearchParams(_queryParams)}` : null, fetcher, { use: [ abortableMiddleware ] });
+  const { data, error, mutate } = useSWRImmutable(
+    debouncedQueryParams.q ? `/mineral/?${new URLSearchParams(cleanQueryParams)}` : null,
+    fetcher,
+    { use: [ abortableMiddleware ], keepPreviousData: true }
+  );
 
-  const { data: mindatData, error: mindatError } = useSWR(
-    `/mr-items/?id__in=${data?.results.filter(item => item.mindat_id !== null).map(item => item.mindat_id).join(",")}`,
-    mindatFetcher,
-    { use: [ abortableMiddleware ], dedupingInterval: 1000 }
+  const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
+    data?.results.filter(item => item.mindat_id !== null).map(item => item.mindat_id) ?? []
   );
 
   console.log(mindatData);
 
   useEffect(() => {
-    if (data || error) setIsSearching(false);
+    setIsSearching(false);
     return;
   }, [data, error])
 
@@ -99,9 +125,29 @@ export default function Explore() {
                        onReset={resetSearch} />
         </div>
 
-        <div className="mt-2 flex justify-center items-center">
-          {(data && !mindatData && !!mindatError) && <div>Fetching from mindat</div>}
-          {(!!mindatError && !mindatData && data) && <div>Failed to fetch from mindat</div>}
+        <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto px-1 mt-2 flex justify-start items-center">
+          <Checkbox label="Subset to IMA-Approved species?"
+                    name="ima_only"
+                    value="ima_only"
+                    checked={queryParams.ima_only}
+                    onChange={(e) => handleSearch({ ima_only: e.target.checked })} />
+        </div>
+
+        <div className="relative max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-2 flex justify-end items-center">
+          {mindatIsLoading && (
+            <div className="absolute top-1 mr-1 flex">
+              <span className="ml-2 text-xs font-medium">Requesting data from mindat</span>
+              <LoadingDots className="relative ml-1 top-0.5" isSmall={true} />
+            </div>
+          )}
+          {!!mindatError && (
+            <div className="flex mt-5 text-red-500 justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
+                <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+              </svg>
+              <span>Couldn&apos;t connect to mindat API. We already notified mindat&apos;s team.</span>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
@@ -122,13 +168,11 @@ export default function Explore() {
 
             <div className="space-y-3">
               {data && data.results.map((item, index) => {
-                let mindatContext = mindatData?.results.filter((item, index_) => index_ === index);
-
                 return (
                   <MineralCard key={item.id}
                                index={index}
                                mineral={item}
-                               mindatContext={mindatContext ? mindatContext[0] : null}
+                               mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
                                isVisible={(e) => handleVisibleItems(e, index)} />
                 );
               })}
