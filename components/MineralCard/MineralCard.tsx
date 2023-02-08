@@ -7,10 +7,12 @@ import clsx from 'clsx';
 
 import utilsStyles  from '@/styles/utils.module.scss';
 import Chip from '@/components/Chip';
+import ClassificationSnippet from './Classification';
 import { InternalLink, ExternalLink } from '@/components/Link';
-import { getStatusColor, getRelevantFormula } from './MineralCard.helpers';
+import { getRelevantFormula } from './MineralCard.helpers';
+import { getStatusColor } from '@/helpers/status.helpers';
 
-function NoData() {
+export function NoData() {
   return (
     <span className="flex text-xs">No data</span>
   );
@@ -19,7 +21,7 @@ function NoData() {
 function CrystallographySnippet({ data} : { data: CrystalSystem[] }) {
   if (data.length > 0) {
     return (
-      <div className="flex flex-wrap space-x-1">
+      <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
           return (
             <Chip key={id}>
@@ -51,13 +53,13 @@ function DiscoverySnippet({ discoveryCountries, history } : { discoveryCountries
           {discoveryCountries.map((item, id) => {
             return (
               <Chip key={id}>
-                <span className="font-normal">{item.name}</span>
+                <span className="flex-1 font-normal">{item.name}</span>
                 {item.count && (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    <span className="font-medium">
+                    <span className="flex-none font-medium">
                       {item.count}
                     </span>
                   </>)
@@ -136,47 +138,11 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
-function ClassificationSnippet({ data }) {
-  if (data?.strunz_index || data?.dana_index || data?.ima_status) {
-    const { strunz_index, dana_index, ima_status } = data;
-    return (
-      <div className="flex flex-col gap-1">
-        {ima_status && (
-          <div className="flex flex-nowrap text-xs">
-            <h4 className="font-medium">IMA Status</h4>
-            {ima_status.map((item, id) => {
-                return (
-                  <Chip key={id} backgroundColor="bg-green-300">
-                    <span className="font-normal">{item}</span>
-                  </Chip>
-                )
-              })
-            }
-          </div>
-        )}
-        {strunz_index && (
-          <div className="flex text-xs">
-            <h4 className="font-medium">Nickel-Strunz (10th)</h4>
-            <span className="ml-1">{strunz_index}</span>
-          </div>
-        )}
-        {dana_index && (
-          <div className="flex text-xs">
-            <h4 className="font-medium">Dana</h4>
-            <span className="ml-1">{dana_index}</span>
-          </div>
-        )}
-      </div>
-    )
-  };
-  return <NoData />;
-};
-
-function SnippetWrapper({ title, children }) {
+export function SnippetWrapper({ title, children }) {
   return (
     <div className="flex flex-col">
       <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
-      {children}
+      <div className="p-0.5">{children}</div>
     </div>
   )
 };
@@ -208,11 +174,11 @@ export default function MineralCard({ index, mineral, mindatContext = [], isVisi
           <div className="ml-5 space-y-1">
             <div className="flex">
               <div className={clsx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-              <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2">
-                <span>{mineral.name}</span>
+              <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
+               {mineral.name}
               </h1>
             </div>
-            {mineralFormula && <h2 className="" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
+            {mineralFormula && <h2 className="break-words" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
 
             {mineral.description && (
               <>
