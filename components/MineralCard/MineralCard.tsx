@@ -7,10 +7,12 @@ import clsx from 'clsx';
 
 import utilsStyles  from '@/styles/utils.module.scss';
 import Chip from '@/components/Chip';
+import ClassificationSnippet from './Classification';
 import { InternalLink, ExternalLink } from '@/components/Link';
-import { getStatusColor, getRelevantFormula } from './MineralCard.helpers';
+import { getRelevantFormula } from './MineralCard.helpers';
+import { getStatusColor } from '@/helpers/status.helpers';
 
-function NoData() {
+export function NoData() {
   return (
     <span className="flex text-xs">No data</span>
   );
@@ -19,7 +21,7 @@ function NoData() {
 function CrystallographySnippet({ data} : { data: CrystalSystem[] }) {
   if (data.length > 0) {
     return (
-      <div className="flex flex-wrap space-x-1">
+      <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
           return (
             <Chip key={id}>
@@ -51,13 +53,13 @@ function DiscoverySnippet({ discoveryCountries, history } : { discoveryCountries
           {discoveryCountries.map((item, id) => {
             return (
               <Chip key={id}>
-                <span className="font-normal">{item.name}</span>
+                <span className="flex-1 font-normal">{item.name}</span>
                 {item.count && (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    <span className="font-medium">
+                    <span className="flex-none font-medium">
                       {item.count}
                     </span>
                   </>)
@@ -136,16 +138,16 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
-function SnippetWrapper({ title, children }) {
+export function SnippetWrapper({ title, children }) {
   return (
     <div className="flex flex-col">
       <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
-      {children}
+      <div className="p-0.5">{children}</div>
     </div>
   )
 };
 
-export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
+export default function MineralCard({ index, mineral, mindatContext = [], isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
 
   const intersectionRef = useRef(null);
   const intersection = useIntersection(intersectionRef, {
@@ -172,11 +174,11 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
           <div className="ml-5 space-y-1">
             <div className="flex">
               <div className={clsx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-              <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2">
-                <span>{mineral.name}</span>
+              <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
+               {mineral.name}
               </h1>
             </div>
-            {mineralFormula && <h2 className="" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
+            {mineralFormula && <h2 className="break-words" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
 
             {mineral.description && (
               <>
@@ -190,6 +192,9 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
         </div>
 
         <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
+          <SnippetWrapper title="Classification">
+            <ClassificationSnippet data={mindatContext} />
+          </SnippetWrapper>
           <SnippetWrapper title="Crystallography">
             <CrystallographySnippet data={mineral.crystal_systems} />
           </SnippetWrapper>

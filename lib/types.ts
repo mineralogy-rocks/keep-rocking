@@ -31,4 +31,5 @@ export type exploreApiResponse = {
 export type exploreApiRequest = {
   q?: string;
   cursor?: string;
+  ima_only?: boolean;
 };

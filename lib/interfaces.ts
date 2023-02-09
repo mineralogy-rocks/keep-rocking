@@ -60,3 +60,8 @@ export interface Link {
   name: string;
   link: string;
 }
+
+export interface colorTuple {
+  textColor: string;
+  backgroundColor: string;
+}

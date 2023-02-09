@@ -15,7 +15,7 @@
       "@/helpers/*": ["./helpers/*"],
       "@/styles/*": ["./styles/*"],
       "@/middleware/*": ["./middleware/*"],
-      // "@utils": ["./src/utils/index.js"]
+      "@utils": ["./utils/index.ts"]
     },
     "allowJs": true,
     "skipLibCheck": true,
