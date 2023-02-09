@@ -1,5 +1,6 @@
 import { paginatedApiResponse } from '@/lib/types';
 
+
 export async function fetcher(
   input: RequestInfo,
   init?: RequestInit
