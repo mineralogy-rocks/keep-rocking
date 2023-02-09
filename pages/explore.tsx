@@ -35,7 +35,7 @@ export default function Explore() {
   const [isSearching, setIsSearching] = useState(false);
 
   const debouncedQueryParams = useDebounce(queryParams, 800);
-  const cleanQueryParams = filter(debouncedQueryParams, (key, value) => value !== '' && value !== null);
+  const cleanQueryParams: any = filter(debouncedQueryParams, (key, value) => value !== '' && value !== null);
 
   useEffect(() => {
     if(!router.isReady) return;
