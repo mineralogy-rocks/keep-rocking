@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 import useSWR from 'swr';
-import useSWRImmutable from 'swr/immutable';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
@@ -113,7 +112,7 @@ export default function Explore() {
     mutate(undefined, false);
   };
 
-  const { data, error, mutate, isLoading, isValidating } = useSWR(
+  const { data, error, mutate, isLoading } = useSWR(
     debouncedSearch && 'q' in _routerParams ? ['/mineral/', new URLSearchParams(_routerParams).toString(),] : null,
     (url, params) => fetcher(url, params),
     {
