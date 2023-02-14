@@ -2,23 +2,23 @@ import { paginatedApiResponse } from '@/lib/types';
 
 
 export async function fetcher(
-  input: RequestInfo,
+  input: any,
   init?: RequestInit
 ): Promise<paginatedApiResponse> {
 
   const apiUrl:string = process.env.API_URL;
   const apiKey:string = process.env.API_KEY;
 
-  const res = await fetch(apiUrl + input, {
+  const res = await fetch(apiUrl + input.join('?'), {
     headers: {
       'Authorization': `Api-Key ${apiKey}`,
       'Content-Type': 'application/json',
     }, ...init})
   if (!res.ok) {
-    throw new Error("An error occurred while posting the data.")
+    throw new Error("An error occurred while fetching the data.")
   }
   return res.json()
-}
+};
 
 export async function mindatFetcher(
   input: RequestInfo,
@@ -34,7 +34,7 @@ export async function mindatFetcher(
       'Content-Type': 'application/json',
     }, ...init})
   if (!res.ok) {
-    throw new Error("An error occurred while posting the data.")
+    throw new Error("An error occurred while fetching the mindat data.")
   }
   return res.json()
-}
+};
