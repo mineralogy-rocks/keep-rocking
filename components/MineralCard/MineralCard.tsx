@@ -147,7 +147,7 @@ export function SnippetWrapper({ title, children }) {
   )
 };
 
-export default function MineralCard({ index, mineral, mindatContext = [], isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
+export default function MineralCard({ index, mineral, mindatContext = {}, isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
 
   const intersectionRef = useRef(null);
   const intersection = useIntersection(intersectionRef, {
@@ -167,7 +167,6 @@ export default function MineralCard({ index, mineral, mindatContext = [], isVisi
     <div ref={intersectionRef}
          id={'mineralCard-' + index}
          className="relative scroll-mt-16 bg-white shadow-surface-low rounded p-2 mx-auto h-auto transition-all duration-200">
-      {mineral.ns_index && <span className="absolute top-1 right-1 text-emerald-700 font-medium text-xs bg-emerald-100 px-2 py-0.5 rounded-full ml-0">{mineral.ns_index}</span>}
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
           <span className="italic text-base">{mineral.ima_symbol}</span>
@@ -193,7 +192,7 @@ export default function MineralCard({ index, mineral, mindatContext = [], isVisi
 
         <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
           <SnippetWrapper title="Classification">
-            <ClassificationSnippet data={mindatContext} />
+            <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index }} />
           </SnippetWrapper>
           <SnippetWrapper title="Crystallography">
             <CrystallographySnippet data={mineral.crystal_systems} />

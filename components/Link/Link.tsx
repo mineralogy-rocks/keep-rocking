@@ -1,12 +1,14 @@
 import Link from 'next/link';
 
-export function ExternalLink({ href, text } : { href: string, text: string }) {
+import clsx from 'clsx';
+
+export function ExternalLink({ className='', href, text, isIcon=true } : { className?: string, href: string, text: string, isIcon?: boolean }) {
   return (
-    <Link href={href} className="flex group items-center" target="_blank">
+    <Link href={href} className={clsx("flex group items-center", className)} target="_blank">
       <span className="text-xs text-blue-700 font-medium hover:text-blue-800 hover:underline cursor-pointer">{text}</span>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">
+      {isIcon && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-      </svg>
+      </svg>)}
     </Link>
   )
 };
