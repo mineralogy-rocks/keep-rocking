@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import utilsStyles  from '@/styles/utils.module.scss';
 import Chip from '@/components/Chip';
 import ClassificationSnippet from './Classification';
+import RelationSnippet from './Relation';
 import { InternalLink, ExternalLink } from '@/components/Link';
 import { getRelevantFormula } from './MineralCard.helpers';
 import { getStatusColor } from '@/helpers/status.helpers';
@@ -81,40 +82,14 @@ function DiscoverySnippet({ discoveryCountries, history } : { discoveryCountries
   return <NoData />;
 };
 
-function RelationSnippet({ data } : { data: Relation[] }) {
-  if (data.length > 0) {
-    return (
-      <div className="flex flex-wrap gap-1">
-        {data.map((item, id) => {
-          return (
-            <Chip key={id}>
-              <span className="font-normal">{item.group.name}</span>
-              {item.count && (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  <span className="font-medium">
-                    {item.count}
-                  </span>
-                </>)
-              }
-            </Chip>
-          )
-        })}
-      </div>
-    )
-  };
-  return <NoData />;
-};
-
 function HierarchySnippet({ data } : { data: Hierarchy[] }) {
   if (data.length > 0) {
     return (
       <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
           return (
-            <InternalLink key={id} href={item.url} text={item.name} />
+            // <InternalLink key={id} href={item.url} text={item.name} />
+            <span key={id} className="text-xs text-blue-700 font-medium">{item.name}</span>
           )
         })}
       </div>
@@ -203,7 +178,7 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
           </SnippetWrapper>
 
           <SnippetWrapper title="Relations">
-            <RelationSnippet data={mineral.relations} />
+            <RelationSnippet slug={mineral.slug} data={mineral.relations} />
           </SnippetWrapper>
 
           <SnippetWrapper title="Hierarchy">

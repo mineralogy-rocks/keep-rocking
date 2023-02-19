@@ -11,7 +11,7 @@ export type paginatedApiResponse = {
 export type exploreApiResponse = {
   id: string;
   name: string;
-  url: string;
+  slug: string;
   ns_index: string;
   ima_symbol: string;
   description: string;

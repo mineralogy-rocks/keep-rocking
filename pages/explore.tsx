@@ -113,7 +113,7 @@ export default function Explore() {
   };
 
   const { data, error, mutate, isLoading } = useSWR(
-    debouncedSearch && 'q' in _routerParams ? ['/mineral/', new URLSearchParams(_routerParams).toString(),] : null,
+    debouncedSearch && 'q' in _routerParams ? '/mineral/?' + new URLSearchParams(_routerParams).toString() : null,
     (url, params) => fetcher(url, params),
     {
       use: [ abortableMiddleware ],
@@ -218,7 +218,7 @@ export default function Explore() {
             <div className="space-y-3">
               {isActive && data && data.results?.map((item, index) => {
                 return (
-                  <MineralCard key={item.id}
+                  <MineralCard key={item.slug}
                                index={index}
                                mineral={item}
                                mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}

@@ -4,12 +4,14 @@ import { paginatedApiResponse } from '@/lib/types';
 export async function fetcher(
   input: any,
   init?: RequestInit
-): Promise<paginatedApiResponse> {
+): Promise<any> {
 
   const apiUrl:string = process.env.API_URL;
   const apiKey:string = process.env.API_KEY;
 
-  const res = await fetch(apiUrl + input.join('?'), {
+  console.log(input)
+
+  const res = await fetch(apiUrl + input, {
     headers: {
       'Authorization': `Api-Key ${apiKey}`,
       'Content-Type': 'application/json',

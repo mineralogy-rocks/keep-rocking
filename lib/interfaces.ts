@@ -36,7 +36,10 @@ export interface Status {
 export interface Relation {
   id: string;
   count: number;
-  group: BaseIdName;
+  group: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface Discovery extends BaseIdName {

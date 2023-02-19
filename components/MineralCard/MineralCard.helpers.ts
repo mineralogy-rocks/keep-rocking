@@ -6,3 +6,20 @@ export const getRelevantFormula = (formulas: Formula[]) => {
   }
   return null;
 };
+
+export const getRelationEndpoint = (statusGroupId: number) => {
+
+  // TODO: This is a temporary solution. We should have a better way to
+  // determine the endpoint for a relation.
+
+  switch (statusGroupId) {
+    case 11:
+      return 'approved-minerals';
+    case 2:
+      return 'synonyms';
+    case 3:
+      return 'varieties';
+    default:
+      return '';
+  }
+}

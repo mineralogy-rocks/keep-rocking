@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import clsx from 'clsx';
@@ -7,9 +6,17 @@ import { getIMAStatusColor } from '@/helpers/status.helpers';
 import { camelize } from '@utils';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 
+import { QuestionIcon, ErrorIcon, LoadingIcon } from './Icons';
 import Chip from '@/components/Chip';
 import Tooltip from './Tooltip';
 import  { NoData }  from './MineralCard';
+
+
+const buttonComponent = (isLoading, error, isShown, onClick) => {
+  if (isLoading) return (<LoadingIcon className="stroke-cyan-900 animate-spin" />);
+  if(error) return (<ErrorIcon className="stroke-red-500" />);
+  else return (<QuestionIcon className={isShown ? "stroke-cyan-900 transition-colors duration-1000" : "stroke-gray-400"} onClick={onClick} />)
+};
 
 
 export default function ClassificationSnippet({ data }) {
@@ -18,8 +25,7 @@ export default function ClassificationSnippet({ data }) {
   const handleIndexUpdate = (newIndex) => {
     setIndex(newIndex);
   };
-
-  const { data: _data, error, isLoading } = useMindatApi(
+  const { data: NickelStrunzData, error, isLoading } = useMindatApi(
     index ? `/nickel-strunz-10/families/?index=${index}` : null
   );
   let _fields = ['strunz_index', 'dana_index', 'ima_status',];
@@ -57,15 +63,17 @@ export default function ClassificationSnippet({ data }) {
 
             <div className="flex items-center rounded py-0.5">
               <span className="">{strunz_index}</span>
-              <Tooltip key={strunz_index} onClick={(e) => {e && handleIndexUpdate(strunz_index)}} isShown={!!_data} isLoading={isLoading} error={error}>
-                {_data?.results &&
+              <Tooltip key={strunz_index}
+                       isShown={!!NickelStrunzData}
+                       button={(open) => buttonComponent(isLoading, !!error, open && !!NickelStrunzData, (e) => {e && handleIndexUpdate(strunz_index)} )}>
+                {NickelStrunzData?.results &&
                   (<div className="relative flex flex-col space-y-1 p-1">
                     <div className="border-b">
                       <p className="font-semibold pb-2 mr-5">Nickel-Strunz (2023) Classification of mindat.org</p>
                     </div>
-                    <div><span className="font-semibold">{_data?.results[0].strunz1}:</span><span className="ml-1">{_data?.results[0].title1}</span></div>
-                    <div><span className="font-semibold">{_data?.results[0].strunz2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: _data?.results[0].title2 }}></span></div>
-                    <div><span className="font-semibold">{_data?.results[0].strunz3}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: _data?.results[0].title3 }}></span></div>
+                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz1}:</span><span className="ml-1">{NickelStrunzData?.results[0].title1}</span></div>
+                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title2 }}></span></div>
+                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz3}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title3 }}></span></div>
                   </div>)
                 }
               </Tooltip>
