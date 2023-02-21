@@ -1,0 +1,28 @@
+.underlineAnimation {
+  @apply relative after:absolute after:bg-gray-400 after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300;
+}
+
+.NavBarLink {
+  @apply text-lg font-medium text-gray-700 hover:text-gray-500/70 cursor-pointer;
+}
+
+.link {
+  @apply font-bold text-blue-700 hover:text-blue-800 cursor-pointer;
+}
+
+.linkSmall {
+  @apply font-medium text-blue-700 hover:text-blue-800 cursor-pointer;
+}
+
+.linkExternal {
+  @extend .link;
+  @apply visited:text-purple-800;
+}
+
+.subtleLink {
+  @apply hover:underline decoration-zinc-500/90 hover:underline-offset-2 hover:text-gray-500/70 transition-all duration-100 ease-in-out;
+}
+
+.secondaryText {
+  @apply text-gray-600;
+}
