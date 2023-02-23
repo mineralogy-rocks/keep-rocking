@@ -28,3 +28,20 @@ export const getIMAStatusColor = (status: string): colorTuple => {
       return { textColor: 'text-green-300', backgroundColor: 'bg-green-700/70' };
   }
 };
+
+export const getIMAStatus = (status: string): string => {
+  switch (status) {
+    case IMA_STATUS_CHOICES.approved:
+      return 'approved';
+    case IMA_STATUS_CHOICES.discredited:
+      return 'discredited';
+    case IMA_STATUS_CHOICES.pending:
+      return 'pending';
+    case IMA_STATUS_CHOICES.grandfathered:
+      return 'grandfathered';
+    case IMA_STATUS_CHOICES.questionable:
+      return 'questionable';
+    default:
+      return 'approved';
+  }
+};

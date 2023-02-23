@@ -9,13 +9,12 @@ import { abortableMiddleware } from '@/middleware/abortable-swr';
 import Chip from '@/components/Chip';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
-import { ErrorIcon, LoadingIcon } from './Icons';
 import { getRelationEndpoint } from './MineralCard.helpers';
 
 
 const buttonComponent = (item, isLoading, error, isShown, onClick) => {
   return (
-    <Chip className={clsx("transition-colors duration-300 ease-in-out border", isShown && "border border-gray-500")} onClick={onClick}>
+    <Chip type="default" className={clsx(isShown && "bg-sky-500/80", error && "bg-red-500/80")} {...{isLoading, onClick}}>
       <span className="font-normal">{item.group.name}</span>
       {item.count && (
         <>
@@ -26,8 +25,6 @@ const buttonComponent = (item, isLoading, error, isShown, onClick) => {
             {item.count}
           </span>
         </>)}
-        {isLoading && (<LoadingIcon className="stroke-cyan-900 animate-spin" />)}
-        {error && (<ErrorIcon className="stroke-red-500" />)}
     </Chip>
   )
 };
