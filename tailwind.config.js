@@ -25,6 +25,11 @@ module.exports = {
         gradientLogo: 'gradientLogo 10s ease infinite',
       },
       keyframes: {
+        shimmer: {
+          "100%": {
+            "transform": "translateX(100%)",
+          },
+        },
         gradientLogo: {
           "0%,100%": {
             backgroundPosition: "0% 30%",

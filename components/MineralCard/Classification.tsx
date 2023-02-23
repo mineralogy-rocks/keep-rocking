@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import clsx from 'clsx';
-
-import { getIMAStatusColor } from '@/helpers/status.helpers';
+import { getIMAStatus } from '@/helpers/status.helpers';
 import { camelize } from '@utils';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 
@@ -37,11 +35,11 @@ export default function ClassificationSnippet({ data }) {
         <div className="flex w-full">
           {ima_status && (
             <div className="flex flex-wrap gap-1">
-              {ima_status.map((item, id) => {
-                  let { textColor, backgroundColor } = getIMAStatusColor(item);
+              {ima_status.map((status, id) => {
+                let status_ = getIMAStatus(status);
                   return (
-                    <Chip key={id} className={clsx("rounded", backgroundColor)}>
-                      <span className={clsx("font-normal", textColor)}>{camelize(item)}</span>
+                    <Chip key={id} className="rounded" type={status_}>
+                      <span className="font-normal">{camelize(status)}</span>
                     </Chip>
                   )
                 })
