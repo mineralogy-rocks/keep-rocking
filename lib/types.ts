@@ -1,4 +1,4 @@
-import { Formula, Hierarchy, CrystalSystem, Status, Relation, Discovery, History, Link } from './interfaces';
+import { Formula, CrystalSystem, Status, Relation, Discovery, History, Link } from './interfaces';
 
 export type paginatedApiResponse = {
   results: any[];
@@ -19,7 +19,6 @@ export type exploreApiResponse = {
   seen: number;
   updated_at: Date;
   formulas: Formula[];
-  hierarchy: Hierarchy[];
   crystal_systems: CrystalSystem[];
   statuses: Status[];
   relations: Relation[];

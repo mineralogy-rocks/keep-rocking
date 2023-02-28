@@ -1,5 +1,5 @@
 import { exploreApiResponse } from '@/lib/types';
-import { CrystalSystem, Discovery, History, Relation, Hierarchy } from '@/lib/interfaces';
+import { CrystalSystem, Discovery, History } from '@/lib/interfaces';
 
 import { useRef, useEffect } from 'react';
 import { useIntersection } from 'react-use';
@@ -82,22 +82,6 @@ function DiscoverySnippet({ discoveryCountries, history } : { discoveryCountries
   return <NoData />;
 };
 
-function HierarchySnippet({ data } : { data: Hierarchy[] }) {
-  if (data.length > 0) {
-    return (
-      <div className="flex flex-wrap gap-1">
-        {data.map((item, id) => {
-          return (
-            // <InternalLink key={id} href={item.url} text={item.name} />
-            <span key={id} className="text-xs text-blue-700 font-medium">{item.name}</span>
-          )
-        })}
-      </div>
-    )
-  };
-  return <NoData />;
-};
-
 function LinksSnippet({ data }) {
   if (data.length > 0) {
     return (
@@ -113,9 +97,9 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
-export function SnippetWrapper({ title, children }) {
+export function SnippetWrapper({ className="", title, children }) {
   return (
-    <div className="flex flex-col">
+    <div className={clsx("flex flex-col", className)}>
       <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
       <div className="p-0.5">{children}</div>
     </div>
@@ -165,7 +149,7 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
           <hr className="my-2 md:hidden" />
         </div>
 
-        <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
+        <div className="col-span-3 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
           <SnippetWrapper title="Classification">
             <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index }} />
           </SnippetWrapper>
@@ -177,12 +161,8 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
             <DiscoverySnippet discoveryCountries={mineral.discovery_countries} history={mineral.history} />
           </SnippetWrapper>
 
-          <SnippetWrapper title="Relations">
+          <SnippetWrapper title="Relations" className="md:col-span-2">
             <RelationSnippet slug={mineral.slug} data={mineral.relations} />
-          </SnippetWrapper>
-
-          <SnippetWrapper title="Hierarchy">
-            <HierarchySnippet data={mineral.hierarchy} />
           </SnippetWrapper>
 
           <SnippetWrapper title="Links">
@@ -191,7 +171,7 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
         </div>
       </div>
 
-      <div className="flex justify-between mt-2">
+      <div className="flex justify-between mt-1">
         <span className="flex italic font-light text-xxs">Last updated in {mineral.updated_at.toString()}</span>
         <div className="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
