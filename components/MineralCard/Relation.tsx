@@ -15,7 +15,7 @@ import { getRelationEndpoint } from './MineralCard.helpers';
 const buttonComponent = (item, isLoading, error, isShown, onClick) => {
   return (
     <Chip type="default" className={clsx(isShown && "bg-sky-500/80", error && "bg-red-500/80")} {...{isLoading, onClick}}>
-      <span className="font-normal">{item.group.name}</span>
+      <span className="font-normal flex-1 text-start">{item.group.name}</span>
       {item.count && (
         <>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">

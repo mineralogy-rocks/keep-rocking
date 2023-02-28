@@ -15,10 +15,6 @@ export interface Formula {
   created_at: Date;
 }
 
-export interface Hierarchy extends BaseIdName {
-  url: string;
-}
-
 export interface CrystalSystem extends BaseIdName {
   count?: number;
 }
