@@ -7,7 +7,7 @@ import { useMindatApi } from '@/hooks/use-mindat-api';
 import { QuestionIcon, ErrorIcon, LoadingIcon } from './Icons';
 import Chip from '@/components/Chip';
 import Tooltip from './Tooltip';
-import  { NoData }  from './MineralCard';
+import NoData from './NoData';
 
 
 const buttonComponent = (isLoading, error, isShown, onClick) => {

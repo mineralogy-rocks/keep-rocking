@@ -1,12 +1,14 @@
 export type CardStyles = {
   textColor: string;
   backgroundColor: string;
+  borderColor?: string;
 }
 export const getStyles= (type = "default"): CardStyles => {
   const _colors = {
     default: {
       textColor: 'text-gray-800',
-      backgroundColor: 'bg-sky-400/70',
+      backgroundColor: 'bg-indigo-200 focus:bg-red-300',
+      borderColor: 'border border-indigo-200 hover:border-indigo-300'
     },
     primary: {},
     secondary: {},

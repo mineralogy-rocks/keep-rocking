@@ -2,13 +2,19 @@ import Link from 'next/link';
 
 import clsx from 'clsx';
 
-export function ExternalLink({ className='', href, text, isIcon=true } : { className?: string, href: string, text: string, isIcon?: boolean }) {
+export function ExternalLink({ className='', href, text, isIcon=true } : {
+  className?: string,
+  href: string,
+  text: string,
+  isIcon?: boolean
+}) {
   return (
     <Link href={href} className={clsx("flex group items-center", className)} target="_blank">
-      <span className="text-xs text-blue-700 font-semibold hover:text-blue-800 hover:underline cursor-pointer">{text}</span>
-      {isIcon && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-      </svg>)}
+      <span className="text-xs text-blue-700 font-semibold hover:text-blue-800 hover:underline cursor-pointer flex-1">{text}</span>
+      {isIcon && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="shrink-0 inline-block align-bottom ml-1 w-3.5 h-3.5 shrink-0">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+        </svg>
+      )}
     </Link>
   )
 };
