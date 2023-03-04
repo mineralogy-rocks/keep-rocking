@@ -9,8 +9,6 @@ export async function fetcher(
   const apiUrl:string = process.env.API_URL;
   const apiKey:string = process.env.API_KEY;
 
-  console.log(input)
-
   const res = await fetch(apiUrl + input, {
     headers: {
       'Authorization': `Api-Key ${apiKey}`,
