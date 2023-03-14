@@ -2,11 +2,22 @@ import { IMA_STATUS_CHOICES } from '@/lib/constants';
 import { Status, colorTuple } from '@/lib/interfaces';
 
 
-export const getStatusColor = (statuses: Status[]): string => {
+export const getStatusGroupColor = (statuses: Status[]): string => {
   for (let status of statuses) {
     if (status.group?.id === 11) return 'bg-green-700/70';
     else if (status.group?.id === 1) return 'bg-blue-700/70';
     else if (status.group?.id in [2, 3, 4, 5, 6, 7, 8, 9, 10]) return 'bg-red-700/70';
+    else return 'bg-gray-600/70';
+  }
+  return 'bg-gray-600/70';
+};
+
+export const getStatusColor = (statuses: [number]): string => {
+  for (let status of statuses) {
+    let _status = Math.floor(status);
+    if (_status === 0) return 'bg-green-700/70';
+    else if (_status === 1) return 'bg-blue-700/70';
+    else if (status in [2, 3, 4, 5, 6, 7, 8, 9, 10]) return 'bg-red-700/70';
     else return 'bg-gray-600/70';
   }
   return 'bg-gray-600/70';

@@ -6,13 +6,15 @@ import clsx from 'clsx';
 
 import utilsStyles  from '@/styles/utils.module.scss';
 import NoData from './NoData';
+import RelationChip from './RelationChip';
 import ClassificationSnippet from './Classification';
 import DiscoverySnippet from './Discovery';
 import RelationSnippet from './Relation';
 import CrystallographySnippet from './Crystallography';
 import { InternalLink, ExternalLink } from '@/components/Link';
 import { getRelevantFormula } from './MineralCard.helpers';
-import { getStatusColor } from '@/helpers/status.helpers';
+import { getStatusGroupColor } from '@/helpers/status.helpers';
+
 
 
 function LinksSnippet({ data }) {
@@ -30,10 +32,11 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
-export function SnippetWrapper({ className="", title, children }) {
+export function SnippetWrapper({ className="", title, subtitle="", children }) {
   return (
     <div className={clsx("flex flex-col", className)}>
       <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
+      {subtitle && (<h4>{subtitle}</h4>)}
       <div className="p-0.5">{children}</div>
     </div>
   )
@@ -64,12 +67,19 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
             <span className="italic text-base">{mineral.ima_symbol}</span>
             <div className="ml-5 space-y-1">
               <div className="flex">
-                <div className={clsx(getStatusColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
+                <div className={clsx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
                 <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
                 {mineral.name}
                 </h1>
               </div>
-              {mineralFormula && <h2 className="break-words" dangerouslySetInnerHTML={{ __html: mineralFormula }}></h2>}
+              <div className="flex flex-wrap gap-y-1">
+                {mineralFormula && (
+                  <h2 className="break-words" dangerouslySetInnerHTML={{ __html: mineralFormula.formula }}></h2>
+                )}
+                {mineralFormula?.from && (
+                  <RelationChip {...{ name: mineralFormula.from.name, statuses: mineralFormula.from.statuses}} />
+                )}
+              </div>
 
               {mineral.description && (
                 <>
@@ -84,9 +94,9 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
 
           <div className="col-span-3 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
             <SnippetWrapper title="Classification">
-              <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index }} />
+              <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index, statuses: mineral.statuses }} />
             </SnippetWrapper>
-            <SnippetWrapper title="Crystallography">
+            <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}
                                       slug={mineral.slug}
                                       data={mineral.crystal_systems} />
