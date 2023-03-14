@@ -29,9 +29,16 @@ export default function ClassificationSnippet({ data }) {
   let _fields = ['strunz_index', 'dana_index', 'ima_status',];
 
   if (data && _fields.some(key => Object.keys(data).includes(key)) && _fields.some(key => data[key])) {
-    const { ns_index, strunz_index, dana_index, ima_status } = data;
+    const { ns_index, statuses, strunz_index, dana_index, ima_status } = data;
     return (
       <div className="flex flex-col">
+        {/* {data.statuses.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {statuses.map((status, id) => {
+
+            })
+          }</div>
+        )} */}
         <div className="flex w-full">
           {ima_status && (
             <div className="flex flex-wrap gap-1">
@@ -83,7 +90,6 @@ export default function ClassificationSnippet({ data }) {
             <h4 className="font-medium mr-1">Dana (8th)</h4>
             <div className="flex items-center rounded px-1 py-0.5">
               <span className="">{dana_index}</span>
-              {/* <QuestionIcon mouseEventHandler={(e) => e && console.log(dana_index)} /> */}
             </div>
           </div>
         )}
