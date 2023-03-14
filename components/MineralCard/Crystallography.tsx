@@ -1,16 +1,26 @@
 import { useState } from 'react';
 import useSWR from 'swr';
-import clsx from 'clsx';
 
 import { CrystalSystem } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
-import { capitalize } from '@utils';
 
 import Button from './Button';
+import RelationChip from './RelationChip';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
 
+
+function ButtonWithRelation(props) {
+  return (
+    <div className="flex flex-row items-center">
+      <Button {...props} />
+      {props.from && (
+        <RelationChip {...{ name: props.from.name, statuses: props.from.statuses}} />
+      )}
+    </div>
+  )
+}
 
 export default function CrystallographySnippet({ isGrouping, slug, data } : { isGrouping: boolean, slug: string, data: CrystalSystem[] }) {
 
@@ -39,8 +49,12 @@ export default function CrystallographySnippet({ isGrouping, slug, data } : { is
           return (
             <Tooltip key={id}
                      isShown={isCurrent && !!_data}
-                     button={(open) => <Button {...{
-                        item: { key: item.name, value: item.count ?? null },
+                     button={(open) => <ButtonWithRelation {...{
+                        from: item.from,
+                        item: {
+                          key: item.name,
+                          value: item.count ?? null
+                        },
                         isLoading: isCurrent && isLoading,
                         error: isCurrent && !!error,
                         isShown: isCurrent && open && !!_data,

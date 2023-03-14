@@ -3,6 +3,12 @@ export interface BaseIdName {
   name: string;
 }
 
+export interface From {
+  slug: string;
+  name: string;
+  statuses: [number];
+}
+
 export interface Formula {
   formula: string;
   note: string | null;
@@ -13,10 +19,12 @@ export interface Formula {
   };
   show_on_site: boolean;
   created_at: Date;
+  from?: From;
 }
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
+  from?: From;
 }
 
 export interface Status {
