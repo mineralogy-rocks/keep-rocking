@@ -13,7 +13,7 @@ import NoData from './NoData';
 
 function ButtonWithRelation(props) {
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-wrap items-center gap-1 text-start cursor-default">
       <Button {...props} />
       {props.from && (
         <RelationChip {...{ name: props.from.name, statuses: props.from.statuses}} />
