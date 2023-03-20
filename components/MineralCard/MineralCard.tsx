@@ -72,12 +72,14 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
                 {mineral.name}
                 </h1>
               </div>
-              <div className="flex flex-wrap gap-y-1">
+              <div className="flex flex-wrap items-center gap-1">
                 {mineralFormula && (
-                  <h2 className="break-words" dangerouslySetInnerHTML={{ __html: mineralFormula.formula }}></h2>
+                  <h2 className="break-words max-w-full" dangerouslySetInnerHTML={{ __html: mineralFormula.formula }}></h2>
                 )}
                 {mineralFormula?.from && (
-                  <RelationChip {...{ name: mineralFormula.from.name, statuses: mineralFormula.from.statuses}} />
+                  <div className="flex flex-row items-center gap-x-1">
+                    <RelationChip {...{ name: mineralFormula.from.name, statuses: mineralFormula.from.statuses}} />
+                  </div>
                 )}
               </div>
 
