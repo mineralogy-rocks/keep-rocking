@@ -19,12 +19,19 @@ const buttonComponent = (isLoading, error, isShown, onClick) => {
 
 export default function ClassificationSnippet({ data }) {
 
-  const [index, setIndex] = useState('');
-  const handleIndexUpdate = (newIndex) => {
-    setIndex(newIndex);
+  const [nickelIndex, setNickelIndex] = useState('');
+  const [danaIndex, setDanaIndex] = useState('');
+  const handleNickelIndexUpdate = (newIndex) => {
+    setNickelIndex(newIndex);
+  };
+  const handleDanaIndexUpdate = (newIndex) => {
+    setDanaIndex(newIndex);
   };
   const { data: NickelStrunzData, error, isLoading } = useMindatApi(
-    index ? `/nickel-strunz-10/families/?index=${index}` : null
+    nickelIndex ? `/nickel-strunz-10/families/?index=${nickelIndex}` : null
+  );
+  const { data: DanaData, error: DanaError, isLoading: DanaIsLoading } = useMindatApi(
+    danaIndex ? `/dana-8/subgroups/?index=${danaIndex}` : null
   );
   let _fields = ['strunz_index', 'dana_index', 'ima_status',];
 
@@ -54,14 +61,6 @@ export default function ClassificationSnippet({ data }) {
             </div>
           )}
         </div>
-        {/* {ns_index && (
-          <div className="flex flex-wrap items-center text-xs mt-1">
-            <h4 className="font-medium mr-1">Nickel-Strunz (10th)</h4>
-            <div className="flex items-center rounded py-0.5">
-              <span className="">{ns_index}</span>
-              </div>
-          </div>
-        )} */}
         {strunz_index && (
           <div className="flex flex-wrap items-center text-xs mt-1">
             <h4 className="font-medium mr-1">Nickel-Strunz (10th)</h4>
@@ -70,7 +69,7 @@ export default function ClassificationSnippet({ data }) {
               <span className="">{strunz_index}</span>
               <Tooltip key={strunz_index}
                        isShown={!!NickelStrunzData}
-                       button={(open) => buttonComponent(isLoading, !!error, open && !!NickelStrunzData, (e) => {e && handleIndexUpdate(strunz_index)} )}>
+                       button={(open) => buttonComponent(isLoading, !!error, open && !!NickelStrunzData, (e) => {e && handleNickelIndexUpdate(strunz_index)} )}>
                 {NickelStrunzData?.results &&
                   (<div className="relative flex flex-col space-y-1 p-1">
                     <div className="border-b">
@@ -90,6 +89,19 @@ export default function ClassificationSnippet({ data }) {
             <h4 className="font-medium mr-1">Dana (8th)</h4>
             <div className="flex items-center rounded px-1 py-0.5">
               <span className="">{dana_index}</span>
+              <Tooltip key={dana_index}
+                       isShown={!!DanaData}
+                       button={(open) => buttonComponent(DanaIsLoading, !!DanaError, open && !!DanaData, (e) => {e && handleDanaIndexUpdate(dana_index)} )}>
+                {DanaData?.results &&
+                  (<div className="relative flex flex-col space-y-1 p-1">
+                    <div className="border-b">
+                      <p className="font-semibold pb-2 mr-5">Dana Classification 8th edition of mindat.org</p>
+                    </div>
+                    <div><span className="font-semibold">{DanaData?.results[0].dana1}:</span><span className="ml-1">{DanaData?.results[0].title1}</span></div>
+                    <div><span className="font-semibold">{DanaData?.results[0].dana2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: DanaData?.results[0].title2 }}></span></div>
+                  </div>)
+                }
+              </Tooltip>
             </div>
           </div>
         )}
