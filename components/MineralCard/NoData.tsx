@@ -1,5 +1,12 @@
+import Chip from '@/components/Chip';
+
+
 export default function NoData() {
   return (
-    <span className="flex text-xs">No data</span>
+    <div className="flex cursor-default">
+      <Chip type="na" className="">
+        <span className="font-normal text-xs">No Data</span>
+      </Chip>
+    </div>
   );
 };

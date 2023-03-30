@@ -128,14 +128,14 @@ export default function Explore() {
     if (isMounted) {
       if (debouncedSearch) {
         if (!isDeferred && 'cursor' in _cleanQueryParams) {
-          router.replace({ query: { ..._cleanQueryParams, q: debouncedSearch } });
+          router.push({ query: { ..._cleanQueryParams, q: debouncedSearch } });
           setIsDeferred(false);
           return;
         }
         let _queryParams = isDeferred ? filter(debouncedQueryParams, (key, val) => !additionalParams.includes(key)) : _cleanQueryParams;
-        router.replace({ query: { ..._queryParams, q: debouncedSearch } });
+        router.push({ query: { ..._queryParams, q: debouncedSearch } });
       } else {
-        router.replace({ query: {..._persistantQueryParams} });
+        router.push({ query: {..._persistantQueryParams} });
       }
       setIsDeferred(false);
     }
@@ -146,7 +146,7 @@ export default function Explore() {
     if (isMounted && !isDeferred && Object.keys(_cleanQueryParams).length > 0) {
       let _query: any = { ..._cleanQueryParams };
       if (searchTerm) _query.q = searchTerm;
-      router.replace({ query: _query });
+      router.push({ query: _query });
     }
     return;
   }, [debouncedQueryParams]);
@@ -169,7 +169,7 @@ export default function Explore() {
         <title>mineralogy.rocks - explore</title>
       </Head>
 
-      <div className="relative max-w-full mx-auto px-4 sm:px-10 md:px-5">
+      <div className="relative max-w-full mx-auto px-0 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
                        isLoading={isSearching || isLoading}
@@ -215,7 +215,7 @@ export default function Explore() {
               </div>
             )}
 
-            <div className="space-y-3">
+            <div className="space-y-6 sm:space-y-3">
               {isActive && data && data.results?.map((item, index) => {
                 return (
                   <MineralCard key={item.slug}
@@ -230,8 +230,8 @@ export default function Explore() {
             {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>
 
-          <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 rounded-sm">
-            {isActive && data?.results && (
+          <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 p-3">
+            {isActive && data?.results.length > 0 && (
               <>
                 <TableOfContents items={data.results} activeItems={inView} selectorId="mineralCard" />
                 <div className="mt-1">

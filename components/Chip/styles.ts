@@ -32,6 +32,11 @@ export const getStyles= (type = "default"): CardStyles => {
       textColor: 'text-green-800',
       backgroundColor: 'bg-green-600/30'
     },
+    na: {
+      textColor: 'text-gray-600',
+      backgroundColor: 'bg-gray-100',
+      borderColor: 'border border-gray-200 hover:border-gray-300'
+    }
   };
   return _colors[type];
 };

@@ -28,8 +28,10 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
       revalidateOnReconnect: false,
     }
   );
+  const _fields = ['ima_year', 'approval_year', 'discovery_year', 'publication_year'];
 
-  if (discoveryCountries.length > 0 || history) {
+
+  if (discoveryCountries.length > 0 || (history && _fields.some(key => Object.keys(history).includes(key)) && _fields.some(key => history[key]))) {
     return (
       <>
       {discoveryCountries.length > 0 && (
