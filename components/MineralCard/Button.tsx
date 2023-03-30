@@ -24,13 +24,13 @@ export default function Button ({ item, isLoading, error, isShown, isClickable =
       {isShown && PingComponent("bg-emerald-400", false)}
       {error && PingComponent("bg-red-500", false)}
       <Chip type="default" className={clsx(isShown && "bg-indigo-300/90", isClickable ? "cursor-pointer" : "cursor-default")} {...{isLoading, onClick}}>
-        <span className="font-normal flex-1 text-start">{item.key}</span>
+        <span className="font-medium flex-1 text-start text-indigo-700">{item.key}</span>
         {item.value && (
           <>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
-            <span className="font-medium">
+            <span className="font-medium text-indigo-800">
               {item.value}
             </span>
           </>)}

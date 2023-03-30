@@ -1,12 +1,29 @@
 import { Fragment } from 'react';
 
 import clsx from 'clsx';
-import { getStatusGroupColor } from '@/helpers/status.helpers';
+import { getStatusGroupColor, getUniqueStatusGroups, reduceStatusGroups } from '@/helpers/status.helpers';
+
 
 export default function TableOfContents({ items, activeItems, selectorId }: { items: any[], activeItems: number[], selectorId: string }) {
+  const statuses = items.filter(item => item.statuses.length > 0).flatMap(item => item.statuses);
+  let _statusGroups: any = getUniqueStatusGroups(statuses);
+  _statusGroups = reduceStatusGroups(_statusGroups);
+
   return (
-    <div>
-      <h3 className="text-sm lg:text-base text-center font-medium mb-2 uppercase">Contents</h3>
+    <div className="">
+      <h3 className="text-sm lg:text-base text-center font-normal mb-2 uppercase">Contents</h3>
+
+      {_statusGroups.length > 0 && (
+        <div className="flex flex-col p-2 border-2 border-dashed rounded mb-2 bg-white">
+          {_statusGroups.map((groups, index) => (
+            <div key={index} className="flex items-center">
+                <span className={clsx(getStatusGroupColor(groups), "ml-1 flex-shrink-0 w-2 h-2 rounded")}></span>
+                <p className="flex-shrink-1 text-xs ml-2">- {groups.map(item => item.group.name).join(', ')}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       <ul className="p-1 space-y-1">
         {items.map((item, index) => (
           <Fragment key={index}>
