@@ -27,12 +27,16 @@ export interface CrystalSystem extends BaseIdName {
   from?: From;
 }
 
-export interface Status {
-  status_id: number;
+export interface StatusGroup {
   group: {
     id: number;
     name: string;
-  };
+  }
+}
+
+export interface Status {
+  status_id: number;
+  group: StatusGroup["group"];
   description_short: string;
   description_long: string;
 }
