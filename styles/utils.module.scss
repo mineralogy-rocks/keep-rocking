@@ -3,7 +3,7 @@
 }
 
 .NavBarLink {
-  @apply text-lg font-medium text-gray-700 hover:text-gray-500/70 cursor-pointer;
+  @apply text-lg font-medium text-gray-700 hover:text-gray-700/70 cursor-pointer;
 }
 
 .link {
@@ -20,7 +20,8 @@
 }
 
 .subtleLink {
-  @apply hover:underline decoration-zinc-500/90 hover:underline-offset-2 hover:text-gray-500/70 transition-all duration-100 ease-in-out;
+  @apply hover:text-gray-700/70 transition-all duration-100 ease-in-out;
+
 }
 
 .secondaryText {
