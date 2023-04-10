@@ -14,7 +14,7 @@ function NavItem({href, text}) {
 
   return (
       <Link href={href}>
-        <span className={clsx({ "text-gray-500/70": isActive }, utilsStyles.NavBarLink, "transition-all duration-300 ease-in-out")}>{text}</span>
+        <span className={clsx({ "text-gray-700/70": isActive }, utilsStyles.NavBarLink, "transition-all duration-300 ease-in-out")}>{text}</span>
       </Link>
   );
 }

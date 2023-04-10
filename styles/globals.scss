@@ -2,10 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  height: 100%;
-}
-
 body {
   min-height: 100%;
+  background-image: linear-gradient(
+    65deg,
+    hsl(284deg 85% 97%) 0%,
+    hsl(263deg 87% 98%) 6%,
+    hsl(245deg 79% 98%) 12%,
+    hsl(230deg 68% 97%) 18%,
+    hsl(220deg 56% 97%) 25%,
+    hsl(212deg 44% 96%) 32%,
+    hsl(210deg 43% 96%) 39%,
+    hsl(210deg 45% 95%) 47%,
+    hsl(209deg 48% 94%) 55%,
+    hsl(209deg 49% 93%) 62%,
+    hsl(209deg 50% 92%) 70%,
+    hsl(211deg 53% 92%) 77%,
+    hsl(220deg 59% 94%) 83%,
+    hsl(232deg 63% 95%) 89%,
+    hsl(252deg 68% 96%) 94%,
+    hsl(274deg 70% 96%) 97%,
+    hsl(300deg 67% 96%) 100%
+  );
 }
