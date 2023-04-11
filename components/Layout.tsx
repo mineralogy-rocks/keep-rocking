@@ -6,13 +6,14 @@ import { Inter } from '@next/font/google';
 
 const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-inter',
 });
 
 export default function Layout({ children }) {
   return (
     <>
       <NavBar />
-        <main className={clsx("max-w-full min-h-[70vh] mx-auto relative pt-10", inter.className)}>{children}</main>
+        <main className={clsx("max-w-full min-h-[70vh] mx-auto relative pt-10 text-font", "font-sans", inter.variable)}>{children}</main>
       <Footer />
     </>
   );
