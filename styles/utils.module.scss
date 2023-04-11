@@ -3,15 +3,15 @@
 }
 
 .NavBarLink {
-  @apply text-lg font-medium text-gray-700 hover:text-gray-700/70 cursor-pointer;
+  @apply text-lg font-medium text-font-primary hover:text-slate-600/80 cursor-pointer;
 }
 
 .link {
-  @apply font-bold text-blue-700 hover:text-blue-800 cursor-pointer;
+  @apply font-bold text-font-blue hover:text-font-blueDark cursor-pointer;
 }
 
 .linkSmall {
-  @apply font-medium text-blue-700 hover:text-blue-800 cursor-pointer;
+  @apply font-medium text-font-blue hover:text-font-blueDark cursor-pointer;
 }
 
 .linkExternal {
@@ -20,10 +20,10 @@
 }
 
 .subtleLink {
-  @apply hover:text-gray-700/70 transition-all duration-100 ease-in-out;
+  @apply hover:text-slate-600/80 transition-all duration-100 ease-in-out;
 
 }
 
 .secondaryText {
-  @apply text-gray-600;
+  @apply text-font-secondary;
 }
