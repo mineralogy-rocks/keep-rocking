@@ -15,9 +15,13 @@
 }
 
 .Header3 {
-  @apply font-bold text-indigo-700 text-lg sm:text-xl mt-5 mb-3;
+  @apply font-bold text-font-blueDark text-lg sm:text-xl mt-5 mb-3;
 }
 
 .Header4 {
-  @apply font-bold text-black text-base sm:text-lg mt-2 mb-1;
+  @apply font-bold text-font text-base sm:text-lg mt-2 mb-1;
+}
+
+.Subtitle {
+  @apply font-bold text-base md:text-lg uppercase text-font-blueDark;
 }

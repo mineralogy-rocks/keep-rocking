@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="mt-4 flex flex-col gap-y-6 text-sm md:text-base sm:flex-row">
           <div className="w-full flex-none justify-center space-y-10 px-2 sm:w-1/3 sm:space-y-8 lg:flex lg:space-y-0">
             <div className="lg:flex-none">
-              <h2 className="text-gray-800 font-bold">Links</h2>
+              <h2 className="text-font-primary font-bold">Links</h2>
               <ul className="mt-3 space-y-2">
                  <li>
                   <ExternalLink href="https://uniba.sk/en/">Comenius University</ExternalLink>
@@ -44,7 +44,7 @@ export default function Footer() {
 
           <div className="w-full flex-none justify-center space-y-10 px-2 sm:w-1/3 sm:space-y-8 lg:flex lg:space-y-0">
             <div className="lg:flex-none">
-              <h2 className="text-gray-800 font-bold">Contribute</h2>
+              <h2 className="text-font-primary font-bold">Contribute</h2>
               <ul className="mt-3 space-y-2">
                 <li>
                   <ExternalLink href="https://www.researchgate.net/profile/Liubomyr-Gavryliv">Research Gate</ExternalLink>
@@ -65,7 +65,7 @@ export default function Footer() {
 
           <div className="w-full flex-none justify-center space-y-10 px-2 sm:w-1/3 sm:space-y-8 lg:flex lg:space-y-0">
             <div className="lg:flex-none">
-              <h2 className="text-gray-800 font-bold">Legal</h2>
+              <h2 className="text-font-primary font-bold">Legal</h2>
               <ul className="mt-3 space-y-2">
                 <li>
                   <InternalLink href='/privacy-policy'>Privacy Policy</InternalLink>
@@ -78,7 +78,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-row justify-center items-center text-xs md:text-sm text-gray-700 border-t border-zinc-300 pt-5">
+        <div className="mt-12 flex flex-row justify-center items-center text-xs md:text-sm text-font-secondary border-t border-zinc-300 pt-5">
           <LogoCube animate={false} />
           <span className="ml-1 font-light">©2022—present mineralogy.rocks. All rights reserved.</span>
         </div>
