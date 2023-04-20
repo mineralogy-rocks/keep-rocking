@@ -17,6 +17,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <style jsx global>{`
         html {
           font-family: ${inter.style.fontFamily};
+
         }
       `}</style>
       <Head>
