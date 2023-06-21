@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
+import { motion, Variants } from 'framer-motion';
 import useSWR from 'swr';
 import filter from 'just-filter-object';
 
@@ -163,6 +164,26 @@ export default function Explore() {
     return;
   }, [data, error,]);
 
+  const items = {
+    hidden: { y: 20, opacity: 0.7 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
+  };
+
+  const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
+  };
+
   return (
     <>
       <Head>
@@ -215,17 +236,38 @@ export default function Explore() {
               </div>
             )}
 
-            <div className="space-y-6 sm:space-y-3">
+            <motion.div className="space-y-6 sm:space-y-3"
+                        variants={container}
+                        initial="hidden"
+                        animate="visible">
               {isActive && data && data.results?.map((item, index) => {
+                // initial={{
+                //   opacity: 0.8,
+                //   y: 20*index
+                //   }}
+                // animate={{
+                //   opacity: 1,
+                //   y: 0
+                // }}
+                // transition={{
+                //   type: "spring",
+                //   stiffness: 260,
+                //   damping: 20,
+                //   ease: "easeInOut",
+                //   duration: 0.5,
+                // }}
                 return (
-                  <MineralCard key={item.slug}
-                               index={index}
-                               mineral={item}
-                               mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
-                               isVisible={(e) => handleVisibleItems(e, index)} />
+                  <motion.div key={item.slug}
+                              variants={ items }>
+                    <MineralCard key={item.slug}
+                                 index={index}
+                                 mineral={item}
+                                 mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
+                                 isVisible={(e) => handleVisibleItems(e, index)} />
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
 
             {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>

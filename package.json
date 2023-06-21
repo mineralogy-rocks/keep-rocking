@@ -14,6 +14,7 @@
     "@popperjs/core": "^2.11.6",
     "@tailwindcss/line-clamp": "^0.4.2",
     "clsx": "^1.2.1",
+    "framer-motion": "^10.12.16",
     "just-filter-object": "^3.1.1",
     "just-group-by": "^2.2.0",
     "next": "^13.0.0",
