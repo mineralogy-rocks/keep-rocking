@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import filter from 'just-filter-object';
 
@@ -164,26 +164,6 @@ export default function Explore() {
     return;
   }, [data, error,]);
 
-  const items = {
-    hidden: { y: 20, opacity: 0.7 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  };
-
-  const container = {
-    hidden: { opacity: 1, scale: 0 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
-  };
-
   return (
     <>
       <Head>
@@ -235,39 +215,37 @@ export default function Explore() {
                 No results found.
               </div>
             )}
-
-            <motion.div className="space-y-6 sm:space-y-3"
-                        variants={container}
-                        initial="hidden"
-                        animate="visible">
-              {isActive && data && data.results?.map((item, index) => {
-                // initial={{
-                //   opacity: 0.8,
-                //   y: 20*index
-                //   }}
-                // animate={{
-                //   opacity: 1,
-                //   y: 0
-                // }}
-                // transition={{
-                //   type: "spring",
-                //   stiffness: 260,
-                //   damping: 20,
-                //   ease: "easeInOut",
-                //   duration: 0.5,
-                // }}
-                return (
-                  <motion.div key={item.slug}
-                              variants={ items }>
-                    <MineralCard key={item.slug}
-                                 index={index}
-                                 mineral={item}
-                                 mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
-                                 isVisible={(e) => handleVisibleItems(e, index)} />
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+            {isActive && data && data.results?.length > 0 && (
+              <div className="space-y-6 sm:space-y-3">
+                {data.results.map((item, index) => {
+                  return (
+                    <motion.div key={index}
+                                initial={{
+                                  opacity: 0.6,
+                                  y: 20
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  y: 0
+                                }}
+                                transition={{
+                                  type: 'spring',
+                                  ease: 'easeInOut',
+                                  bounce: 0.9,
+                                  stiffness: 90,
+                                  damping: 7,
+                                  delay: 0.1*index
+                                }}>
+                      <MineralCard key={item.slug}
+                                   index={index}
+                                   mineral={item}
+                                   mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
+                                   isVisible={(e) => handleVisibleItems(e, index)} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
 
             {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>

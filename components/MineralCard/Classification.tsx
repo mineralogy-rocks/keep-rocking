@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import groupBy from 'just-group-by';
+import { motion, Variants } from 'framer-motion';
 
 import { getRelationDesignation } from './MineralCard.helpers';
 import { getIMAStatus } from '@/helpers/status.helpers';
@@ -52,7 +53,34 @@ export default function ClassificationSnippet({ data }) {
     let _group = groups[group][0].group;
     let designation = getRelationDesignation(groups[group], _group);
     if (_group.id !== 11) _groups.push(designation);
-  })
+  });
+
+  const container: Variants = {
+    ready: {
+      height: "auto",
+      transition: {
+        staggerChildren: 0.07,
+      }
+    },
+    loading: {
+      height: 0,
+    }
+  };
+  const item: Variants = {
+    ready: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+      }
+    },
+    loading: {
+      opacity: 0.4,
+      y: 30,
+    }
+  };
 
   if (data && _fields.some(key => Object.keys(data).includes(key)) && _fields.some(key => data[key]) || _groups.length > 0) {
     return (
@@ -80,8 +108,12 @@ export default function ClassificationSnippet({ data }) {
           </ul>
         )}
 
+        <motion.div key={data.id}
+                    variants={ container }
+                    initial={ 'loading' }
+                    animate={ !!(ima_status || strunz_index || dana_index) ? 'ready' : 'loading' }>
           {ima_status && (
-            <div className="flex w-full">
+            <motion.div className="flex w-full" variants={item}>
               <div className="flex flex-wrap gap-1">
                 {ima_status.map((status, id) => {
                   let _status = getIMAStatus(status);
@@ -93,52 +125,53 @@ export default function ClassificationSnippet({ data }) {
                   })
                 }
               </div>
-            </div>
+            </motion.div>
           )}
-        {strunz_index && (
-          <div className="flex flex-wrap items-center text-xs">
-            <h4 className="font-medium mr-1">Nickel-Strunz (10th)</h4>
+          {strunz_index && (
+            <motion.div className="flex flex-wrap items-center text-xs" variants={item}>
+              <h4 className="font-medium mr-1">Nickel-Strunz (10th)</h4>
 
-            <div className="flex items-center rounded py-0.5">
-              <span className="">{strunz_index}</span>
-              <Tooltip key={strunz_index}
-                       isShown={!!NickelStrunzData}
-                       button={(open) => buttonComponent(isLoading, !!error, open && !!NickelStrunzData, (e) => {e && handleNickelIndexUpdate(strunz_index)} )}>
-                {NickelStrunzData?.results &&
-                  (<div className="relative flex flex-col space-y-1 p-1">
-                    <div className="border-b">
-                      <p className="font-semibold pb-2 mr-5">Nickel-Strunz (2023) Classification of mindat.org</p>
-                    </div>
-                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz1}:</span><span className="ml-1">{NickelStrunzData?.results[0].title1}</span></div>
-                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title2 }}></span></div>
-                    <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz3}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title3 }}></span></div>
-                  </div>)
-                }
-              </Tooltip>
-            </div>
-          </div>
-        )}
-        {dana_index && (
-          <div className="flex flex-wrap items-center text-xs">
-            <h4 className="font-medium mr-1">Dana (8th)</h4>
-            <div className="flex items-center rounded px-1 py-0.5">
-              <span className="">{dana_index}</span>
-              <Tooltip key={dana_index}
-                       isShown={!!DanaData}
-                       button={(open) => buttonComponent(DanaIsLoading, !!DanaError, open && !!DanaData, (e) => {e && handleDanaIndexUpdate(dana_index)} )}>
-                {DanaData?.results &&
-                  (<div className="relative flex flex-col space-y-1 p-1">
-                    <div className="border-b">
-                      <p className="font-semibold pb-2 mr-5">Dana Classification 8th edition of mindat.org</p>
-                    </div>
-                    <div><span className="font-semibold">{DanaData?.results[0].dana1}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: DanaData?.results[0].title1 }}></span></div>
-                    <div><span className="font-semibold">{DanaData?.results[0].dana2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: DanaData?.results[0].title2 }}></span></div>
-                  </div>)
-                }
-              </Tooltip>
-            </div>
-          </div>
-        )}
+              <div className="flex items-center rounded py-0.5">
+                <span className="">{strunz_index}</span>
+                <Tooltip key={strunz_index}
+                        isShown={!!NickelStrunzData}
+                        button={(open) => buttonComponent(isLoading, !!error, open && !!NickelStrunzData, (e) => {e && handleNickelIndexUpdate(strunz_index)} )}>
+                  {NickelStrunzData?.results &&
+                    (<div className="relative flex flex-col space-y-1 p-1">
+                      <div className="border-b">
+                        <p className="font-semibold pb-2 mr-5">Nickel-Strunz (2023) Classification of mindat.org</p>
+                      </div>
+                      <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz1}:</span><span className="ml-1">{NickelStrunzData?.results[0].title1}</span></div>
+                      <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title2 }}></span></div>
+                      <div><span className="font-semibold">{NickelStrunzData?.results[0].strunz3}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: NickelStrunzData?.results[0].title3 }}></span></div>
+                    </div>)
+                  }
+                </Tooltip>
+              </div>
+            </motion.div>
+          )}
+          {dana_index && (
+            <motion.div className="flex flex-wrap items-center text-xs" variants={item}>
+              <h4 className="font-medium mr-1">Dana (8th)</h4>
+              <div className="flex items-center rounded px-1 py-0.5">
+                <span className="">{dana_index}</span>
+                <Tooltip key={dana_index}
+                        isShown={!!DanaData}
+                        button={(open) => buttonComponent(DanaIsLoading, !!DanaError, open && !!DanaData, (e) => {e && handleDanaIndexUpdate(dana_index)} )}>
+                  {DanaData?.results &&
+                    (<div className="relative flex flex-col space-y-1 p-1">
+                      <div className="border-b">
+                        <p className="font-semibold pb-2 mr-5">Dana Classification 8th edition of mindat.org</p>
+                      </div>
+                      <div><span className="font-semibold">{DanaData?.results[0].dana1}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: DanaData?.results[0].title1 }}></span></div>
+                      <div><span className="font-semibold">{DanaData?.results[0].dana2}:</span><span className="ml-1" dangerouslySetInnerHTML={{ __html: DanaData?.results[0].title2 }}></span></div>
+                    </div>)
+                  }
+                </Tooltip>
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     )
   };
