@@ -7,13 +7,14 @@ import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 
 import { Inter } from '@next/font/google';
-
 import clsx from 'clsx';
 
 
 const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-inter'
 });
+
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -22,9 +23,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className={clsx("max-w-full mx-auto relative pt-10 text-font", inter.className)}>
+      <main className={clsx("max-w-full mx-auto relative text-font font-sans", inter.variable)}>
         <NavBar />
-        <div className="min-h-[70vh]">
+        <div className="min-h-[70vh] pt-10">
           <Component {...pageProps} />
         </div>
         <Footer />

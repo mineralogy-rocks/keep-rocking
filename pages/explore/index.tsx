@@ -155,7 +155,11 @@ export default function Explore() {
   let dataAvailable = data?.results?.filter(item => item.mindat_id !== null).map(item => item.mindat_id).join(',') ?? null;
 
   const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
-    dataAvailable ? `/mr-items/?id__in=${dataAvailable}` : null
+    dataAvailable ? `/mr-items/?id__in=${dataAvailable}` : null,
+    {
+      use: [ abortableMiddleware ],
+      keepPreviousData: true,
+    }
   );
 
   useEffect(() => {
