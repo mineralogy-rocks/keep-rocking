@@ -21,7 +21,7 @@ import TableOfContents from '@/components/TableOfContents';
 
 const additionalParams = [
   'cursor',
-]
+];
 
 const initialSearchQueryParams = {
   cursor: '',

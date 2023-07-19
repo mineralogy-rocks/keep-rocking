@@ -1,11 +1,12 @@
 import { useState } from "react";
 
+
 function Header({ text, isHovered }) {
     return <div className="mr-5 transition-all duration-500 text-white font-medium text-xs md:text-sm justify-end">{text}</div>;
 }
 
-export default function Terminal({ children }) {
 
+export default function Terminal({ children }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -35,13 +36,13 @@ export default function Terminal({ children }) {
             <Header text="~/home" isHovered={isHovered} />
           </div>
         </div>
-          <div className="min-h-0 flex-auto flex flex-col">
-            <div className="w-full flex-auto flex min-h-0 overflow-auto">
-              <div className="w-full flex-auto">
-                {children}
-              </div>
+        <div className="min-h-[50px] flex-auto flex flex-col">
+          <div className="w-full flex-auto flex min-h-0 overflow-auto">
+            <div className="w-full flex-auto">
+              {children}
             </div>
           </div>
+        </div>
       </div>
     </div>
   )

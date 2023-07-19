@@ -1,6 +1,9 @@
+import { useRef, useEffect, useState } from "react";
+
 import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
+import { motion, useInView } from "framer-motion";
 import cx from 'clsx';
 
 import Terminal from '@/components/content/Terminal';
@@ -14,6 +17,97 @@ import MSCALogo from 'public/assets/MSCA.png';
 
 
 export default function Home() {
+
+  const terminalRef = useRef(null);
+  const terminalCodeRef = useRef(null);
+  const isInView = useInView(terminalRef, { once: true, amount: 0.1 });
+
+  const code = [
+    'curl -X GET \\',
+    '-H "Content-type: application/json" \\',
+    '-H "Accept: application/json" \\',
+    '-d "offset=10" \\',
+    '-d "ordering=status_id" \\',
+    '"https://api.mineralogy.rocks/status"',
+  ];
+
+  const [typedCode, setTypedCode] = useState('');
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const htmlTypedCode = typedCode.split('\n').map((line, index) => {
+    return (
+      <div key={index} className={cx('flex items-center', index > 0 && 'ml-[36px] sm:ml-[42px]')}>
+        {line}
+        {(index === typedCode.split('\n').length - 1) && (
+          <svg className="text-gray-400 animate-[blink_1s_ease-in-out_infinite]" width="5" height="15" viewBox="0 0 5 15" fill="currentColor">
+            <rect x="0" y="0" width="5" height="15" />
+          </svg>)}
+        <br />
+      </div>
+    );
+  });
+
+  useEffect(() => {
+    if (terminalCodeRef.current) {
+      setContentHeight(terminalCodeRef.current.offsetHeight);
+    };
+    return;
+  }, [htmlTypedCode]);
+
+  useEffect(() => {
+
+    const codeTypingDisabled = sessionStorage.getItem('codeTypingDisabled');
+    const typeCode = (index, line) => {
+      if (index === code.length) {
+        return;
+      }
+
+      const delay = Math.floor(Math.random() * 100); // Random delay between 0 and 100ms
+      let currentIndex = 0;
+
+      const typeNextCharacter = () => {
+        if (currentIndex === line.length) {
+          // Move to the next line of code after typing
+          setTimeout(() => {
+            setTypedCode(prevCode => prevCode + '\n');
+            typeCode(index + 1, code[index + 1]);
+          }, delay + Math.floor(Math.random() * 100) + 200);
+          return;
+        }
+
+        const char = line[currentIndex];
+
+        if (char === ' ') {
+          // Pause between words
+          setTimeout(() => {
+            setTypedCode(prevCode => prevCode + ' ');
+            currentIndex++;
+            typeNextCharacter();
+          }, Math.floor(Math.random() * 100) + 200); // Random pause between 100ms and 200ms
+        } else {
+          // Type the character with varying speed
+          setTimeout(() => {
+            setTypedCode(prevCode => prevCode + char);
+            currentIndex++;
+            typeNextCharacter();
+          }, delay + Math.floor(Math.random() * 100) + 10); // Random typing speed between 50ms and 150ms
+        }
+      };
+
+      typeNextCharacter();
+    };
+
+    if (!codeTypingDisabled) {
+      if (isInView) {
+        typeCode(0, code[0]);
+        sessionStorage.setItem('codeTypingDisabled', 'true');
+      }
+    } else {
+      setTypedCode(code.join('\n'));
+    }
+    return;
+  }, [isInView]);
+
   return (
   <>
     <Head>
@@ -50,7 +144,7 @@ export default function Home() {
     </header>
 
     <section>
-      <div className={typographyStyles.Section}>
+      <div className={cx(typographyStyles.Section, "")}>
         <h3 className="text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
         <p className="text-base md:text-lg leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
@@ -108,11 +202,11 @@ export default function Home() {
               Reach out to us if you need an API key.
             </p>
             <p className="text-base md:text-lg leading-normal mt-2">
-              Importantly, our system is built around <a className={utilsStyles.linkExternal} href="https://api.mindat.org" target="_blank" rel="noopener noreferrer">Mindat API</a>, which is a fascinating and a well-documented resource!
+              Importantly, our system is built around <a className={utilsStyles.linkExternal} href="https://api.mindat.org" target="_blank" rel="noopener noreferrer">Mindat API</a>, which is a fascinating resource!
             </p>
           </div>
 
-          <div className="md:col-span-6">
+          <div className="md:col-span-6" ref={terminalRef}>
             <Terminal>
               <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
                 <code className="flex-none min-w-full p-5">
@@ -120,15 +214,23 @@ export default function Home() {
                     <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
                       <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                     </svg>
-                    <span className="flex-auto">
-                      <span className="text-indigo-700">curl</span>
-                      <span> -X GET \</span>{'\n'}
-                      <span>     -H &quot;Content-type: application/json&quot; \</span>{'\n'}
-                      <span>     -H &quot;Accept: application/json&quot; \</span>{'\n'}
-                      <span>     -d &quot;offset=10&quot; \</span>{'\n'}
-                      <span>     -d &quot;ordering=status_id&quot; \</span>{'\n'}
-                      <span>     &quot;https://api.mineralogy.rocks/status&quot; </span>
-                    </span>
+                    <motion.div className="flex-auto"
+                                initial={{
+                                  height: 0,
+                                }}
+                                animate={{
+                                  height: contentHeight,
+                                }}
+                                transition={{
+                                  type: 'spring',
+                                  bounce: 0.4,
+                                  stiffness: 100,
+                                  damping: 20,
+                                }}>
+                      <div ref={terminalCodeRef}>
+                        {htmlTypedCode}
+                      </div>
+                    </motion.div>
                   </span>
                 </code>
               </pre>
