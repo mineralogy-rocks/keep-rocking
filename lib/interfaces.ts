@@ -18,7 +18,7 @@ export interface Formula {
     url: string;
   };
   show_on_site: boolean;
-  created_at: Date;
+  created_at: string;
   from?: From;
 }
 
