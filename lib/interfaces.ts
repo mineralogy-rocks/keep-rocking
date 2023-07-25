@@ -41,6 +41,15 @@ export interface Status {
   description_long: string;
 }
 
+export interface StatusWithRelation extends Status {
+  mineral: {
+    id: string;
+    name: string;
+    slug: string;
+    mindat_id?: number;
+  }
+};
+
 export interface Relation {
   id: string;
   count: number;
@@ -76,3 +85,4 @@ export interface colorTuple {
   textColor: string;
   backgroundColor: string;
 }
+

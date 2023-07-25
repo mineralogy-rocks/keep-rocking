@@ -6,13 +6,17 @@ import groupBy from 'just-group-by';
 
 import { Formula, History } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
+import { useMindatApi } from '@/hooks/use-mindat-api';
+import { getPhysicalProperties } from '@/helpers/mindat.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
+import { getRange } from '@utils';
+import { Fragment } from 'react';
 
 
 const Section = ({ title, children }) => (
   <section className="mt-10 px-2">
     <h2 className="text-xl font-semibold text-font-blueDark">{title}</h2>
-    <div className="flex flex-col p-2">
+    <div className="flex flex-col px-2 mt-5">
       {children}
     </div>
   </section>
@@ -20,18 +24,29 @@ const Section = ({ title, children }) => (
 
 export default function MineralPage() {
   const router = useRouter();
-  console.log(router.query.slug);
   const { data, error, isLoading } = useSWR(
     router.isReady ? '/mineral/' + router.query.slug + '/' : null,
     fetcher,
   );
+
+  const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
+    data && data.mindat_id ? `/geomaterials/${data.mindat_id}` : null,
+    {
+      use: [ abortableMiddleware ],
+      keepPreviousData: false,
+    }
+  );
+
+  console.log(mindatData)
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
   const { history, formulas, name, description } : { history: History, formulas: [Formula], name: string, description: string } = data;
   const _formulas = groupBy(formulas, item => item.source.name);
-  console.log(_formulas);
+
+  const physicalProperties = getPhysicalProperties(mindatData);
+  console.log(physicalProperties)
 
   return (
     <>
@@ -39,45 +54,74 @@ export default function MineralPage() {
         <title>mineralogy.rocks - {name}</title>
       </Head>
 
-      <div className="max-w-lg md:max-w-3xl lg:max-w-5xl mx-auto mt-10">
+      <div className="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mt-10 px-5">
         <h1 className="text-xl sm:text-3xl font-semibold sm:font-bold ml-2 break-words">{name}</h1>
         <p className="mt-10 px-2" dangerouslySetInnerHTML={{ __html: description }}></p>
 
         {history && (
-          <section className="mt-10 px-2">
-            <h2 className="text-xl font-semibold text-font-blueDark">History</h2>
-            <div className="flex flex-col p-2">
-              {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
-              {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
-              {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)}
-            </div>
-          </section>
+          <Section title="History">
+            {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
+            {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
+            {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)}
+          </Section>
         )}
 
         {formulas && (
-          <section className="mt-10 px-2">
-            <h2 className="text-xl font-semibold text-font-blueDark">Stoichiometric Formulas</h2>
-            <div className="flex flex-col p-2">
-              {Object.keys(_formulas).map((key, index) => {
-                let _localFormulas = _formulas[key].sort((a, b) => {
-                  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                })
-                return (
-                  <div key={index} className="flex flex-col">
-                    <span className="font-semibold">{key}</span>
+          <Section title="Stoichiometric formulas">
+            {Object.keys(_formulas).map((key, index) => {
+              let _localFormulas = _formulas[key].sort((a, b) => {
+                return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+              })
+              return (
+                <div key={index} className="flex flex-col">
+                  <h3 className="font-semibold">{key}</h3>
+                  <ul className="relative p-2 list-none">
                     {_localFormulas.map((item, index) => (
-                      <div key={index} className="flex items-center p-2 space-x-2 text-sm">
-                        <span className="text-font-secondary italic">{item.created_at}</span>
-                        <span className="w-1 h-1 rounded-full bg-blue-900"></span>
-                        <span className="font-medium" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
-                      </div>
+                      <li key={index} className="relative pb-2 text-sm">
+                        <div className="flex flex-col ml-3">
+                          <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
+                          <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
+                        </div>
+                        <style jsx>{`
+                          li::before {
+                            position: absolute;
+                            top: -0.25em;
+                            left: calc(0.25rem*-1);
+                            content: "•";
+                            color: #1E40AF;
+                          }
+                          li::after {
+                            position: absolute;
+                            content: " ";
+                            top: 1em;
+                            left: calc(-0.1rem + 1px);
+                            bottom: 0;
+                            width: 1px;
+                            height: auto;
+                            background-color: #cbd5e1;
+                          }
+                        `}</style>
+                      </li>
                       )
                     )}
-                  </div>
-                )}
+                  </ul>
+                </div>
               )}
+            )}
+          </Section>
+        )}
+
+        {physicalProperties && (
+          <Section title="Physical properties">
+            <div className="grid grid-cols-2 gap-2 w-1/2">
+              {Object.keys(physicalProperties).map((key, index) => (
+                <Fragment key={index}>
+                  <span className="font-semibold">{key}</span>
+                  <span className="text-sm">{physicalProperties[key]}</span>
+                </Fragment>
+              ))}
             </div>
-          </section>
+          </Section>
         )}
       </div>
     </>

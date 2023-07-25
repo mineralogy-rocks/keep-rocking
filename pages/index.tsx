@@ -35,22 +35,21 @@ export default function Home() {
   const [contentHeight, setContentHeight] = useState(0);
 
   const htmlTypedCode = typedCode.split('\n').map((line, index) => {
+    let _isLastLine = index === typedCode.split('\n').length - 1;
     return (
       <div key={index} className={cx('flex items-center', index > 0 && 'ml-[36px] sm:ml-[42px]')}>
         {line}
-        {(index === typedCode.split('\n').length - 1) && (
-          <svg className="text-gray-400 animate-[blink_1s_ease-in-out_infinite]" width="5" height="15" viewBox="0 0 5 15" fill="currentColor">
+        {_isLastLine && (
+          <svg className="text-gray-400 animate-[blink_1s_ease-out_infinite]" width="5" height="15" viewBox="0 0 5 15" fill="currentColor">
             <rect x="0" y="0" width="5" height="15" />
           </svg>)}
-        <br />
+        {!_isLastLine && (<br />)}
       </div>
     );
   });
 
   useEffect(() => {
-    if (terminalCodeRef.current) {
-      setContentHeight(terminalCodeRef.current.offsetHeight);
-    };
+    if (terminalCodeRef.current) setContentHeight(terminalCodeRef.current.offsetHeight);
     return;
   }, [htmlTypedCode]);
 
