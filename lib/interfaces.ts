@@ -76,6 +76,13 @@ export interface History {
   first_known_use: string;
 }
 
+export interface Inheritance {
+  mindat_id: number|null;
+  id: string;
+  statuses: [number];
+  depth: number;
+};
+
 export interface Link {
   name: string;
   link: string;

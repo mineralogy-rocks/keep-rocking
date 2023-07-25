@@ -1,16 +1,19 @@
+import { Fragment } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import groupBy from 'just-group-by';
 
+import { MINDAT_RETRIEVE_FIELDS, MINDAT_RETRIEVE_FIELDS_MAP } from '@/lib/constants';
 import { Formula, History } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
-import { getPhysicalProperties } from '@/helpers/mindat.helpers';
+import { getFirstConclusiveData, getPhysicalProperties } from '@/helpers/mindat.helpers';
+import { getMindatIds } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
-import { getRange } from '@utils';
-import { Fragment } from 'react';
+import Inheritance from '@/components/Inheritance';
+import RelationChip from '@/components/MineralCard/RelationChip';
 
 
 const Section = ({ title, children }) => (
@@ -29,8 +32,11 @@ export default function MineralPage() {
     fetcher,
   );
 
+  const primaryMindatId = data && data.mindat_id ? data.mindat_id : null;
+  const mindatIds = getMindatIds(data);
+
   const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
-    data && data.mindat_id ? `/geomaterials/${data.mindat_id}` : null,
+    mindatIds ? `/geomaterials/?id__in=${mindatIds.join(',')}&fields=${MINDAT_RETRIEVE_FIELDS.join(',')}` : null,
     {
       use: [ abortableMiddleware ],
       keepPreviousData: false,
@@ -45,8 +51,18 @@ export default function MineralPage() {
   const { history, formulas, name, description } : { history: History, formulas: [Formula], name: string, description: string } = data;
   const _formulas = groupBy(formulas, item => item.source.name);
 
-  const physicalProperties = getPhysicalProperties(mindatData);
-  console.log(physicalProperties)
+  const firstConclusive = getFirstConclusiveData(
+    mindatData?.results.filter(item => item.id !== primaryMindatId),
+    MINDAT_RETRIEVE_FIELDS // MINDAT_RETRIEVE_FIELDS_MAP['physicalProperties']
+  );
+  const physicalProperties = getPhysicalProperties(
+    mindatData?.results.filter(item => item.id === primaryMindatId)?.[0]
+  );
+  const inheritedPhysicalProperties = getPhysicalProperties(firstConclusive);
+
+  console.log(firstConclusive);
+  console.log(physicalProperties);
+  console.log(inheritedPhysicalProperties);
 
   return (
     <>
@@ -111,15 +127,36 @@ export default function MineralPage() {
           </Section>
         )}
 
-        {physicalProperties && (
+        {(physicalProperties || inheritedPhysicalProperties) && (
           <Section title="Physical properties">
-            <div className="grid grid-cols-2 gap-2 w-1/2">
-              {Object.keys(physicalProperties).map((key, index) => (
-                <Fragment key={index}>
-                  <span className="font-semibold">{key}</span>
-                  <span className="text-sm">{physicalProperties[key]}</span>
-                </Fragment>
-              ))}
+            <div className="flex flex-wrap">
+              {physicalProperties && (
+                <div className="grid grid-cols-3 gap-2 w-1/2">
+                  {Object.keys(physicalProperties).map((key, index) => (
+                    <Fragment key={index}>
+                      <span className="font-semibold">{key}</span>
+                      <span className="col-span-2 text-sm">{physicalProperties[key]}</span>
+                    </Fragment>
+                  ))}
+                </div>
+              )}
+              {inheritedPhysicalProperties && (
+                <div className="w-1/2">
+                  <Inheritance>
+                    <h3>Compare with
+                      <RelationChip name={firstConclusive.name} statuses={[0]} hasArrow={false}></RelationChip>
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      {Object.keys(inheritedPhysicalProperties).map((key, index) => (
+                        <Fragment key={index}>
+                          <span className="font-semibold">{key}</span>
+                          <span className="col-span-2 text-sm">{inheritedPhysicalProperties[key]}</span>
+                        </Fragment>
+                      ))}
+                    </div>
+                  </Inheritance>
+                </div>
+              )}
             </div>
           </Section>
         )}

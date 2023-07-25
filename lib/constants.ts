@@ -21,6 +21,29 @@ export const COMPLEMENTING_STATUS_GROUPS = {
   3: [11]
 };
 
+export const MINDAT_RETRIEVE_FIELDS = [
+  "id",
+  "name",
+
+  "colour",
+  "diapheny",
+  "dmeas",
+  "dmeas2",
+  "hmin",
+  "hmax",
+  "tenacity",
+  "cleavage",
+  "cleavagetype",
+  "luminescence",
+  "lustre",
+  "streak",
+]
+
+export const MINDAT_RETRIEVE_FIELDS_MAP = {
+  'base': ['id', 'name'],
+  'physicalProperties': MINDAT_RETRIEVE_FIELDS
+};
+
 export const MINDAT_KEYS_MAP = {
   density: "Measured Density",
 };
