@@ -38,11 +38,11 @@ export const MINDAT_RETRIEVE_FIELDS = [
   "streak",
 ]
 
-export const MINDAT_RETRIEVE_FIELDS_MAP = {
-  'base': ['id', 'name'],
-  'physicalProperties': MINDAT_RETRIEVE_FIELDS
-};
-
 export const MINDAT_KEYS_MAP = {
   density: "Measured Density",
+};
+
+export const MINDAT_DATA_NODE_STRUCTURE = {
+    "minerals": [],
+    "items": [],
 };

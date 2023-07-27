@@ -20,3 +20,21 @@ export const getRange = (min: number|string, max: number|string): string|null =>
 export const concatStrings = (values: string[], sep: string=" "): string => {
   return values.filter((v) => v).join(sep);
 };
+
+export const compareColors = [
+	{
+		base: '#0075CB',
+	},
+	{
+		base: '#F55A2C',
+	},
+	{
+		base: '#04D192',
+	},
+	{
+		base: '#A89672',
+	},
+  {
+		base: '#F5A92C',
+	}
+];

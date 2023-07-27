@@ -5,15 +5,15 @@ import useSWR from 'swr';
 
 import groupBy from 'just-group-by';
 
-import { MINDAT_RETRIEVE_FIELDS, MINDAT_RETRIEVE_FIELDS_MAP } from '@/lib/constants';
+import { MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
 import { Formula, History } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
-import { getPhysicalProperties } from '@/helpers/mindat.helpers';
+import { getConclusiveMindatData } from '@/helpers/mindat.helpers';
 import { getMindatIds } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
-import Inheritance from '@/components/Inheritance';
 import RelationChip from '@/components/MineralCard/RelationChip';
+
 
 
 const Section = ({ title, children }) => (
@@ -43,47 +43,9 @@ export default function MineralPage() {
   );
 
 
-  const conclusiveMindatData = {
-    'physicalProperties': {}
-  };
-  mindatData?.results.forEach((item) => {
-    const _physicalProperties = getPhysicalProperties(item);
-    if (_physicalProperties) {
-      Object.entries(_physicalProperties).forEach(([key, value]) => {
-        if (!conclusiveMindatData.physicalProperties[key]) conclusiveMindatData.physicalProperties[key] = [];
-
-        let _existingItem = conclusiveMindatData.physicalProperties[key].find((item_) => item_.value === value);
-        if (_existingItem) {
-          _existingItem.ids.push(item.id);
-        } else {
-          conclusiveMindatData.physicalProperties[key].push({ 'value': value, 'ids': [item.id] });
-        }
-      });
-    }
-  });
-
-  // const conclusiveMindatData = mindatData?.results.map((item) => {
-  //   let _item = {
-  //     id: item.id,
-  //     name: item.name,
-  //   }
-  //   let _statuses = item.id === data.mindat_id ?
-  //       data.statuses.map((status) => status.status_id) :
-  //       data.inheritance_chain.find((chainItem) => chainItem.mindat_id === item.id)?.statuses;
-  //   _item['physicalProperties'] = getPhysicalProperties(item);
-  //   _item['statuses'] = _statuses;
-  //   return _item;
-  // });
+  const conclusiveMindatData = getConclusiveMindatData(mindatData?.results.slice(0, 5), data)
 
   console.log(conclusiveMindatData)
-
-  let _ = {
-    color: [
-      { ids: [1], value: 'red' },
-      { ids: [34, 2], value: 'colorless' },
-    ],
-  }
-
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
@@ -156,56 +118,39 @@ export default function MineralPage() {
 
         {(conclusiveMindatData && conclusiveMindatData.physicalProperties) && (
           <Section title="Physical properties">
-            <div className="flex flex-wrap">
-              <div className="grid grid-cols-3 gap-2 w-1/2">
-                {Object.keys(conclusiveMindatData.physicalProperties).map((key, index) => (
-                  <Fragment key={index}>
-                    <span className="font-semibold">{key}</span>
-                    <div className="col-span-2 flex flex-col space-y-2">
-                      {conclusiveMindatData.physicalProperties[key].map((item, index) => (
-                        <span key={index} className="text-sm">{item.value}</span>
-                      ))}
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
+            <div className="grid grid-cols-4 gap-2 w-full lg:w-1/2">
+              {Object.keys(conclusiveMindatData.physicalProperties.items).map((key, index) => (
+                <Fragment key={index}>
+                  <span className="font-semibold break-words">{key}</span>
+                  <div className="col-span-3 flex flex-col space-y-2">
+                    {conclusiveMindatData.physicalProperties.items[key].map((item, index) => (
+                      <div key={index} className="flex items-center">
+                        <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                          {item.ids.map((id) => {
+                            let _color = conclusiveMindatData.physicalProperties.minerals.find(mineral => mineral.id === id)?.color;
+                            return (
+                              <span key={id} className="w-2 h-2 rounded-full -ml-1 first:ml-0" style={{ backgroundColor: _color }}></span>
+                            )}
+                          )}
+                        </div>
+                        <span className="text-sm" dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                      </div>
+                      )
+                    )}
+                  </div>
+                </Fragment>
+              ))}
             </div>
+            <aside className="flex flex-col mt-5 gap-2">
+              {conclusiveMindatData.physicalProperties.minerals.map((item, index) => (
+                <div key={index} className="flex items-center">
+                  <div className="w-2 h-2 mr-2 rounded-full" style={{ backgroundColor: item.color }}></div>
+                  <RelationChip name={item.name} statuses={item.statuses} hasArrow={false} />
+                </div>
+              ))}
+            </aside>
           </Section>
         )}
-
-        {/* {(physicalProperties || inheritedPhysicalProperties) && (
-          <Section title="Physical properties">
-            <div className="flex flex-wrap">
-              {physicalProperties && (
-                <div className="grid grid-cols-3 gap-2 w-1/2">
-                  {Object.keys(physicalProperties).map((key, index) => (
-                    <Fragment key={index}>
-                      <span className="font-semibold">{key}</span>
-                      <span className="col-span-2 text-sm">{physicalProperties[key]}</span>
-                    </Fragment>
-                  ))}
-                </div>
-              )}
-              {inheritedPhysicalProperties && (
-                <div className="w-1/2">
-                  <Inheritance>
-                    <h3>Compare with
-                      <RelationChip name={firstConclusive.name} statuses={[0]} hasArrow={false}></RelationChip>
-                    </h3>
-                    <div className="grid grid-cols-3 gap-2">
-                      {Object.keys(inheritedPhysicalProperties).map((key, index) => (
-                        <Fragment key={index}>
-                          <span className="font-semibold">{key}</span>
-                          <span className="col-span-2 text-sm">{inheritedPhysicalProperties[key]}</span>
-                        </Fragment>
-                      ))}
-                    </div>
-                  </Inheritance>
-                </div>
-              )}
-            </div>
-          </Section>
-        )} */}
       </div>
     </>
   )
