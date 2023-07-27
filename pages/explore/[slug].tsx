@@ -9,7 +9,7 @@ import { MINDAT_RETRIEVE_FIELDS, MINDAT_RETRIEVE_FIELDS_MAP } from '@/lib/consta
 import { Formula, History } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
-import { getFirstConclusiveData, getPhysicalProperties } from '@/helpers/mindat.helpers';
+import { getPhysicalProperties } from '@/helpers/mindat.helpers';
 import { getMindatIds } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import Inheritance from '@/components/Inheritance';
@@ -32,7 +32,6 @@ export default function MineralPage() {
     fetcher,
   );
 
-  const primaryMindatId = data && data.mindat_id ? data.mindat_id : null;
   const mindatIds = getMindatIds(data);
 
   const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
@@ -43,26 +42,54 @@ export default function MineralPage() {
     }
   );
 
-  console.log(mindatData)
+
+  const conclusiveMindatData = {
+    'physicalProperties': {}
+  };
+  mindatData?.results.forEach((item) => {
+    const _physicalProperties = getPhysicalProperties(item);
+    if (_physicalProperties) {
+      Object.entries(_physicalProperties).forEach(([key, value]) => {
+        if (!conclusiveMindatData.physicalProperties[key]) conclusiveMindatData.physicalProperties[key] = [];
+
+        let _existingItem = conclusiveMindatData.physicalProperties[key].find((item_) => item_.value === value);
+        if (_existingItem) {
+          _existingItem.ids.push(item.id);
+        } else {
+          conclusiveMindatData.physicalProperties[key].push({ 'value': value, 'ids': [item.id] });
+        }
+      });
+    }
+  });
+
+  // const conclusiveMindatData = mindatData?.results.map((item) => {
+  //   let _item = {
+  //     id: item.id,
+  //     name: item.name,
+  //   }
+  //   let _statuses = item.id === data.mindat_id ?
+  //       data.statuses.map((status) => status.status_id) :
+  //       data.inheritance_chain.find((chainItem) => chainItem.mindat_id === item.id)?.statuses;
+  //   _item['physicalProperties'] = getPhysicalProperties(item);
+  //   _item['statuses'] = _statuses;
+  //   return _item;
+  // });
+
+  console.log(conclusiveMindatData)
+
+  let _ = {
+    color: [
+      { ids: [1], value: 'red' },
+      { ids: [34, 2], value: 'colorless' },
+    ],
+  }
+
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
   const { history, formulas, name, description } : { history: History, formulas: [Formula], name: string, description: string } = data;
   const _formulas = groupBy(formulas, item => item.source.name);
-
-  const firstConclusive = getFirstConclusiveData(
-    mindatData?.results.filter(item => item.id !== primaryMindatId),
-    MINDAT_RETRIEVE_FIELDS // MINDAT_RETRIEVE_FIELDS_MAP['physicalProperties']
-  );
-  const physicalProperties = getPhysicalProperties(
-    mindatData?.results.filter(item => item.id === primaryMindatId)?.[0]
-  );
-  const inheritedPhysicalProperties = getPhysicalProperties(firstConclusive);
-
-  console.log(firstConclusive);
-  console.log(physicalProperties);
-  console.log(inheritedPhysicalProperties);
 
   return (
     <>
@@ -127,7 +154,26 @@ export default function MineralPage() {
           </Section>
         )}
 
-        {(physicalProperties || inheritedPhysicalProperties) && (
+        {(conclusiveMindatData && conclusiveMindatData.physicalProperties) && (
+          <Section title="Physical properties">
+            <div className="flex flex-wrap">
+              <div className="grid grid-cols-3 gap-2 w-1/2">
+                {Object.keys(conclusiveMindatData.physicalProperties).map((key, index) => (
+                  <Fragment key={index}>
+                    <span className="font-semibold">{key}</span>
+                    <div className="col-span-2 flex flex-col space-y-2">
+                      {conclusiveMindatData.physicalProperties[key].map((item, index) => (
+                        <span key={index} className="text-sm">{item.value}</span>
+                      ))}
+                    </div>
+                  </Fragment>
+                ))}
+              </div>
+            </div>
+          </Section>
+        )}
+
+        {/* {(physicalProperties || inheritedPhysicalProperties) && (
           <Section title="Physical properties">
             <div className="flex flex-wrap">
               {physicalProperties && (
@@ -159,7 +205,7 @@ export default function MineralPage() {
               )}
             </div>
           </Section>
-        )}
+        )} */}
       </div>
     </>
   )

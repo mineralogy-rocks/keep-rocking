@@ -33,7 +33,6 @@ export const MINDAT_RETRIEVE_FIELDS = [
   "hmax",
   "tenacity",
   "cleavage",
-  "cleavagetype",
   "luminescence",
   "lustre",
   "streak",
