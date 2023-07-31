@@ -23,7 +23,7 @@ export const parsePhysicalProperties = (data) => {
   };
 
   Object.keys(_data).forEach((key) => {
-    if (_data[key]) cleanData[capitalize(MINDAT_KEYS_MAP[key] || key)] = _data[key];
+    if (_data[key]) cleanData[capitalize(MINDAT_KEYS_MAP[key] || key)] = capitalize(_data[key]);
   });
   if (!Object.keys(cleanData).length) return null;
   return cleanData;

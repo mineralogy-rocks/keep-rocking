@@ -23,18 +23,18 @@ export const concatStrings = (values: string[], sep: string=" "): string => {
 
 export const compareColors = [
 	{
-		base: '#0075CB',
+		base: '#2563eb',
 	},
 	{
-		base: '#F55A2C',
+		base: '#be185d',
 	},
 	{
-		base: '#04D192',
+		base: '#fb7185',
 	},
 	{
-		base: '#A89672',
+		base: '#ea580c',
 	},
   {
-		base: '#F5A92C',
+		base: '#22c55e',
 	}
 ];
