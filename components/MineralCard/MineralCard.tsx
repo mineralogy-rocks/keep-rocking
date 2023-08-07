@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import utilsStyles  from '@/styles/utils.module.scss';
 import NoData from './NoData';
-import RelationChip from './RelationChip';
+import RelationChip from '@/components/RelationChip';
 import ClassificationSnippet from './Classification';
 import DiscoverySnippet from './Discovery';
 import RelationSnippet from './Relation';

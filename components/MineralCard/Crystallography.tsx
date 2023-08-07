@@ -6,7 +6,7 @@ import { fetcher } from '@/helpers/fetcher.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import Button from './Button';
-import RelationChip from './RelationChip';
+import RelationChip from '@/components/RelationChip';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
 

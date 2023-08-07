@@ -22,6 +22,14 @@ export interface Formula {
   from?: From;
 }
 
+export interface Crystallography {
+  id: number;
+  mineral: string;
+  crystal_system: BaseIdName;
+  crystal_class: BaseIdName;
+  space_group: BaseIdName;
+}
+
 export interface CrystalSystem extends BaseIdName {
   count?: number;
   from?: From;
@@ -79,8 +87,12 @@ export interface History {
 export interface Inheritance {
   mindat_id: number|null;
   id: string;
+  name: string;
+  slug: string;
   statuses: [number];
   depth: number;
+  formulas: Formula[];
+  crystal_system: CrystalSystem|null;
 };
 
 export interface Link {

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { useState, Fragment } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -7,13 +7,13 @@ import cx from 'clsx';
 import groupBy from 'just-group-by';
 
 import { MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
-import { Formula, History } from '@/lib/interfaces';
+import { Formula, History, Crystallography } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
-import { getConclusiveMindatData } from '@/helpers/mindat.helpers';
+import { getConclusiveData } from '@/helpers/mindat.helpers';
 import { getMindatIds } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
-import RelationChip from '@/components/MineralCard/RelationChip';
+import RelationChip from '@/components/RelationChip';
 
 
 
@@ -24,12 +24,130 @@ const Section = ({ title, children }) => (
   </section>
 );
 
+
+const DataGrid = ({ data }) => {
+  const [_highlighted, _setHighlighted] = useState(data.minerals.map(item => {
+    return {
+      id: item.id,
+      hovered: false,
+      clicked: false
+    }
+  }));
+
+  const handleSelection = (id, hovered = false, clicked = false, reset = false) => {
+    _setHighlighted((prevHighlighted) => {
+      if (clicked) {
+        return prevHighlighted.map((item) => (item.id === id ? { ...item, clicked: true } : item));
+      } else {
+        return prevHighlighted.map((item) => {
+          if (item.id === id) {
+            if (reset) {
+              return { ...item, hovered: false, clicked: false };
+            } else {
+              return { ...item, hovered: hovered };
+            }
+          } else {
+            return item;
+          }
+        });
+      }
+    });
+  };
+
+  const highlighted = _highlighted.filter(item => item.hovered || item.clicked).map(item => item.id);
+
+  return (
+    <div className="grid grid-cols-8 px-2 mt-5">
+      <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
+        {Object.keys(data.items).map((key, index) => {
+          let _isHovered = highlighted.length && !data.items[key].some(item => item.ids.some(id => highlighted.includes(id)));
+          let hoverClass = 'transition-opacity duration-300 ease-in-out';
+
+          return (
+            <Fragment key={index}>
+              <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{key}</span>
+              <div className="col-span-3 flex flex-col space-y-2">
+                {data.items[key].map((item, index) => {
+                  let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
+
+                  return (
+                    <div key={index} className="flex items-center">
+                      <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                        {item.ids.map((id) => {
+                          let _isHovered = highlighted.length && !highlighted.includes(id);
+                          let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+
+                          return (
+                            <span key={id}
+                                  className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
+                                  style={{ backgroundColor: _color }}>
+                            </span>
+                          )}
+                        )}
+                      </div>
+                      <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                    </div>
+                  )}
+                )}
+              </div>
+            </Fragment>
+          )}
+        )}
+      </div>
+
+      <aside className="col-start-8 flex flex-col gap-2">
+        {data.minerals.map((item, index) => {
+          let isHighlighted = _highlighted.find(_item => _item.id === item.id);
+
+          return (
+            <div key={index} className="flex items-center justify-start">
+              <div className="w-2 h-2 mr-2 rounded-full flex-none" style={{ backgroundColor: item.color }}></div>
+              <RelationChip name={item.name}
+                            statuses={item.statuses}
+                            className="flex-none"
+                            hasArrow={false}
+                            hasClose={isHighlighted && isHighlighted.clicked}
+                            onMouseEnter={() => { handleSelection(item.id, true) }}
+                            onMouseLeave={() => { handleSelection(item.id, false) }}
+                            onClick={() => { handleSelection(item.id, false, true)  }}
+                            onClose={(e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) }}
+                            type={isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
+            </div>)
+        })}
+      </aside>
+    </div>
+  )
+};
+
+const CrystallographyNode = ({ crystal_system, crystal_class, space_group, className = "" }) => (
+  <div className={cx("flex flex-col px-2 mt-2 space-y-1 text-sm", className)}>
+    {crystal_system && (
+      <span className="font-medium">Crystal System{' '}
+        <span className="font-normal">{crystal_system.name}</span>
+      </span>
+    )}
+    {crystal_class && (
+      <span className="font-medium">Crystal Class{' '}
+        <span className="font-normal">{crystal_class.name}</span>
+      </span>
+    )}
+    {space_group && (
+      <span className="font-medium">Space Group{' '}
+        <span className="font-normal">{space_group.name}</span>
+      </span>
+    )}
+  </div>
+);
+
+
 export default function MineralPage() {
   const router = useRouter();
+
   const { data, error, isLoading } = useSWR(
     router.isReady ? '/mineral/' + router.query.slug + '/' : null,
     fetcher,
   );
+  console.log(data)
 
   const mindatIds = getMindatIds(data);
 
@@ -41,16 +159,27 @@ export default function MineralPage() {
     }
   );
 
-
-  const conclusiveMindatData = getConclusiveMindatData(mindatData?.results.slice(0, 5), data)
+  const conclusiveMindatData = getConclusiveData(
+    mindatData?.results.slice(0, 5).sort((a, b) => {
+      return mindatIds.indexOf(a.id) - mindatIds.indexOf(b.id);
+    }),
+    data
+  );
 
   console.log(conclusiveMindatData)
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  const { history, formulas, name, description } : { history: History, formulas: [Formula], name: string, description: string } = data;
+  const { crystallography, history, formulas, name, description } : {
+    crystallography: Crystallography,
+    history: History,
+    formulas: [Formula],
+    name: string,
+    description: string
+  } = data;
   const _formulas = groupBy(formulas, item => item.source.name);
+  const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
 
   return (
     <>
@@ -61,6 +190,28 @@ export default function MineralPage() {
       <div className="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mt-10 px-5">
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
         <p className="mt-10 px-2 text-sm font-normal" dangerouslySetInnerHTML={{ __html: description }}></p>
+
+        {hasCrystallography && (
+          <Section title="Crystallography">
+            <div className="flex">
+              {crystallography && (<CrystallographyNode {...crystallography} />)}
+              {data.inheritance_chain && (
+                <div className="flex px-2 space-y-2">
+                  {data.inheritance_chain.map((item, index) => {
+                    if (item.crystallography) return (
+                      <div key={index} className="bg-white p-2 rounded flex flex-col shadow-surface-low">
+                        <div className="flex justify-start">
+                          <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
+                        </div>
+                        <CrystallographyNode className="text-xs" {...item.crystallography} />
+                      </div>
+                    )}
+                  )}
+                </div>
+              )}
+            </div>
+          </Section>
+        )}
 
         {history && (
           <Section title="History">
@@ -119,42 +270,15 @@ export default function MineralPage() {
           </Section>
         )}
 
-        {(conclusiveMindatData && conclusiveMindatData.physicalProperties) && (
+        {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
           <Section title="Physical properties">
-            <div className="grid grid-cols-8 px-2 mt-5">
-              <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
-                {Object.keys(conclusiveMindatData.physicalProperties.items).map((key, index) => (
-                  <Fragment key={index}>
-                    <span className="font-semibold break-words">{key}</span>
-                    <div className="col-span-3 flex flex-col space-y-2">
-                      {conclusiveMindatData.physicalProperties.items[key].map((item, index) => (
-                        <div key={index} className="flex items-center">
-                          <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
-                            {item.ids.map((id) => {
-                              let _color = conclusiveMindatData.physicalProperties.minerals.find(mineral => mineral.id === id)?.color;
-                              return (
-                                <span key={id} className="w-2 h-2 rounded-full -ml-1 first:ml-0" style={{ backgroundColor: _color }}></span>
-                              )}
-                            )}
-                          </div>
-                          <span className="" dangerouslySetInnerHTML={{ __html: item.value }}></span>
-                        </div>
-                        )
-                      )}
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
+            <DataGrid data={{ minerals: conclusiveMindatData.physicalProperties.minerals, items: conclusiveMindatData.physicalProperties.items }} />
+          </Section>
+        )}
 
-              <aside className="col-start-8 flex flex-col gap-2">
-                {conclusiveMindatData.physicalProperties.minerals.map((item, index) => (
-                  <div key={index} className="flex items-center justify-start">
-                    <div className="w-2 h-2 mr-2 rounded-full" style={{ backgroundColor: item.color }}></div>
-                    <RelationChip name={item.name} statuses={item.statuses} hasArrow={false} />
-                  </div>
-                ))}
-              </aside>
-            </div>
+        {conclusiveMindatData && conclusiveMindatData.opticalProperties && (
+          <Section title="Optical properties">
+            <DataGrid data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
           </Section>
         )}
       </div>

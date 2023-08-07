@@ -10,7 +10,7 @@ import { Status } from '@/lib/interfaces';
 
 import { QuestionIcon, ErrorIcon, LoadingIcon } from './Icons';
 import Chip from '@/components/Chip';
-import RelationChip from './RelationChip';
+import RelationChip from '@/components/RelationChip';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
 

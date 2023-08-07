@@ -1,3 +1,6 @@
+import { mindatDataNode } from "@/lib/types";
+
+
 export const IMA_STATUS_CHOICES = {
   approved: "APPROVED",
   discredited: "DISCREDITED",
@@ -36,13 +39,63 @@ export const MINDAT_RETRIEVE_FIELDS = [
   "luminescence",
   "lustre",
   "streak",
-]
+
+  "opticaltype",
+  "opticalsign",
+  "opticalextinction",
+  "opticalalpha",
+  "opticalalpha2",
+  "opticalalphaerror",
+  "opticalbeta",
+  "opticalbeta2",
+  "opticalbetaerror",
+  "opticalgamma",
+  "opticalgamma2",
+  "opticalgammaerror",
+  "opticalomega",
+  "opticalomega2",
+  "opticalomegaerror",
+  "opticalepsilon",
+  "opticalepsilon2",
+  "opticalepsilonerror",
+  "opticaln",
+  "opticaln2",
+  "opticalnerror",
+  "optical2vcalc",
+  "optical2vcalc2",
+  "optical2vcalcerror",
+  "optical2vmeasured",
+  "optical2vmeasured2",
+  "optical2vmeasurederror",
+  "opticaldispersion",
+  "opticalpleochroism",
+  "opticalpleochorismdesc",
+  "opticalbirefringence",
+  "opticalcomments",
+  "opticalcolour",
+  "opticalinternal",
+  "opticaltropic",
+  "opticalanisotropism",
+  "opticalbireflectance",
+  "opticalr",
+];
 
 export const MINDAT_KEYS_MAP = {
   density: "Measured Density",
+
+  opticalSign: "Optical Sign",
+  opticalExtinction: "Optical Extinction",
+  opticalbiRefringence: "Optical Birefringence",
+  optical2VMeasured: "Optical 2V Measured",
+  optical2VCalculated: "Optical 2V Calculated",
+  opticalNa: "Na",
+  opticalNb: "Nb",
+  opticalNg: "Ng",
+  opticalDispersion: "Optical Dispersion",
+  opticalPleochroism: "Optical Pleochroism",
 };
 
-export const MINDAT_DATA_NODE_STRUCTURE = {
+export const MINDAT_DATA_NODE_STRUCTURE: mindatDataNode = {
+    "items": {},
     "minerals": [],
-    "items": [],
 };

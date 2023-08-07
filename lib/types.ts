@@ -46,3 +46,18 @@ export type exploreApiRequest = {
   cursor?: string;
   ima_only?: boolean;
 };
+
+export type mindatDataNode = {
+  items: {
+    [key: string]: {
+      value: any;
+      ids: [number];
+    }[];
+  };
+  minerals: {
+    id: number;
+    name: string;
+    color: string;
+    statuses: [number];
+  }[];
+};
