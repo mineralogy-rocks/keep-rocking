@@ -7,7 +7,7 @@ import cx from 'clsx';
 import groupBy from 'just-group-by';
 
 import { MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
-import { Formula, History, Crystallography } from '@/lib/interfaces';
+import { Formula, FormulaGroupBySource, History, Crystallography } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
@@ -19,7 +19,7 @@ import RelationChip from '@/components/RelationChip';
 
 const Section = ({ title, children }) => (
   <section className="mt-10 px-2">
-    <h2 className="text-xl font-semibold text-font-blueDark">{title}</h2>
+    <h2 className="text-xl mb-5 font-semibold text-font-blueDark">{title}</h2>
     {children}
   </section>
 );
@@ -57,7 +57,7 @@ const DataGrid = ({ data }) => {
   const highlighted = _highlighted.filter(item => item.hovered || item.clicked).map(item => item.id);
 
   return (
-    <div className="grid grid-cols-8 px-2 mt-5">
+    <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
         {Object.keys(data.items).map((key, index) => {
           let _isHovered = highlighted.length && !data.items[key].some(item => item.ids.some(id => highlighted.includes(id)));
@@ -119,8 +119,8 @@ const DataGrid = ({ data }) => {
   )
 };
 
-const CrystallographyNode = ({ crystal_system, crystal_class, space_group, className = "" }) => (
-  <div className={cx("flex flex-col px-2 mt-2 space-y-1 text-sm", className)}>
+const CrystallographyNode = ({ crystal_system, crystal_class, space_group, className = "text-sm" }) => (
+  <div className={cx("flex flex-col px-2 mt-2 gap-1", className)}>
     {crystal_system && (
       <span className="font-medium">Crystal System{' '}
         <span className="font-normal">{crystal_system.name}</span>
@@ -137,6 +137,52 @@ const CrystallographyNode = ({ crystal_system, crystal_class, space_group, class
       </span>
     )}
   </div>
+);
+
+
+const FormulaNode = ({ formulas }: { formulas: FormulaGroupBySource }) => (
+  <>
+    {Object.keys(formulas).map((key, index) => {
+      let _localFormulas = formulas[key].sort((a, b) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      })
+      return (
+        <div key={index} className="flex flex-col text-sm">
+          <h3 className="font-semibold">{key}</h3>
+          <ul className="relative p-2 list-none">
+            {_localFormulas.map((item, index) => (
+              <li key={index} className="relative pb-2">
+                <div className="flex flex-col ml-3">
+                  <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
+                  <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
+                </div>
+                <style jsx>{`
+                  li::before {
+                    position: absolute;
+                    top: -0.25em;
+                    left: calc(0.25rem*-1);
+                    content: "•";
+                    color: #1E40AF;
+                  }
+                  li::after {
+                    position: absolute;
+                    content: " ";
+                    top: 1em;
+                    left: calc(-0.1rem + 1px);
+                    bottom: 0;
+                    width: 1px;
+                    height: auto;
+                    background-color: #cbd5e1;
+                  }
+                `}</style>
+              </li>
+              )
+            )}
+          </ul>
+        </div>
+      )}
+    )}
+  </>
 );
 
 
@@ -174,11 +220,12 @@ export default function MineralPage() {
   const { crystallography, history, formulas, name, description } : {
     crystallography: Crystallography,
     history: History,
-    formulas: [Formula],
+    formulas: Formula[],
     name: string,
     description: string
   } = data;
-  const _formulas = groupBy(formulas, item => item.source.name);
+  const _formulas: FormulaGroupBySource = groupBy(formulas, item => item.source.name);
+  console.log(_formulas)
   const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
 
   return (
@@ -196,17 +243,23 @@ export default function MineralPage() {
             <div className="flex">
               {crystallography && (<CrystallographyNode {...crystallography} />)}
               {data.inheritance_chain && (
-                <div className="flex px-2 space-y-2">
-                  {data.inheritance_chain.map((item, index) => {
-                    if (item.crystallography) return (
-                      <div key={index} className="bg-white p-2 rounded flex flex-col shadow-surface-low">
-                        <div className="flex justify-start">
-                          <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
-                        </div>
-                        <CrystallographyNode className="text-xs" {...item.crystallography} />
-                      </div>
-                    )}
-                  )}
+                <div className="flex">
+                  <div className="mx-2 w-[1px] bg-gray-300"></div>
+                  <div>
+                    <h3 className="font-medium text-sm text-font-blueDark">Related species</h3>
+                    <div className="flex px-2 gap-2 mt-1">
+                      {data.inheritance_chain.map((item, index) => {
+                        if (item.crystallography) return (
+                          <div key={index} className="bg-white p-2 rounded flex flex-col border border-gray-300 shadow-sm">
+                            <div className="flex justify-start items-center">
+                              <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
+                            </div>
+                            <CrystallographyNode className="text-xs" {...item.crystallography} />
+                          </div>
+                        )}
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -215,7 +268,7 @@ export default function MineralPage() {
 
         {history && (
           <Section title="History">
-            <div className="flex px-2 mt-5">
+            <div className="flex px-2">
               {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
               {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
               {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)}
@@ -225,46 +278,30 @@ export default function MineralPage() {
 
         {formulas.length > 0 && (
           <Section title="Stoichiometric formulas">
-            <div className="flex flex-col px-2 mt-5">
-              {Object.keys(_formulas).map((key, index) => {
-                let _localFormulas = _formulas[key].sort((a, b) => {
-                  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                })
-                return (
-                  <div key={index} className="flex flex-col text-sm">
-                    <h3 className="font-semibold">{key}</h3>
-                    <ul className="relative p-2 list-none">
-                      {_localFormulas.map((item, index) => (
-                        <li key={index} className="relative pb-2">
-                          <div className="flex flex-col ml-3">
-                            <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
-                            <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
-                          </div>
-                          <style jsx>{`
-                            li::before {
-                              position: absolute;
-                              top: -0.25em;
-                              left: calc(0.25rem*-1);
-                              content: "•";
-                              color: #1E40AF;
-                            }
-                            li::after {
-                              position: absolute;
-                              content: " ";
-                              top: 1em;
-                              left: calc(-0.1rem + 1px);
-                              bottom: 0;
-                              width: 1px;
-                              height: auto;
-                              background-color: #cbd5e1;
-                            }
-                          `}</style>
-                        </li>
-                        )
+            <div className="flex flex-col px-2">
+              <FormulaNode formulas={_formulas} />
+              {data.inheritance_chain && (
+                <div className="flex">
+                  <div className="mx-2 w-[1px] bg-gray-300"></div>
+                  <div>
+                    <h3 className="font-medium text-sm text-font-blueDark">Related species</h3>
+                    <div className="flex px-2 gap-2 mt-1">
+                      {data.inheritance_chain.map((item, index) => {
+                        if (item.formulas.length > 0) {
+                          let _formulas: FormulaGroupBySource = groupBy(item.formulas, item => item.source.name);
+                          if (_formulas) return (
+                            <div key={index} className="bg-white p-2 rounded flex flex-col border border-gray-300 shadow-sm">
+                              <div className="flex justify-start items-center">
+                                <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
+                              </div>
+                              <FormulaNode formulas={_formulas} />
+                            </div>
+                          )}
+                        }
                       )}
-                    </ul>
+                    </div>
                   </div>
-                )}
+                </div>
               )}
             </div>
           </Section>

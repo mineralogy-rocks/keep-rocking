@@ -22,6 +22,10 @@ export interface Formula {
   from?: From;
 }
 
+export interface FormulaGroupBySource {
+  [key: string]: Formula[];
+}
+
 export interface Crystallography {
   id: number;
   mineral: string;
