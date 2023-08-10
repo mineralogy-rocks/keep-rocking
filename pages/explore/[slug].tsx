@@ -11,7 +11,7 @@ import { Formula, FormulaGroupBySource, History, Crystallography } from '@/lib/i
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
-import { getMindatIds } from '@/helpers/data.helpers';
+import { getMindatIds, mergeFormulas } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import RelationChip from '@/components/RelationChip';
 
@@ -228,6 +228,19 @@ export default function MineralPage() {
   console.log(_formulas)
   const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
 
+  const conclusiveFormulas = mergeFormulas(formulas.map((item) => {
+    return { ...item, mineral: {
+                        id: data.id,
+                        name: data.name,
+                        slug: data.slug,
+                        statuses: data.statuses.map((i) => i.status_id),
+                        depth: 0
+                      }
+    }
+  }), data.inheritance_chain);
+  console.log(conclusiveFormulas)
+
+
   return (
     <>
       <Head>
@@ -279,33 +292,108 @@ export default function MineralPage() {
         {formulas.length > 0 && (
           <Section title="Stoichiometric formulas">
             <div className="flex flex-col px-2">
-              <FormulaNode formulas={_formulas} />
-              {data.inheritance_chain && (
-                <div className="flex">
-                  <div className="mx-2 w-[1px] bg-gray-300"></div>
-                  <div>
-                    <h3 className="font-medium text-sm text-font-blueDark">Related species</h3>
-                    <div className="flex px-2 gap-2 mt-1">
-                      {data.inheritance_chain.map((item, index) => {
-                        if (item.formulas.length > 0) {
-                          let _formulas: FormulaGroupBySource = groupBy(item.formulas, item => item.source.name);
-                          if (_formulas) return (
-                            <div key={index} className="bg-white p-2 rounded flex flex-col border border-gray-300 shadow-sm">
-                              <div className="flex justify-start items-center">
-                                <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
-                              </div>
-                              <FormulaNode formulas={_formulas} />
+              {Object.keys(conclusiveFormulas).map((key, index) => {
+                let minerals = groupBy(conclusiveFormulas[key], item => item.mineral.id);
+                console.log(minerals);
+
+                return (
+                  <div key={index} className="flex flex-col text-sm">
+                    <h3 className="font-semibold">{key}</h3>
+                    <ul className="relative p-2 list-none">
+                      {Object.keys(minerals).map((_key, _index) => {
+                          let _formulasSorted = minerals[_key].sort((a, b) => {
+                            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                          })
+                          return (
+                            <div key={_index} className="flex flex-col text-sm">
+                              <h3 className="font-semibold">{_key}</h3>
+                              <ul className="relative p-2 list-none">
+                                {_formulasSorted.map((item, __index) => (
+                                  <li key={__index} className="relative pb-2">
+                                    <div className="flex flex-col ml-3">
+                                      <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
+                                      <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
+                                    </div>
+                                    <style jsx>{`
+                                      li::before {
+                                        position: absolute;
+                                        top: -0.25em;
+                                        left: calc(0.25rem*-1);
+                                        content: "•";
+                                        color: #1E40AF;
+                                      }
+                                      li::after {
+                                        position: absolute;
+                                        content: " ";
+                                        top: 1em;
+                                        left: calc(-0.1rem + 1px);
+                                        bottom: 0;
+                                        width: 1px;
+                                        height: auto;
+                                        background-color: #cbd5e1;
+                                      }
+                                    `}</style>
+                                  </li>
+                                  )
+                                )}
+                              </ul>
                             </div>
-                          )}
-                        }
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+                          )
+                        })
+                      }
+                    </ul>
+                  </div>)
+                })}
             </div>
           </Section>
         )}
+
+        {/* {formulas.length > 0 && (
+          <Section title="Stoichiometric formulas">
+            <div className="flex flex-col px-2">
+              {Object.keys(_formulas).map((key, index) => {
+                let _localFormulas = _formulas[key].sort((a, b) => {
+                  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                })
+                return (
+                  <div key={index} className="flex flex-col text-sm">
+                    <h3 className="font-semibold">{key}</h3>
+                    <ul className="relative p-2 list-none">
+                      {_localFormulas.map((item, index) => (
+                        <li key={index} className="relative pb-2">
+                          <div className="flex flex-col ml-3">
+                            <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
+                            <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
+                          </div>
+                          <style jsx>{`
+                            li::before {
+                              position: absolute;
+                              top: -0.25em;
+                              left: calc(0.25rem*-1);
+                              content: "•";
+                              color: #1E40AF;
+                            }
+                            li::after {
+                              position: absolute;
+                              content: " ";
+                              top: 1em;
+                              left: calc(-0.1rem + 1px);
+                              bottom: 0;
+                              width: 1px;
+                              height: auto;
+                              background-color: #cbd5e1;
+                            }
+                          `}</style>
+                        </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+              )}
+            </div>
+          </Section>
+        )} */}
 
         {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
           <Section title="Physical properties">

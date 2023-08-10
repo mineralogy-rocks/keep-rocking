@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
 import cx from 'clsx';
 
-import Terminal from '@/components/content/Terminal';
+import Terminal from '@/components/Content/Terminal';
 import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
