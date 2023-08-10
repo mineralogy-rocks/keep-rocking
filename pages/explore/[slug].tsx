@@ -224,11 +224,9 @@ export default function MineralPage() {
     name: string,
     description: string
   } = data;
-  const _formulas: FormulaGroupBySource = groupBy(formulas, item => item.source.name);
-  console.log(_formulas)
   const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
 
-  const conclusiveFormulas = mergeFormulas(formulas.map((item) => {
+  const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
                         id: data.id,
                         name: data.name,
@@ -238,6 +236,10 @@ export default function MineralPage() {
                       }
     }
   }), data.inheritance_chain);
+
+  let nrMinerals = Object.keys(groupBy(conclusiveFormulas, item => item.mineral.id));
+  let nrSources = Object.keys(groupBy(conclusiveFormulas, item => item.source.id));
+  console.log(nrMinerals, nrSources)
   console.log(conclusiveFormulas)
 
 
@@ -291,59 +293,65 @@ export default function MineralPage() {
 
         {formulas.length > 0 && (
           <Section title="Stoichiometric formulas">
-            <div className="flex flex-col px-2">
-              {Object.keys(conclusiveFormulas).map((key, index) => {
-                let minerals = groupBy(conclusiveFormulas[key], item => item.mineral.id);
-                console.log(minerals);
-
+            <div className="grid grid-cols-3">
+              {nrMinerals.map((key, index) => {
+                let item = conclusiveFormulas.find((item) => item.mineral.id == key)?.mineral;
                 return (
-                  <div key={index} className="flex flex-col text-sm">
-                    <h3 className="font-semibold">{key}</h3>
-                    <ul className="relative p-2 list-none">
-                      {Object.keys(minerals).map((_key, _index) => {
-                          let _formulasSorted = minerals[_key].sort((a, b) => {
-                            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                          })
-                          return (
-                            <div key={_index} className="flex flex-col text-sm">
-                              <h3 className="font-semibold">{_key}</h3>
-                              <ul className="relative p-2 list-none">
-                                {_formulasSorted.map((item, __index) => (
-                                  <li key={__index} className="relative pb-2">
-                                    <div className="flex flex-col ml-3">
-                                      <span className="text-font-secondary font-normal text-xs">{item.created_at}</span>
-                                      <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item.formula }}></span>
-                                    </div>
-                                    <style jsx>{`
-                                      li::before {
-                                        position: absolute;
-                                        top: -0.25em;
-                                        left: calc(0.25rem*-1);
-                                        content: "•";
-                                        color: #1E40AF;
-                                      }
-                                      li::after {
-                                        position: absolute;
-                                        content: " ";
-                                        top: 1em;
-                                        left: calc(-0.1rem + 1px);
-                                        bottom: 0;
-                                        width: 1px;
-                                        height: auto;
-                                        background-color: #cbd5e1;
-                                      }
-                                    `}</style>
-                                  </li>
-                                  )
-                                )}
-                              </ul>
-                            </div>
-                          )
-                        })
-                      }
-                    </ul>
+                  <div key={index} className="flex flex-col">
+                    <div className="flex">
+                      <RelationChip name={item.name} statuses={item.statuses} hasArrow={false} />
+                    </div>
                   </div>)
-                })}
+              })}
+              <div className="flex flex-col">
+                {nrSources.map((key_, index_) => {
+                  let items = conclusiveFormulas.filter((item_) => item_.source.id == parseInt(key_));
+                  console.log(items)
+                  return(
+                    <div key={index_} className="flex mt-2">{items[0]?.source.name}</div>
+                  )
+                  // let formulas = conclusiveFormulas.filter((item_) => item_.mineral.id === item.id && item_.source.id === parseInt(key_));
+                  // let _formulas = formulas.sort((a, b) => {
+                  //   return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                  // })
+                  // return formulas.length > 0 && (
+                  //   <div key={index} className="flex flex-col text-sm">
+                  //     <h3 className="font-semibold">{source.name}</h3>
+                  //     <ul className="relative p-2 list-none">
+                  //       {_formulas.map((item_, index_) => (
+                  //         <li key={index_} className="relative pb-2">
+                  //           <div className="flex flex-col ml-3">
+                  //             <span className="text-font-secondary font-normal text-xs">{item_.created_at}</span>
+                  //             <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item_.formula }}></span>
+                  //           </div>
+                  //           <style jsx>{`
+                  //             li::before {
+                  //               position: absolute;
+                  //               top: -0.25em;
+                  //               left: calc(0.25rem*-1);
+                  //               content: "•";
+                  //               color: #1E40AF;
+                  //             }
+                  //             li::after {
+                  //               position: absolute;
+                  //               content: " ";
+                  //               top: 1em;
+                  //               left: calc(-0.1rem + 1px);
+                  //               bottom: 0;
+                  //               width: 1px;
+                  //               height: auto;
+                  //               background-color: #cbd5e1;
+                  //             }
+                  //           `}</style>
+                  //         </li>
+                  //         )
+                  //       )}
+                  //     </ul>
+                  //   </div>
+                  // )
+                }
+                )}
+              </div>
             </div>
           </Section>
         )}

@@ -29,5 +29,5 @@ export const mergeFormulas = (formulas: Formula[], inheritanceChain) => {
   }
 
   let _data = groupBy(data, item => item.source.name);
-  return _data;
+  return data;
 };
