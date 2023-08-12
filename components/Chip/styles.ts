@@ -36,7 +36,12 @@ export const getStyles= (type = "default"): Styles => {
       textColor: 'text-gray-600',
       backgroundColor: 'bg-gray-100',
       borderColor: 'border border-gray-200 hover:border-gray-300'
-    }
+    },
+    black: {
+      textColor: 'text-orange-50',
+      backgroundColor: 'bg-black',
+      borderColor: ''
+    },
   };
   return colors[type];
 };
