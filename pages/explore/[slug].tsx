@@ -6,8 +6,8 @@ import cx from 'clsx';
 
 import groupBy from 'just-group-by';
 
-import { MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
-import { Formula, FormulaGroupBySource, History, Crystallography } from '@/lib/interfaces';
+import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
+import { Formula, Status, FormulaGroupBySource, History, Crystallography } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
@@ -15,13 +15,16 @@ import { getMindatIds, mergeFormulas } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import RelationChip from '@/components/RelationChip';
 import Chip from '@/components/Chip';
+import BarChart from '@/components/BarChart';
 
 
 
 const Section = ({ title, children }) => (
   <section className="mt-10 px-2">
-    <h2 className="text-xl mb-5 font-semibold text-font-blueDark">{title}</h2>
-    {children}
+    <h2 className="text-xl font-semibold text-font-blueDark">{title}</h2>
+    <div className="ml-2 mt-5">
+      {children}
+    </div>
   </section>
 );
 
@@ -120,25 +123,34 @@ const DataGrid = ({ data }) => {
   )
 };
 
-const CrystallographyNode = ({ crystal_system, crystal_class, space_group, className = "text-sm" }) => (
-  <div className={cx("flex flex-col px-2 mt-2 gap-1", className)}>
-    {crystal_system && (
-      <span className="font-medium">Crystal System{' '}
-        <span className="font-normal">{crystal_system.name}</span>
-      </span>
-    )}
-    {crystal_class && (
-      <span className="font-medium">Crystal Class{' '}
-        <span className="font-normal">{crystal_class.name}</span>
-      </span>
-    )}
-    {space_group && (
-      <span className="font-medium">Space Group{' '}
-        <span className="font-normal">{space_group.name}</span>
-      </span>
-    )}
-  </div>
-);
+const CrystallographyNode = ({ item = null, isInherited = true, className = "", ...props }) => (
+  <div className={cx("relative p-2 rounded flex flex-col text-xs ml-2",
+                     "outline-dashed outline-[1px] outline-gray-400",
+                     className
+                  )}>
+    {item && (
+      <div className="flex justify-start items-center">
+        <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
+      </div>)
+    }
+    <div className="flex flex-col px-2 mt-2 gap-1">
+      {props.crystal_system && (
+        <span className="font-medium">Crystal System{' '}
+          <span className="font-normal">{props.crystal_system.name}</span>
+        </span>
+      )}
+      {props.crystal_class && (
+        <span className="font-medium">Crystal Class{' '}
+          <span className="font-normal">{props.crystal_class.name}</span>
+        </span>
+      )}
+      {props.space_group && (
+        <span className="font-medium">Space Group{' '}
+          <span className="font-normal">{props.space_group.name}</span>
+        </span>
+      )}
+    </div>
+  </div>);
 
 
 export default function MineralPage() {
@@ -148,7 +160,6 @@ export default function MineralPage() {
     router.isReady ? '/mineral/' + router.query.slug + '/' : null,
     fetcher,
   );
-  console.log(data)
 
   const mindatIds = getMindatIds(data);
 
@@ -160,7 +171,7 @@ export default function MineralPage() {
     }
   );
 
-  const conclusiveMindatData = getConclusiveData(
+  const conclusiveMindatData: any = getConclusiveData(
     mindatData?.results.slice(0, 5).sort((a, b) => {
       return mindatIds.indexOf(a.id) - mindatIds.indexOf(b.id);
     }),
@@ -172,12 +183,15 @@ export default function MineralPage() {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  const { crystallography, history, formulas, name, description } : {
+  const { crystallography, history, formulas, name, description, statuses, structures, elements } : {
     crystallography: Crystallography,
     history: History,
     formulas: Formula[],
     name: string,
-    description: string
+    description: string,
+    statuses: Status[],
+    structures: any,
+    elements: any,
   } = data;
   const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
 
@@ -205,27 +219,14 @@ export default function MineralPage() {
 
         {hasCrystallography && (
           <Section title="Crystallography">
-            <div className="flex">
-              {crystallography && (<CrystallographyNode {...crystallography} />)}
-              {data.inheritance_chain && (
-                <div className="flex">
-                  <div className="mx-2 w-[1px] bg-gray-300"></div>
-                  <div>
-                    <h3 className="font-medium text-sm text-font-blueDark">Related species</h3>
-                    <div className="flex px-2 gap-2 mt-1">
-                      {data.inheritance_chain.map((item, index) => {
-                        if (item.crystallography) return (
-                          <div key={index} className="bg-white p-2 rounded flex flex-col border border-gray-300 shadow-sm">
-                            <div className="flex justify-start items-center">
-                              <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
-                            </div>
-                            <CrystallographyNode className="text-xs" {...item.crystallography} />
-                          </div>
-                        )}
-                      )}
-                    </div>
-                  </div>
-                </div>
+            <div className="flex flex-wrap gap-2">
+              {crystallography && (<CrystallographyNode isInherited={false}
+                                                        item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
+                                                        {...crystallography} />)}
+              {data.inheritance_chain.map((item, index) => {
+                if (item.crystallography) return (
+                  <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
+                )}
               )}
             </div>
           </Section>
@@ -241,9 +242,9 @@ export default function MineralPage() {
           </Section>
         )}
 
-        {formulas.length > 0 && (
+        {conclusiveFormulas.length > 0 && (
           <Section title="Stoichiometric formulas">
-            <div className="flex gap-5">
+            <div className="flex flex-wrap gap-5 px-2">
               {Object.keys(nrMinerals).map((key, index) => {
                 let items = nrMinerals[key];
                 let sources = groupBy(items, item => item.source.name);
@@ -257,7 +258,7 @@ export default function MineralPage() {
                         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
                       })
                       return (
-                        <div key={index_} className="flex flex-col text-sm">
+                        <div key={index_} className="flex flex-col text-sm pl-1">
                           <div className="flex">
                             <Chip type="black" className="mt-1">
                               <span className="font-medium text-xxs">{key_}</span>
@@ -298,6 +299,55 @@ export default function MineralPage() {
                     })}
                   </div>)
               })}
+            </div>
+          </Section>
+        )}
+
+        {(structures || elements) && (
+          <Section title="Analytical Data">
+            <div className="flex flex-col flex-wrap gap-5 px-2">
+              {structures && (
+                <>
+                  <h3 className="text-sm font-medium text-font-blueDark">Structural summary based on <span className="font-bold">{structures.count}</span> samples</h3>
+                  <table className="table-auto text-xs md:text-sm max-w-md">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1"></th>
+                        <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
+                        <th className="px-2 py-1 text-start font-semibold">Average</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {STRUCTURAL_DATA_KEYS.map((key, index) => (
+                        <tr key={index} className="">
+                          <td className="px-2 py-1 font-semibold">{key}</td>
+                          <td className="px-2 py-1 text-font-secondary">{structures[key].min}—{structures[key].max}</td>
+                          <td className="px-2 py-1 text-font-secondary">{structures[key].avg}</td>
+                        </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                </>
+              )}
+
+              {elements && (
+                <>
+                  <h3 className="text-sm font-medium text-font-blueDark">Elements observed according to EPMA data</h3>
+                  <div className="flex flex-col mt-2">
+                    <BarChart className="h-16"
+                              isAnimated={true}
+                              items={elements.map((item, index) => {
+                                return {
+                                  id: index,
+                                  value: item.count,
+                                  label: item.element,
+                                  subLabel: item.count
+                                }
+                              })} />
+                  </div>
+                </>
+              )}
             </div>
           </Section>
         )}

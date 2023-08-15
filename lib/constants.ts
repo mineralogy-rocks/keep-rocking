@@ -24,6 +24,16 @@ export const COMPLEMENTING_STATUS_GROUPS = {
   3: [11]
 };
 
+export const STRUCTURAL_DATA_KEYS = [
+  "a",
+  "b",
+  "c",
+  "alpha",
+  "beta",
+  "gamma",
+  "volume",
+];
+
 export const MINDAT_RETRIEVE_FIELDS = [
   "id",
   "name",
