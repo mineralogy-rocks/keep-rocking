@@ -181,25 +181,31 @@ export default function MineralPage() {
 
     const plot = Plot.plot({
       width: 600,
-      // set transparent background
+      marginLeft: 100,
       color: {
         scheme: "BuRd",
         legend: true,
       },
       x: { label: "Year" },
+      y: { label: null },
       style: {
         backgroundColor: "transparent",
       },
       marks: [
-        Plot.barX(_history, {
-          x: "year",
-          fill: "count",
-          interval: 1,
-          inset: 0,
-        })
+        Plot.axisY({
+          tickFormat: (d) => {
+            return d;
+          },
+        }),
+        Plot.tickX(
+          _history,
+          {x: "year", y: "key", strokeOpacity: 0.7},
+        ),
       ],
     });
-    containerRef.current.append(plot);
+    if (containerRef.current) {
+      containerRef.current.appendChild(plot);
+    }
     return () => plot.remove();
   }, [data]);
 
@@ -254,6 +260,7 @@ export default function MineralPage() {
 
         {history && isGrouping && (
           <Section title="History">
+            <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
             <div className="flex px-2">
               {/* {history.discovery_year.map((item, index) => (<span key={index} className=""><strong>{item}</strong></span>))} */}
               {/* {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
@@ -337,6 +344,7 @@ export default function MineralPage() {
         {conclusiveFormulas.length > 0 && (
           <Section title="Chemical context">
             <div className="flex flex-wrap gap-5 px-2">
+              <h3 className="text-sm font-medium text-font-blueDark">Stoichiometric formulas</h3>
               {Object.keys(nrMinerals).map((key, index) => {
                 let items = nrMinerals[key];
                 let sources = groupBy(items, item => item.source.name);
