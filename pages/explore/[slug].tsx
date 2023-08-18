@@ -1,13 +1,13 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import cx from 'clsx';
 
 import groupBy from 'just-group-by';
-
+import * as Plot from "@observablehq/plot";
 import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
-import { Formula, Status, FormulaGroupBySource, History, Crystallography } from '@/lib/interfaces';
+import { Formula, Status, History, CrystallographyGrouped, Crystallography } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
@@ -156,6 +156,8 @@ const CrystallographyNode = ({ item = null, isInherited = true, className = "", 
 export default function MineralPage() {
   const router = useRouter();
 
+  const containerRef = useRef();
+
   const { data, error, isLoading } = useSWR(
     router.isReady ? '/mineral/' + router.query.slug + '/' : null,
     fetcher,
@@ -171,6 +173,36 @@ export default function MineralPage() {
     }
   );
 
+  useEffect(() => {
+    if (!data) return;
+    // reduce to array of objects with year and count
+    let _history = data.history || [];
+    console.log(_history)
+
+    const plot = Plot.plot({
+      width: 600,
+      // set transparent background
+      color: {
+        scheme: "BuRd",
+        legend: true,
+      },
+      x: { label: "Year" },
+      style: {
+        backgroundColor: "transparent",
+      },
+      marks: [
+        Plot.barX(_history, {
+          x: "year",
+          fill: "count",
+          interval: 1,
+          inset: 0,
+        })
+      ],
+    });
+    containerRef.current.append(plot);
+    return () => plot.remove();
+  }, [data]);
+
   const conclusiveMindatData: any = getConclusiveData(
     mindatData?.results.slice(0, 5).sort((a, b) => {
       return mindatIds.indexOf(a.id) - mindatIds.indexOf(b.id);
@@ -183,8 +215,9 @@ export default function MineralPage() {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  const { crystallography, history, formulas, name, description, statuses, structures, elements } : {
-    crystallography: Crystallography,
+  const { is_grouping: isGrouping, crystallography, history, formulas, name, description, statuses, structures, elements } : {
+    is_grouping: boolean,
+    crystallography: Crystallography | CrystallographyGrouped[],
     history: History,
     formulas: Formula[],
     name: string,
@@ -193,7 +226,9 @@ export default function MineralPage() {
     structures: any,
     elements: any,
   } = data;
-  const hasCrystallography = crystallography || data.inheritance_chain.some(item => item.crystallography);
+  const hasCrystallography = crystallography || data.inheritance_chain?.some(item => item.crystallography);
+
+  console.log(history)
 
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
@@ -217,33 +252,90 @@ export default function MineralPage() {
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
         <p className="mt-10 px-2 text-sm font-normal" dangerouslySetInnerHTML={{ __html: description }}></p>
 
-        {hasCrystallography && (
-          <Section title="Crystallography">
-            <div className="flex flex-wrap gap-2">
-              {crystallography && (<CrystallographyNode isInherited={false}
-                                                        item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
-                                                        {...crystallography} />)}
-              {data.inheritance_chain.map((item, index) => {
-                if (item.crystallography) return (
-                  <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
-                )}
-              )}
+        {history && isGrouping && (
+          <Section title="History">
+            <div className="flex px-2">
+              {/* {history.discovery_year.map((item, index) => (<span key={index} className=""><strong>{item}</strong></span>))} */}
+              {/* {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
+              {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
+              {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)} */}
+            </div>
+            <div ref={containerRef}>
             </div>
           </Section>
         )}
 
-        {history && (
-          <Section title="History">
-            <div className="flex px-2">
-              {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
-              {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
-              {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)}
+        {hasCrystallography && (
+          <Section title="Structural context">
+            <div className="flex flex-wrap gap-2">
+              {isGrouping && Array.isArray(crystallography) ? (
+                crystallography.map((item, index) => (
+                  <div key={index} className="max-w-md relative p-2 rounded text-xs outline-dashed outline-[1px] outline-gray-400 h-full">
+                    <h3 className="mb-3 flex">
+                      <Chip type="default" className="mt-1 bg-indigo-300/90">
+                        <span className="font-semibold flex-1 text-start text-indigo-700">{item.name}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span className="font-semibold text-indigo-800">
+                          {item.count}
+                        </span>
+                      </Chip>
+                    </h3>
+                    <div className="flex flex-wrap justify-start items-center gap-1 ml-2 mt-2">
+                      {item.minerals.map((mineral, index) => (
+                        <RelationChip key={index} className="flex-none" name={mineral.name} statuses={mineral.statuses} hasArrow={false} />
+                      ))}
+                    </div>
+                  </div>
+                )
+                )
+              ) : (
+                <>
+                  {crystallography && (
+                    <CrystallographyNode isInherited={false}
+                                         item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
+                                         {...crystallography} />
+                    )
+                  }
+                  {data.inheritance_chain.map((item, index) => {
+                    if (item.crystallography) return (
+                    <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
+                    )}
+                  )}
+                </>
+              )}
             </div>
+
+            {structures && (
+                <div className="mt-7">
+                  <h3 className="text-sm font-medium text-font-blueDark">Structural statistics based on <span className="font-bold">{structures.count}</span> samples</h3>
+                  <table className="table-auto text-xs md:text-sm max-w-md mt-5">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1"></th>
+                        <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
+                        <th className="px-2 py-1 text-start font-semibold">Average</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {STRUCTURAL_DATA_KEYS.map((key, index) => (
+                        <tr key={index} className="">
+                          <td className="px-2 py-1 font-semibold">{key}</td>
+                          <td className="px-2 py-1 text-font-secondary">{structures[key].min}—{structures[key].max}</td>
+                          <td className="px-2 py-1 text-font-secondary">{structures[key].avg}</td>
+                        </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
           </Section>
         )}
 
         {conclusiveFormulas.length > 0 && (
-          <Section title="Stoichiometric formulas">
+          <Section title="Chemical context">
             <div className="flex flex-wrap gap-5 px-2">
               {Object.keys(nrMinerals).map((key, index) => {
                 let items = nrMinerals[key];
@@ -270,6 +362,7 @@ export default function MineralPage() {
                                 <div className="flex flex-col ml-3">
                                   <span className="text-font-secondary font-normal text-xs">{item__.created_at}</span>
                                   <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
+                                  {item__.note && (<span className="font-normal mt-2 text-xs" dangerouslySetInnerHTML={{ __html: item__.note }}></span>)}
                                 </div>
                                 <style jsx>{`
                                   li::before {
@@ -300,41 +393,11 @@ export default function MineralPage() {
                   </div>)
               })}
             </div>
-          </Section>
-        )}
 
-        {(structures || elements) && (
-          <Section title="Analytical Data">
-            <div className="flex flex-col flex-wrap gap-5 px-2">
-              {structures && (
-                <>
-                  <h3 className="text-sm font-medium text-font-blueDark">Structural summary based on <span className="font-bold">{structures.count}</span> samples</h3>
-                  <table className="table-auto text-xs md:text-sm max-w-md">
-                    <thead>
-                      <tr>
-                        <th className="px-2 py-1"></th>
-                        <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
-                        <th className="px-2 py-1 text-start font-semibold">Average</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {STRUCTURAL_DATA_KEYS.map((key, index) => (
-                        <tr key={index} className="">
-                          <td className="px-2 py-1 font-semibold">{key}</td>
-                          <td className="px-2 py-1 text-font-secondary">{structures[key].min}—{structures[key].max}</td>
-                          <td className="px-2 py-1 text-font-secondary">{structures[key].avg}</td>
-                        </tr>
-                        )
-                      )}
-                    </tbody>
-                  </table>
-                </>
-              )}
-
-              {elements && (
-                <>
-                  <h3 className="text-sm font-medium text-font-blueDark">Elements observed according to EPMA data</h3>
-                  <div className="flex flex-col mt-2">
+            {elements && (
+                <div className="mt-7">
+                  <h3 className="text-sm font-medium text-font-blueDark">Elements recorded on EPMA</h3>
+                  <div className="flex flex-col mt-5">
                     <BarChart className="h-16"
                               isAnimated={true}
                               items={elements.map((item, index) => {
@@ -346,11 +409,11 @@ export default function MineralPage() {
                                 }
                               })} />
                   </div>
-                </>
+                </div>
               )}
-            </div>
           </Section>
         )}
+
 
         {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
           <Section title="Physical properties">

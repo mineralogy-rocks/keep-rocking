@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.5",
     "@next/font": "^13.0.0",
+    "@observablehq/plot": "^0.6.10",
     "@popperjs/core": "^2.11.6",
     "@tailwindcss/line-clamp": "^0.4.2",
     "clsx": "^1.2.1",

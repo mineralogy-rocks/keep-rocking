@@ -18,10 +18,11 @@ const defaultProps = {
   isAnimated: false,
   className: "",
   color: "#14b8a6",
+  highlightThreshold: null,
 };
 
 
-const BarChart = ({ isAnimated = false, items, className, color }: Props & typeof defaultProps) => {
+const BarChart = ({ isAnimated = false, items, className, color, highlightThreshold }: Props & typeof defaultProps) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const variants: Variants = {
@@ -32,7 +33,7 @@ const BarChart = ({ isAnimated = false, items, className, color }: Props & typeo
         delay: 0.3,
         type: "spring",
         bounce: 0.25,
-        stiffness: 50,
+        stiffness: 30,
       }
     }),
     default: () => ({
@@ -52,7 +53,7 @@ const BarChart = ({ isAnimated = false, items, className, color }: Props & typeo
                           initial={isAnimated ? "default" : ""}
                           animate={isAnimated ? "animated" : ""}
                           style={{
-                            width: "5px",
+                            width: "8px",
                             bottom: 0,
                             height: `${(item.value / maxValue * 100)}%`,
                             borderRadius: "2px",
@@ -63,7 +64,7 @@ const BarChart = ({ isAnimated = false, items, className, color }: Props & typeo
             </div>
             <div className="flex flex-1 shrink-0 flex-col px-2 justify-center text-center basis-[35px] w-[35px]">
               <div className="text-xxs font-normal">{item.subLabel}</div>
-              <div className={cx(" text-xs md:text-sm font-medium", item.value >= (maxValue / 2) ? "border-b border-b-violet-500" : "")}>{item.label}</div>
+              <div className={cx(" text-xs md:text-sm font-medium", highlightThreshold && item.value >= highlightThreshold ? "border-b border-b-violet-500" : "")}>{item.label}</div>
             </div>
           </div>
         )

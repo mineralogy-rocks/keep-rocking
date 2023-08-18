@@ -38,7 +38,7 @@ export type mineralDetailApiResponse = {
   updated_at: Date;
   formulas: Formula[];
   statuses: Status[];
-  inheritance_chain: Inheritance[];
+  inheritance_chain?: Inheritance[];
 };
 
 export type exploreApiRequest = {

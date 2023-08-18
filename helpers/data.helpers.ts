@@ -7,12 +7,12 @@ import { mineralDetailApiResponse } from '@/lib/types';
 export const getMindatIds = (data: mineralDetailApiResponse) => {
   if (!data) return null;
   const { mindat_id } = data;
-  const inheritedIds = data.inheritance_chain.map((item) => item.mindat_id);
+  const inheritedIds = data.inheritance_chain?.map((item) => item.mindat_id) || [];
   return [mindat_id, ...inheritedIds].filter((item) => item);
 };
 
 
-export const mergeFormulas = (formulas: Formula[], inheritanceChain) => {
+export const mergeFormulas = (formulas: Formula[], inheritanceChain=[]) => {
   let data = [...formulas];
 
   for (const item of inheritanceChain) {

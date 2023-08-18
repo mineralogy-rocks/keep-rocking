@@ -28,11 +28,21 @@ export interface FormulaGroupBySource {
 
 export interface Crystallography {
   id: number;
-  mineral: string;
+  mineral?: string;
   crystal_system: BaseIdName;
-  crystal_class: BaseIdName;
-  space_group: BaseIdName;
+  crystal_class?: BaseIdName;
+  space_group?: BaseIdName;
 }
+
+export interface CrystallographyGrouped extends BaseIdName{
+  count: number;
+  minerals: {
+    id: string;
+    name: string;
+    slug: string;
+    statuses: [number];
+  }[];
+};
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
