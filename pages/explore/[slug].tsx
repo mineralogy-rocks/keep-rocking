@@ -193,19 +193,25 @@ export default function MineralPage() {
     elements: any,
   } = data;
 
-  const hasCrystallography = crystallography || data.inheritance_chain?.some(item => item.crystallography);
 
   let completeHistory = [];
-  let completeCrystallography = [];
+  let membersCrystallography = null;
 
   if (isGrouping) {
     completeHistory = prepareHistory(
       data?.members.map(item => item.history).filter(item => item !== null) || []
     );
+    membersCrystallography = groupBy(
+      data?.members.filter(item => item.crystal_system),
+      item => item.crystal_system.name
+    ) || [];
   } else {
     completeHistory = history ? prepareHistory([history]) : [];
   }
 
+  console.log(membersCrystallography);
+
+  const hasCrystallography = crystallography || data.inheritance_chain?.some(item => item.crystallography) || membersCrystallography;
 
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
@@ -241,23 +247,23 @@ export default function MineralPage() {
         {hasCrystallography && (
           <Section title="Structural context">
             <div className="flex flex-wrap gap-2">
-              {isGrouping && Array.isArray(crystallography) ? (
-                crystallography.map((item, index) => (
+              {isGrouping && membersCrystallography ? (
+                Object.entries(membersCrystallography).map(([key, value], index) => (
                   <div key={index} className="max-w-md relative p-2 rounded text-xs outline-dashed outline-[1px] outline-gray-400 h-full">
                     <h3 className="mb-3 flex">
                       <Chip type="default" className="mt-1 bg-indigo-300/90">
-                        <span className="font-semibold flex-1 text-start text-indigo-700">{item.name}</span>
+                        <span className="font-semibold flex-1 text-start text-indigo-700">{key}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         <span className="font-semibold text-indigo-800">
-                          {item.count}
+                          {value.length}
                         </span>
                       </Chip>
                     </h3>
                     <div className="flex flex-wrap justify-start items-center gap-1 ml-2 mt-2">
-                      {item.minerals.map((mineral, index) => (
-                        <RelationChip key={index} className="flex-none" name={mineral.name} statuses={mineral.statuses} hasArrow={false} />
+                      {value.map((item) => (
+                        <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
                       ))}
                     </div>
                   </div>
@@ -311,61 +317,63 @@ export default function MineralPage() {
           <Section title="Chemical context">
             <div className="flex flex-col flex-wrap gap-5 px-2">
               <h3 className="text-sm font-medium text-font-blueDark">Stoichiometric formulas</h3>
-              {Object.keys(nrMinerals).map((key, index) => {
-                let items = nrMinerals[key];
-                let sources = groupBy(items, item => item.source.name);
-                return (
-                  <div key={index} className="flex flex-col">
-                    <div className="flex mb-2">
-                      <RelationChip name={items[0]?.mineral.name} statuses={items[0]?.mineral.statuses} hasArrow={false} />
-                    </div>
-                    {Object.keys(sources).map((key_, index_) => {
-                      let _formulas = sources[key_].sort((a, b) => {
-                        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                      })
-                      return (
-                        <div key={index_} className="flex flex-col text-sm pl-1">
-                          <div className="flex">
-                            <Chip type="black" className="mt-1">
-                              <span className="font-medium text-xxs">{key_}</span>
-                            </Chip>
+              <div className="flex gap-1">
+                {Object.keys(nrMinerals).map((key, index) => {
+                  let items = nrMinerals[key];
+                  let sources = groupBy(items, item => item.source.name);
+                  return (
+                    <div key={index} className="flex flex-col">
+                      <div className="flex mb-2">
+                        <RelationChip name={items[0]?.mineral.name} statuses={items[0]?.mineral.statuses} hasArrow={false} />
+                      </div>
+                      {Object.keys(sources).map((key_, index_) => {
+                        let _formulas = sources[key_].sort((a, b) => {
+                          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                        })
+                        return (
+                          <div key={index_} className="flex flex-col text-sm pl-1">
+                            <div className="flex">
+                              <Chip type="black" className="mt-1">
+                                <span className="font-medium text-xxs">{key_}</span>
+                              </Chip>
+                            </div>
+                            <ul className="relative p-2 list-none max-w-lg">
+                              {_formulas.map((item__, index__) => (
+                                <li key={index__} className="relative pb-2">
+                                  <div className="flex flex-col ml-3">
+                                    <span className="text-font-secondary font-normal text-xs">{item__.created_at}</span>
+                                    <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
+                                    {item__.note && (<span className="font-normal mt-2 text-xs" dangerouslySetInnerHTML={{ __html: item__.note }}></span>)}
+                                  </div>
+                                  <style jsx>{`
+                                    li::before {
+                                      position: absolute;
+                                      top: -0.25em;
+                                      left: calc(0.25rem*-1);
+                                      content: "•";
+                                      color: #1E40AF;
+                                    }
+                                    li::after {
+                                      position: absolute;
+                                      content: " ";
+                                      top: 1em;
+                                      left: calc(-0.1rem + 1px);
+                                      bottom: 0;
+                                      width: 1px;
+                                      height: auto;
+                                      background-color: #cbd5e1;
+                                    }
+                                  `}</style>
+                                </li>
+                                )
+                              )}
+                            </ul>
                           </div>
-                          <ul className="relative p-2 list-none max-w-lg">
-                            {_formulas.map((item__, index__) => (
-                              <li key={index__} className="relative pb-2">
-                                <div className="flex flex-col ml-3">
-                                  <span className="text-font-secondary font-normal text-xs">{item__.created_at}</span>
-                                  <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
-                                  {item__.note && (<span className="font-normal mt-2 text-xs" dangerouslySetInnerHTML={{ __html: item__.note }}></span>)}
-                                </div>
-                                <style jsx>{`
-                                  li::before {
-                                    position: absolute;
-                                    top: -0.25em;
-                                    left: calc(0.25rem*-1);
-                                    content: "•";
-                                    color: #1E40AF;
-                                  }
-                                  li::after {
-                                    position: absolute;
-                                    content: " ";
-                                    top: 1em;
-                                    left: calc(-0.1rem + 1px);
-                                    bottom: 0;
-                                    width: 1px;
-                                    height: auto;
-                                    background-color: #cbd5e1;
-                                  }
-                                `}</style>
-                              </li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      )
-                    })}
-                  </div>)
-              })}
+                        )
+                      })}
+                    </div>)
+                })}
+              </div>
             </div>
 
             {elements && (

@@ -52,7 +52,7 @@ export const prepareHistory = (data: any) => {
 
 export const prepareCrystallography = (data: any) => {
   if (!data) return [];
-  let _data = []
+  let _data = [];
   data.map((item) => {
       Object.keys(item).forEach((key) => {
         if (key in HISTORY_DATA_MAP && item[key]) {
@@ -63,5 +63,7 @@ export const prepareCrystallography = (data: any) => {
         }
       });
   });
+
+  // output structure { name: '', count: 0, minerals : [ id, name, slug, statuses ] }
   return _data;
 }

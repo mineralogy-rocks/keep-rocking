@@ -45,7 +45,10 @@ const TimelineChart = ({ items, labelX, labelY, domainX, className, colorScheme 
         }),
         Plot.tickX(
           items,
-          { x: "value", y: "key", strokeOpacity: 0.7 },
+          {
+            x: "value",
+            y: "key", strokeOpacity: 0.7
+          },
         ),
       ],
     });
