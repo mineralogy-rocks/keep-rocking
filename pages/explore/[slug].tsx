@@ -1,21 +1,21 @@
-import { useState, Fragment, useRef, useEffect } from 'react';
+import { useState, Fragment } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import cx from 'clsx';
 
 import groupBy from 'just-group-by';
-import * as Plot from "@observablehq/plot";
-import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS } from '@/lib/constants';
+import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS, HISTORY_DATA_MAP } from '@/lib/constants';
 import { Formula, Status, History, CrystallographyGrouped, Crystallography } from '@/lib/interfaces';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
-import { getMindatIds, mergeFormulas } from '@/helpers/data.helpers';
+import { getMindatIds, mergeFormulas, prepareHistory, prepareCrystallography } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import RelationChip from '@/components/RelationChip';
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
+import TimelineChart from '@/components/TimelineChart';
 
 
 
@@ -156,8 +156,6 @@ const CrystallographyNode = ({ item = null, isInherited = true, className = "", 
 export default function MineralPage() {
   const router = useRouter();
 
-  const containerRef = useRef();
-
   const { data, error, isLoading } = useSWR(
     router.isReady ? '/mineral/' + router.query.slug + '/' : null,
     fetcher,
@@ -166,48 +164,12 @@ export default function MineralPage() {
   const mindatIds = getMindatIds(data);
 
   const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
-    mindatIds ? `/geomaterials/?id__in=${mindatIds.join(',')}&fields=${MINDAT_RETRIEVE_FIELDS.join(',')}` : null,
+    mindatIds.length > 0 ? `/geomaterials/?id__in=${mindatIds.join(',')}&fields=${MINDAT_RETRIEVE_FIELDS.join(',')}` : null,
     {
       use: [ abortableMiddleware ],
       keepPreviousData: false,
     }
   );
-
-  useEffect(() => {
-    if (!data) return;
-    // reduce to array of objects with year and count
-    let _history = data.history || [];
-    console.log(_history)
-
-    const plot = Plot.plot({
-      width: 600,
-      marginLeft: 100,
-      color: {
-        scheme: "BuRd",
-        legend: true,
-      },
-      x: { label: "Year" },
-      y: { label: null },
-      style: {
-        backgroundColor: "transparent",
-      },
-      marks: [
-        Plot.axisY({
-          tickFormat: (d) => {
-            return d;
-          },
-        }),
-        Plot.tickX(
-          _history,
-          {x: "year", y: "key", strokeOpacity: 0.7},
-        ),
-      ],
-    });
-    if (containerRef.current) {
-      containerRef.current.appendChild(plot);
-    }
-    return () => plot.remove();
-  }, [data]);
 
   const conclusiveMindatData: any = getConclusiveData(
     mindatData?.results.slice(0, 5).sort((a, b) => {
@@ -215,8 +177,6 @@ export default function MineralPage() {
     }),
     data
   );
-
-  console.log(conclusiveMindatData)
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
@@ -232,9 +192,20 @@ export default function MineralPage() {
     structures: any,
     elements: any,
   } = data;
+
   const hasCrystallography = crystallography || data.inheritance_chain?.some(item => item.crystallography);
 
-  console.log(history)
+  let completeHistory = [];
+  let completeCrystallography = [];
+
+  if (isGrouping) {
+    completeHistory = prepareHistory(
+      data?.members.map(item => item.history).filter(item => item !== null) || []
+    );
+  } else {
+    completeHistory = history ? prepareHistory([history]) : [];
+  }
+
 
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
@@ -258,17 +229,12 @@ export default function MineralPage() {
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
         <p className="mt-10 px-2 text-sm font-normal" dangerouslySetInnerHTML={{ __html: description }}></p>
 
-        {history && isGrouping && (
+        {completeHistory.length > 0 && (
           <Section title="History">
             <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
             <div className="flex px-2">
-              {/* {history.discovery_year.map((item, index) => (<span key={index} className=""><strong>{item}</strong></span>))} */}
-              {/* {history.discovery_year && (<span className="">Discovered in <strong>{history.discovery_year}</strong></span>)}
-              {history.publication_year && (<span className="">Published in <strong>{history.publication_year}</strong></span>)}
-              {history.approval_year && (<span className="">Approved by IMA in <strong>{history.approval_year}</strong></span>)} */}
             </div>
-            <div ref={containerRef}>
-            </div>
+            <TimelineChart items={completeHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
           </Section>
         )}
 
@@ -343,7 +309,7 @@ export default function MineralPage() {
 
         {conclusiveFormulas.length > 0 && (
           <Section title="Chemical context">
-            <div className="flex flex-wrap gap-5 px-2">
+            <div className="flex flex-col flex-wrap gap-5 px-2">
               <h3 className="text-sm font-medium text-font-blueDark">Stoichiometric formulas</h3>
               {Object.keys(nrMinerals).map((key, index) => {
                 let items = nrMinerals[key];
@@ -364,7 +330,7 @@ export default function MineralPage() {
                               <span className="font-medium text-xxs">{key_}</span>
                             </Chip>
                           </div>
-                          <ul className="relative p-2 list-none">
+                          <ul className="relative p-2 list-none max-w-lg">
                             {_formulas.map((item__, index__) => (
                               <li key={index__} className="relative pb-2">
                                 <div className="flex flex-col ml-3">

@@ -34,6 +34,13 @@ export const STRUCTURAL_DATA_KEYS = [
   "volume",
 ];
 
+export const HISTORY_DATA_MAP = {
+  discovery_year: "Discovery year",
+  publication_year: "Publication year",
+  ima_year: "IMA year",
+  approval_year: "Approval year",
+};
+
 export const MINDAT_RETRIEVE_FIELDS = [
   "id",
   "name",
