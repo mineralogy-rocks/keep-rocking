@@ -1,4 +1,4 @@
-import { Formula, CrystalSystem, Status, Relation, Discovery, History, Link, Inheritance } from './interfaces';
+import { Formula, Crystallography, CrystalSystem, Status, Relation, Discovery, History, Link, Inheritance, GroupingMember } from './interfaces';
 
 
 export type paginatedApiResponse = {
@@ -38,7 +38,12 @@ export type mineralDetailApiResponse = {
   updated_at: Date;
   formulas: Formula[];
   statuses: Status[];
+  crystallography: Crystallography,
+  history: History;
+  structures: any[];
+  elements: any[];
   inheritance_chain?: Inheritance[];
+  members?: GroupingMember[];
 };
 
 export type exploreApiRequest = {

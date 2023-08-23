@@ -6,11 +6,11 @@ import cx from 'clsx';
 
 import groupBy from 'just-group-by';
 import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS, HISTORY_DATA_MAP } from '@/lib/constants';
-import { Formula, Status, History, CrystallographyGrouped, Crystallography } from '@/lib/interfaces';
+import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { getConclusiveData } from '@/helpers/mindat.helpers';
-import { getMindatIds, mergeFormulas, prepareHistory, prepareCrystallography } from '@/helpers/data.helpers';
+import { getMindatIds, mergeFormulas, prepareHistory } from '@/helpers/data.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import RelationChip from '@/components/RelationChip';
 import Chip from '@/components/Chip';
@@ -181,17 +181,21 @@ export default function MineralPage() {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  const { is_grouping: isGrouping, crystallography, history, formulas, name, description, statuses, structures, elements } : {
-    is_grouping: boolean,
-    crystallography: Crystallography | CrystallographyGrouped[],
-    history: History,
-    formulas: Formula[],
-    name: string,
-    description: string,
-    statuses: Status[],
-    structures: any,
-    elements: any,
-  } = data;
+  const {
+    name,
+    description,
+    statuses,
+
+    is_grouping: isGrouping,
+
+    crystallography,
+    history,
+    formulas,
+    structures,
+    elements,
+    members,
+    inheritance_chain,
+  } : mineralDetailApiResponse = data;
 
 
   let completeHistory = [];
@@ -199,19 +203,19 @@ export default function MineralPage() {
 
   if (isGrouping) {
     completeHistory = prepareHistory(
-      data?.members.map(item => item.history).filter(item => item !== null) || []
+      members?.map(item => item.history).filter(item => item !== null) || []
     );
     membersCrystallography = groupBy(
-      data?.members.filter(item => item.crystal_system),
+      members?.filter(item => item.crystal_system),
       item => item.crystal_system.name
-    ) || [];
+    );
   } else {
     completeHistory = history ? prepareHistory([history]) : [];
   }
 
   console.log(membersCrystallography);
 
-  const hasCrystallography = crystallography || data.inheritance_chain?.some(item => item.crystallography) || membersCrystallography;
+  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || membersCrystallography;
 
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
@@ -222,7 +226,7 @@ export default function MineralPage() {
                         depth: 0
                       }
     }
-  }), data.inheritance_chain);
+  }), inheritance_chain);
   const nrMinerals = groupBy(conclusiveFormulas, item => item.mineral.id);
 
   return (
@@ -277,7 +281,7 @@ export default function MineralPage() {
                                          {...crystallography} />
                     )
                   }
-                  {data.inheritance_chain.map((item, index) => {
+                  {inheritance_chain.map((item, index) => {
                     if (item.crystallography) return (
                     <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
                     )}

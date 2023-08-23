@@ -44,6 +44,15 @@ export interface CrystallographyGrouped extends BaseIdName{
   }[];
 };
 
+export interface GroupingMember extends BaseIdName {
+  slug : string;
+  description: string;
+  url: string;
+  statuses: [number];
+  crystal_system: BaseIdName;
+  history: History;
+};
+
 export interface CrystalSystem extends BaseIdName {
   count?: number;
   from?: From;
@@ -106,7 +115,7 @@ export interface Inheritance {
   statuses: [number];
   depth: number;
   formulas: Formula[];
-  crystal_system: CrystalSystem|null;
+  crystallography: Crystallography|null;
 };
 
 export interface Link {

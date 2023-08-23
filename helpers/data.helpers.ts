@@ -1,6 +1,6 @@
 import groupBy from 'just-group-by';
 
-import { Formula, History } from '@/lib/interfaces';
+import { Formula } from '@/lib/interfaces';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { HISTORY_DATA_MAP } from '@/lib/constants';
 
@@ -49,21 +49,3 @@ export const prepareHistory = (data: any) => {
   });
   return _data;
 };
-
-export const prepareCrystallography = (data: any) => {
-  if (!data) return [];
-  let _data = [];
-  data.map((item) => {
-      Object.keys(item).forEach((key) => {
-        if (key in HISTORY_DATA_MAP && item[key]) {
-          _data.push({
-            key: HISTORY_DATA_MAP[key],
-            value: item[key],
-          });
-        }
-      });
-  });
-
-  // output structure { name: '', count: 0, minerals : [ id, name, slug, statuses ] }
-  return _data;
-}
