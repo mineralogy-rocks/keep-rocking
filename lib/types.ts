@@ -44,6 +44,7 @@ export type mineralDetailApiResponse = {
   elements: any[];
   inheritance_chain?: Inheritance[];
   members?: GroupingMember[];
+  contexts: any[];
 };
 
 export type exploreApiRequest = {

@@ -116,6 +116,7 @@ export interface Inheritance {
   depth: number;
   formulas: Formula[];
   crystallography: Crystallography|null;
+  contexts: any[];
 };
 
 export interface Link {

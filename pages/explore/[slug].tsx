@@ -5,13 +5,10 @@ import useSWR from 'swr';
 import cx from 'clsx';
 
 import groupBy from 'just-group-by';
-import { STRUCTURAL_DATA_KEYS, MINDAT_RETRIEVE_FIELDS, HISTORY_DATA_MAP } from '@/lib/constants';
+import { STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
-import { useMindatApi } from '@/hooks/use-mindat-api';
-import { getConclusiveData } from '@/helpers/mindat.helpers';
-import { getMindatIds, mergeFormulas, prepareHistory } from '@/helpers/data.helpers';
-import { abortableMiddleware } from '@/middleware/abortable-swr';
+import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
@@ -161,22 +158,6 @@ export default function MineralPage() {
     fetcher,
   );
 
-  const mindatIds = getMindatIds(data);
-
-  const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
-    mindatIds.length > 0 ? `/geomaterials/?id__in=${mindatIds.join(',')}&fields=${MINDAT_RETRIEVE_FIELDS.join(',')}` : null,
-    {
-      use: [ abortableMiddleware ],
-      keepPreviousData: false,
-    }
-  );
-
-  const conclusiveMindatData: any = getConclusiveData(
-    mindatData?.results.slice(0, 5).sort((a, b) => {
-      return mindatIds.indexOf(a.id) - mindatIds.indexOf(b.id);
-    }),
-    data
-  );
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
@@ -195,7 +176,17 @@ export default function MineralPage() {
     elements,
     members,
     inheritance_chain,
+    contexts,
   } : mineralDetailApiResponse = data;
+
+
+  const contextGroups = contexts ? groupBy(contexts, item => item.type.name) : {};
+
+
+  getConclusiveContext(contextGroups['Physical properties']);
+
+
+  // console.log(contextGroups);
 
 
   let completeHistory = [];
@@ -213,7 +204,6 @@ export default function MineralPage() {
     completeHistory = history ? prepareHistory([history]) : [];
   }
 
-  console.log(membersCrystallography);
 
   const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || membersCrystallography;
 
@@ -227,6 +217,7 @@ export default function MineralPage() {
                       }
     }
   }), inheritance_chain);
+
   const nrMinerals = groupBy(conclusiveFormulas, item => item.mineral.id);
 
   return (
@@ -400,8 +391,46 @@ export default function MineralPage() {
           </Section>
         )}
 
+        {contextGroups && (
+          Object.keys(contextGroups).map((key, index) => {
+            <Section title={key}>
+              <div className="grid grid-cols-8 px-2">
+                <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
+                  {/* {Object.keys(contextGroups[index]).map((_key, _index) => {
 
-        {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
+                    return (
+                      <Fragment key={index}>
+                        <span className={cx("font-semibold break-words")}>{_key}</span>
+                        <div className="col-span-3 flex flex-col space-y-2">
+                          {data.items[key].map((item, index) => {
+                            return (
+                              <div key={index} className="flex items-center">
+                                <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                                  {item.ids.map((id) => {
+
+                                    return (
+                                      <span key={id}
+                                            className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0")}>
+                                      </span>
+                                    )}
+                                  )}
+                                </div>
+                                <span dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                              </div>
+                            )}
+                          )}
+                        </div>
+                      </Fragment>
+                    )}
+                  )} */}
+                </div>
+              </div>
+            </Section>
+          })
+        )}
+
+
+        {/* {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
           <Section title="Physical properties">
             <DataGrid data={{ minerals: conclusiveMindatData.physicalProperties.minerals, items: conclusiveMindatData.physicalProperties.items }} />
           </Section>
@@ -411,7 +440,7 @@ export default function MineralPage() {
           <Section title="Optical properties">
             <DataGrid data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
           </Section>
-        )}
+        )} */}
       </div>
     </>
   )
