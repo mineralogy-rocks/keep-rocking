@@ -47,14 +47,18 @@ export const DATA_CONTEXT_STRUCTURE = {
 }
 
 export const PHYSICAL_PROPS_TITLES = {
-  color: ["Color", "Color entities, recognized using a custom trained NER model"],
-  colorNote: ["Original color note"],
-  streak: ["Streak", "Streak entities, recognized using a custom trained NER model"],
-  streakNote: ["Original streak note"],
+  // the order of keys matters, it defines the order of the properties in the output
+  // comment out the keys to remove the properties from the output
+
+  colorNote: ["Color note"],
+  color: ["Color entities", "recognized using a custom trained NER model"],
+  streakNote: ["Streak note"],
+  streak: ["Streak entities", "recognized using a custom trained NER model"],
+
   lustre: ["Lustre"],
-  lustreNote: ["Lustre note"],
+  // lustreNote: ["Lustre note"],
   fracture: ["Fracture"],
-  fractureNote: ["Fracture note"],
+  // fractureNote: ["Fracture note"],
   transparency: ["Transparency"],
   luminescence: ["Luminescence"],
   tenacity: ["Tenacity"],

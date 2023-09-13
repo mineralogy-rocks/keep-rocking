@@ -11,6 +11,7 @@ import { fetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
 import Chip from '@/components/Chip';
+import ColorChip from '@/components/ColorChip';
 import BarChart from '@/components/BarChart';
 import TimelineChart from '@/components/TimelineChart';
 
@@ -60,7 +61,9 @@ const DataGrid = ({ data }) => {
   return (
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
-        {Object.keys(data.items).map((key, index) => {
+        {Object.keys(PHYSICAL_PROPS_TITLES).map((key, index) => {
+          if (data.items.hasOwnProperty(key) === false) return null;
+
           const [title, subtitle] = PHYSICAL_PROPS_TITLES[key] || [key, null];
 
           let _isHovered = highlighted.length && !data.items[key].some(item => item.ids.some(id => highlighted.includes(id)));
@@ -72,30 +75,80 @@ const DataGrid = ({ data }) => {
                 <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{title}</span>
                 {subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{subtitle}</span>)}
               </div>
+              {key === 'color' || key === 'streak' ? (
+                <div className="col-span-3 flex flex-wrap">
+                {data.items[key].map((item, index) => {
+                  let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
+                    return (
+                      <div key={index} className="flex flex-col">
+                        <div className="flex items-center">
+                          <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                            {item.ids.map((id) => {
+                              let _isHovered = highlighted.length && !highlighted.includes(id);
+                              let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+
+                              return (
+                                <span key={id}
+                                      className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
+                                      style={{ backgroundColor: _color }}>
+                                </span>
+                              )}
+                            )}
+                          </div>
+                          <ColorChip type={item.value} className={cx(hoverClass, _isHovered ? 'opacity-20' : '')}>{item.value}</ColorChip>
+                        </div>
+                        <ul className="mt-1 relative py-1 ml-[18px] list-none text-xs text-font-secondary">
+                        {item.children.map((child, index) => {
+                          let _isHovered = highlighted.length && !highlighted.some(id => child.ids.includes(id));
+
+                          return (
+                          <li key={index} className="flex items-center relative pb-2">
+                            <div className="flex">
+                              {child.ids.map((id) => {
+                                let _isHovered = highlighted.length && !highlighted.includes(id);
+                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+
+                                return (
+                                  <span key={id}
+                                        className={cx("z-10 w-1.5 h-1.5 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
+                                        style={{ backgroundColor: _color }}>
+                                  </span>
+                                )}
+                              )}
+                            </div>
+                            <span className={cx("ml-1", hoverClass, _isHovered ? 'opacity-20' : '')}>{child.value}</span>
+                          </li>
+                        )}
+                        )}
+                      </ul>
+                    </div>
+                    )}
+                )}
+              </div>
+              ) :
               <div className="col-span-3 flex flex-col space-y-2">
                 {data.items[key].map((item, index) => {
                   let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
+                    return (
+                      <div key={index} className="flex items-center">
+                        <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                          {item.ids.map((id) => {
+                            let _isHovered = highlighted.length && !highlighted.includes(id);
+                            let _color = data.minerals.find(mineral => mineral.id === id)?.color;
 
-                  return (
-                    <div key={index} className="flex items-center">
-                      <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
-                        {item.ids.map((id) => {
-                          let _isHovered = highlighted.length && !highlighted.includes(id);
-                          let _color = data.minerals.find(mineral => mineral.id === id)?.color;
-
-                          return (
-                            <span key={id}
-                                  className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
-                                  style={{ backgroundColor: _color }}>
-                            </span>
+                            return (
+                              <span key={id}
+                                    className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
+                                    style={{ backgroundColor: _color }}>
+                              </span>
+                            )}
                           )}
-                        )}
+                        </div>
+                        <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                       </div>
-                      <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
-                    </div>
-                  )}
+                    )}
                 )}
-              </div>
+              </div>}
             </Fragment>
           )}
         )}

@@ -95,106 +95,6 @@ export const parsePhysicalProperties = (data) => {
 };
 
 
-export const _getConclusiveContext = (data) => {
-  if (!data) return null;
-
-  let conclusiveMindatData = {};
-  let props = [
-    {
-      key: 'Physical properties',
-      callback: parsePhysicalProperties,
-    },
-    // {
-    //   key: 'Optical properties',
-    //   callback: parseOpticalProperties,
-    // },
-  ];
-
-  for (let prop of props) {
-    conclusiveMindatData[prop.key] = clone(DATA_CONTEXT_STRUCTURE);
-    let _index = -1;
-
-    console.log(conclusiveMindatData)
-
-    data.forEach((item) => {
-      let _props = prop.callback(item.data);
-      if (_props) {
-        _index++;
-        let _item = {
-          color: compareColors[_index].base,
-          ...item.mineral
-        };
-        conclusiveMindatData[prop.key].minerals.push(_item);
-
-        Object.entries(_props).forEach(([key, value]) => {
-          // flatten each key and find corresponding values in the data
-          if (!conclusiveMindatData[prop.key].items[key]) conclusiveMindatData[prop.key].items[key] = [];
-
-          // treat `color` and `streak` separately
-          if (key === 'color' || key === 'streak') {
-            if (!value) return;
-            value.forEach((v) => {
-              let { primaryColor, entities } = v;
-              let _existingItem = conclusiveMindatData[prop.key].items[key].find((item_) => {
-                return item_.value === primaryColor;
-              });
-
-              let children = entities.map((entity) => {
-                return { ids: [item.mineral.id], value: entity};
-              });
-              if (_existingItem) {
-                _existingItem.ids.push(item.mineral.id);
-                _existingItem.children.forEach((child) => {
-                  if (entities.includes(child.value)) {
-                    child.ids.push(item.mineral.id);
-                  } else {
-                    entities.map((entity) => {
-                      _existingItem.children.push({ ids: [item.mineral.id], value: entity});
-                    });
-                  }
-                })
-
-              } else {
-                conclusiveMindatData[prop.key].items[key].push({
-                  'value': primaryColor,
-                  'ids': [item.mineral.id],
-                  children: children
-                });
-              }
-            });
-            return;
-          };
-
-
-          if (Array.isArray(value)) {
-            value.forEach((v) => {
-              let _existingItem = conclusiveMindatData[prop.key].items[key].find((item_) => {
-                return item_.value === v;
-              });
-              if (_existingItem) {
-                _existingItem.ids.push(item.mineral.id);
-              } else {
-                conclusiveMindatData[prop.key].items[key].push({ 'value': v, 'ids': [item.mineral.id] });
-              }
-            });
-          } else {
-            let _existingItem = conclusiveMindatData[prop.key].items[key].find((item_) => {
-              return item_.value === value;
-            });
-            if (_existingItem) {
-              _existingItem.ids.push(item.mineral.id);
-            } else {
-              conclusiveMindatData[prop.key].items[key].push({ 'value': value, 'ids': [item.mineral.id] });
-            }
-          }
-        });
-      }
-    });
-  };
-  return conclusiveMindatData;
-};
-
-
 const _createEmptyContext = () => ({
   'Physical properties': {
     minerals: [],
@@ -203,11 +103,13 @@ const _createEmptyContext = () => ({
   // Add more properties as needed
 });
 
+
 const _addMineralToContext = (context, prop, mineral) => {
   const { items, minerals } = context[prop];
   minerals.push({ color: compareColors[minerals.length].base, ...mineral });
   return { items, minerals };
 };
+
 
 const _addValueToItems = (items, key, value, mineralId) => {
   if (!items[key]) items[key] = [];
@@ -259,6 +161,7 @@ const _addValueToItems = (items, key, value, mineralId) => {
   return items;
 };
 
+
 export const getConclusiveContext = (data) => {
   if (!data) return null;
 
@@ -283,6 +186,6 @@ export const getConclusiveContext = (data) => {
     });
   });
 
-  // console.log(conclusiveData)
+  console.log(conclusiveData)
   return conclusiveData;
 };
