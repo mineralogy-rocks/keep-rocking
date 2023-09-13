@@ -45,3 +45,20 @@ export const DATA_CONTEXT_STRUCTURE = {
   minerals: [],
   items: {},
 }
+
+export const PHYSICAL_PROPS_TITLES = {
+  color: ["Color", "Color entities, recognized using a custom trained NER model"],
+  colorNote: ["Original color note"],
+  streak: ["Streak", "Streak entities, recognized using a custom trained NER model"],
+  streakNote: ["Original streak note"],
+  lustre: ["Lustre"],
+  lustreNote: ["Lustre note"],
+  fracture: ["Fracture"],
+  fractureNote: ["Fracture note"],
+  transparency: ["Transparency"],
+  luminescence: ["Luminescence"],
+  tenacity: ["Tenacity"],
+  hardness: ["Hardness"],
+  density: ["Measured density"],
+  densityCalculated: ["Calculated density"],
+};

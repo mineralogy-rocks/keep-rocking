@@ -95,7 +95,7 @@ export const parsePhysicalProperties = (data) => {
 };
 
 
-export const getConclusiveContext = (data) => {
+export const _getConclusiveContext = (data) => {
   if (!data) return null;
 
   let conclusiveMindatData = {};
@@ -121,10 +121,8 @@ export const getConclusiveContext = (data) => {
       if (_props) {
         _index++;
         let _item = {
-          id: item.mineral,
-          name: item.name,
           color: compareColors[_index].base,
-          statuses: item.statuses,
+          ...item.mineral
         };
         conclusiveMindatData[prop.key].minerals.push(_item);
 
@@ -134,15 +132,34 @@ export const getConclusiveContext = (data) => {
 
           // treat `color` and `streak` separately
           if (key === 'color' || key === 'streak') {
+            if (!value) return;
             value.forEach((v) => {
               let { primaryColor, entities } = v;
               let _existingItem = conclusiveMindatData[prop.key].items[key].find((item_) => {
                 return item_.value === primaryColor;
               });
+
+              let children = entities.map((entity) => {
+                return { ids: [item.mineral.id], value: entity};
+              });
               if (_existingItem) {
-                _existingItem.ids.push(item.mineral);
+                _existingItem.ids.push(item.mineral.id);
+                _existingItem.children.forEach((child) => {
+                  if (entities.includes(child.value)) {
+                    child.ids.push(item.mineral.id);
+                  } else {
+                    entities.map((entity) => {
+                      _existingItem.children.push({ ids: [item.mineral.id], value: entity});
+                    });
+                  }
+                })
+
               } else {
-                conclusiveMindatData[prop.key].items[key].push({ 'value': primaryColor, 'ids': [item.mineral] });
+                conclusiveMindatData[prop.key].items[key].push({
+                  'value': primaryColor,
+                  'ids': [item.mineral.id],
+                  children: children
+                });
               }
             });
             return;
@@ -155,9 +172,9 @@ export const getConclusiveContext = (data) => {
                 return item_.value === v;
               });
               if (_existingItem) {
-                _existingItem.ids.push(item.mineral);
+                _existingItem.ids.push(item.mineral.id);
               } else {
-                conclusiveMindatData[prop.key].items[key].push({ 'value': v, 'ids': [item.mineral] });
+                conclusiveMindatData[prop.key].items[key].push({ 'value': v, 'ids': [item.mineral.id] });
               }
             });
           } else {
@@ -165,9 +182,9 @@ export const getConclusiveContext = (data) => {
               return item_.value === value;
             });
             if (_existingItem) {
-              _existingItem.ids.push(item.mineral);
+              _existingItem.ids.push(item.mineral.id);
             } else {
-              conclusiveMindatData[prop.key].items[key].push({ 'value': value, 'ids': [item.mineral] });
+              conclusiveMindatData[prop.key].items[key].push({ 'value': value, 'ids': [item.mineral.id] });
             }
           }
         });
@@ -175,4 +192,97 @@ export const getConclusiveContext = (data) => {
     });
   };
   return conclusiveMindatData;
+};
+
+
+const _createEmptyContext = () => ({
+  'Physical properties': {
+    minerals: [],
+    items: {}
+  },
+  // Add more properties as needed
+});
+
+const _addMineralToContext = (context, prop, mineral) => {
+  const { items, minerals } = context[prop];
+  minerals.push({ color: compareColors[minerals.length].base, ...mineral });
+  return { items, minerals };
+};
+
+const _addValueToItems = (items, key, value, mineralId) => {
+  if (!items[key]) items[key] = [];
+
+  if (key === 'color' || key === 'streak') {
+    if (!value) return items;
+    value.forEach((v) => {
+      const { primaryColor, entities } = v;
+      const existingItem = items[key].find((item) => item.value === primaryColor);
+
+      const children = entities.map((entity) => ({ ids: [mineralId], value: entity }));
+
+      if (existingItem) {
+        existingItem.ids.push(mineralId);
+        existingItem.children.forEach((child) => {
+          if (entities.includes(child.value)) {
+            child.ids.push(mineralId);
+          } else {
+            entities.forEach((entity) => {
+              child.ids.push(mineralId);
+              child.value = entity;
+            });
+          }
+        });
+      } else {
+        items[key].push({ value: primaryColor, ids: [mineralId], children });
+      }
+    });
+    return items;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((v) => {
+      const existingItem = items[key].find((item) => item.value === v);
+      if (existingItem) {
+        existingItem.ids.push(mineralId);
+      } else {
+        items[key].push({ value: v, ids: [mineralId] });
+      }
+    });
+  } else {
+    const existingItem = items[key].find((item) => item.value === value);
+    if (existingItem) {
+      existingItem.ids.push(mineralId);
+    } else {
+      items[key].push({ value, ids: [mineralId] });
+    }
+  }
+  return items;
+};
+
+export const getConclusiveContext = (data) => {
+  if (!data) return null;
+
+  const conclusiveData = _createEmptyContext();
+  const props = [
+    {
+      key: 'Physical properties',
+      callback: parsePhysicalProperties,
+    },
+    // Add more properties as needed
+  ];
+
+  props.forEach((prop) => {
+    data.forEach((item) => {
+      const props = prop.callback(item.data);
+      if (props) {
+        const { items, minerals } = _addMineralToContext(conclusiveData, prop.key, item.mineral);
+        Object.entries(props).forEach(([key, value]) => {
+          if (value) _addValueToItems(items, key, value, item.mineral.id);
+        });
+      }
+    });
+  });
+
+  // console.log(conclusiveData)
+  return conclusiveData;
 };

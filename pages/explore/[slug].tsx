@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import cx from 'clsx';
 
 import groupBy from 'just-group-by';
-import { STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP } from '@/lib/constants';
+import { STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, PHYSICAL_PROPS_TITLES } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
@@ -61,12 +61,17 @@ const DataGrid = ({ data }) => {
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
         {Object.keys(data.items).map((key, index) => {
+          const [title, subtitle] = PHYSICAL_PROPS_TITLES[key] || [key, null];
+
           let _isHovered = highlighted.length && !data.items[key].some(item => item.ids.some(id => highlighted.includes(id)));
           let hoverClass = 'transition-opacity duration-300 ease-in-out';
 
           return (
             <Fragment key={index}>
-              <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{key}</span>
+              <div className="flex flex-col">
+                <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{title}</span>
+                {subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{subtitle}</span>)}
+              </div>
               <div className="col-span-3 flex flex-col space-y-2">
                 {data.items[key].map((item, index) => {
                   let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
@@ -176,17 +181,14 @@ export default function MineralPage() {
     elements,
     members,
     inheritance_chain,
-    contexts,
+    contexts: _contexts,
   } : mineralDetailApiResponse = data;
 
 
-  const contextGroups = contexts ? groupBy(contexts, item => item.type.name) : {};
+  const contextGroups = _contexts ? groupBy(_contexts, item => item.type.name) : {};
+  const contexts = getConclusiveContext(contextGroups['Physical properties']);
 
-
-  getConclusiveContext(contextGroups['Physical properties']);
-
-
-  // console.log(contextGroups);
+  console.log(contexts);
 
 
   let completeHistory = [];
@@ -391,52 +393,14 @@ export default function MineralPage() {
           </Section>
         )}
 
-        {contextGroups && (
-          Object.keys(contextGroups).map((key, index) => {
-            <Section title={key}>
-              <div className="grid grid-cols-8 px-2">
-                <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
-                  {/* {Object.keys(contextGroups[index]).map((_key, _index) => {
 
-                    return (
-                      <Fragment key={index}>
-                        <span className={cx("font-semibold break-words")}>{_key}</span>
-                        <div className="col-span-3 flex flex-col space-y-2">
-                          {data.items[key].map((item, index) => {
-                            return (
-                              <div key={index} className="flex items-center">
-                                <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
-                                  {item.ids.map((id) => {
-
-                                    return (
-                                      <span key={id}
-                                            className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0")}>
-                                      </span>
-                                    )}
-                                  )}
-                                </div>
-                                <span dangerouslySetInnerHTML={{ __html: item.value }}></span>
-                              </div>
-                            )}
-                          )}
-                        </div>
-                      </Fragment>
-                    )}
-                  )} */}
-                </div>
-              </div>
-            </Section>
-          })
-        )}
-
-
-        {/* {conclusiveMindatData && conclusiveMindatData.physicalProperties && (
+        {contexts && (
           <Section title="Physical properties">
-            <DataGrid data={{ minerals: conclusiveMindatData.physicalProperties.minerals, items: conclusiveMindatData.physicalProperties.items }} />
+            <DataGrid data={{ minerals: contexts['Physical properties'].minerals, items: contexts['Physical properties'].items }} />
           </Section>
         )}
 
-        {conclusiveMindatData && conclusiveMindatData.opticalProperties && (
+        {/* {conclusiveMindatData && conclusiveMindatData.opticalProperties && (
           <Section title="Optical properties">
             <DataGrid data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
           </Section>
