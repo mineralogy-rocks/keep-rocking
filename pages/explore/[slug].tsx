@@ -82,7 +82,7 @@ const DataGrid = ({ data }) => {
                     return (
                       <div key={index} className="flex flex-col">
                         <div className="flex items-center">
-                          <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                          {/* <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
                             {item.ids.map((id) => {
                               let _isHovered = highlighted.length && !highlighted.includes(id);
                               let _color = data.minerals.find(mineral => mineral.id === id)?.color;
@@ -94,8 +94,23 @@ const DataGrid = ({ data }) => {
                                 </span>
                               )}
                             )}
-                          </div>
-                          <ColorChip type={item.value} className={cx(hoverClass, _isHovered ? 'opacity-20' : '')}>{item.value}</ColorChip>
+                          </div> */}
+                          <ColorChip type={item.value} hasPadding={false} className={cx(hoverClass, _isHovered ? 'opacity-20' : '')}>
+                            <div className="flex flex-none mr-3 w-[1.5rem] bg-white h-full items-center justify-center">
+                              {item.ids.map((id) => {
+                                let _isHovered = highlighted.length && !highlighted.includes(id);
+                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+
+                                return (
+                                  <span key={id}
+                                        className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
+                                        style={{ backgroundColor: _color }}>
+                                  </span>
+                                )}
+                              )}
+                            </div>
+                            <span className="px-1 py-0.5">{item.value}</span>
+                          </ColorChip>
                         </div>
                         <ul className="mt-1 relative py-1 ml-[18px] list-none text-xs text-font-secondary">
                         {item.children.map((child, index) => {
