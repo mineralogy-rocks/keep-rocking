@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { Fragment } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -8,13 +8,14 @@ import groupBy from 'just-group-by';
 import { STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, PHYSICAL_PROPS_TITLES } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
+import useSelection from "@/hooks/use-selection.hook";
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
+import Dot from '@/components/Dot';
 import Chip from '@/components/Chip';
 import ColorChip from '@/components/ColorChip';
 import BarChart from '@/components/BarChart';
 import TimelineChart from '@/components/TimelineChart';
-
 
 
 const Section = ({ title, children }) => (
@@ -28,45 +29,17 @@ const Section = ({ title, children }) => (
 
 
 const DataGrid = ({ data }) => {
-  const [_highlighted, _setHighlighted] = useState(data.minerals.map(item => {
-    return {
-      id: item.id,
-      hovered: false,
-      clicked: false
-    }
-  }));
 
-  const handleSelection = (id, hovered = false, clicked = false, reset = false) => {
-    _setHighlighted((prevHighlighted) => {
-      if (clicked) {
-        return prevHighlighted.map((item) => (item.id === id ? { ...item, clicked: true } : item));
-      } else {
-        return prevHighlighted.map((item) => {
-          if (item.id === id) {
-            if (reset) {
-              return { ...item, hovered: false, clicked: false };
-            } else {
-              return { ...item, hovered: hovered };
-            }
-          } else {
-            return item;
-          }
-        });
-      }
-    });
-  };
-
-  const highlighted = _highlighted.filter(item => item.hovered || item.clicked).map(item => item.id);
+  const [selected, handleSelection] = useSelection(data.minerals.map(item_ => item_.id));
+  const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
 
   return (
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
         {Object.keys(PHYSICAL_PROPS_TITLES).map((key, index) => {
           if (data.items.hasOwnProperty(key) === false) return null;
-
           const [title, subtitle] = PHYSICAL_PROPS_TITLES[key] || [key, null];
-
-          let _isHovered = highlighted.length && !data.items[key].some(item => item.ids.some(id => highlighted.includes(id)));
+          let _isHovered = selectedIds.length && !data.items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
           let hoverClass = 'transition-opacity duration-300 ease-in-out';
 
           return (
@@ -76,86 +49,63 @@ const DataGrid = ({ data }) => {
                 {subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{subtitle}</span>)}
               </div>
               {key === 'color' || key === 'streak' ? (
-                <div className="col-span-3 flex flex-wrap">
+                <div className="col-span-3 flex flex-col flex-wrap gap-2">
                 {data.items[key].map((item, index) => {
-                  let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
-                    return (
-                      <div key={index} className="flex flex-col">
-                        <div className="flex items-center">
-                          {/* <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
-                            {item.ids.map((id) => {
-                              let _isHovered = highlighted.length && !highlighted.includes(id);
-                              let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+                  let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
 
+                    return (
+                      <div key={index} className="flex items-center">
+                        <div className="flex items-center">
+                          <div className="flex w-4 mr-2">
+                            {item.ids.map((id) => {
+                              let _isHovered = selectedIds.length && !selectedIds.includes(id);
+                              let _color = data.minerals.find(mineral_ => mineral_.id === id)?.color;
                               return (
-                                <span key={id}
-                                      className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
-                                      style={{ backgroundColor: _color }}>
-                                </span>
+                                <Dot key={id} color={_color} isHovered={_isHovered} />
                               )}
                             )}
-                          </div> */}
+                          </div>
                           <ColorChip type={item.value} hasPadding={false} className={cx(hoverClass, _isHovered ? 'opacity-20' : '')}>
-                            <div className="flex flex-none mr-3 w-[1.5rem] bg-white h-full items-center justify-center">
-                              {item.ids.map((id) => {
-                                let _isHovered = highlighted.length && !highlighted.includes(id);
-                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
-
-                                return (
-                                  <span key={id}
-                                        className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
-                                        style={{ backgroundColor: _color }}>
-                                  </span>
-                                )}
-                              )}
-                            </div>
-                            <span className="px-1 py-0.5">{item.value}</span>
                           </ColorChip>
                         </div>
-                        <ul className="mt-1 relative py-1 ml-[18px] list-none text-xs text-font-secondary">
-                        {item.children.map((child, index) => {
-                          let _isHovered = highlighted.length && !highlighted.some(id => child.ids.includes(id));
+                        <ul className="flex flex-wrap mt-1 relative ml-2 list-none text-xs text-font-secondary">
+                          {item.children.map((child, index) => {
+                            let _isHovered = selectedIds.length && !selectedIds.some(id => child.ids.includes(id));
 
-                          return (
-                          <li key={index} className="flex items-center relative pb-2">
-                            <div className="flex">
-                              {child.ids.map((id) => {
-                                let _isHovered = highlighted.length && !highlighted.includes(id);
-                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+                            return (
+                            <li key={index} className="ml-2 flex items-center relative pb-2">
+                              <div className="flex">
+                                {child.ids.map((id) => {
+                                  let _isHovered = selectedIds.length && !selectedIds.includes(id);
+                                  let _color = data.minerals.find(mineral => mineral.id === id)?.color;
 
-                                return (
-                                  <span key={id}
-                                        className={cx("z-10 w-1.5 h-1.5 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
-                                        style={{ backgroundColor: _color }}>
-                                  </span>
+                                  return (
+                                    <Dot key={id} size='small' color={_color} isHovered={_isHovered} />
+                                  )}
                                 )}
-                              )}
-                            </div>
-                            <span className={cx("ml-1", hoverClass, _isHovered ? 'opacity-20' : '')}>{child.value}</span>
-                          </li>
-                        )}
-                        )}
-                      </ul>
-                    </div>
+                              </div>
+                              <span className={cx("ml-1", hoverClass, _isHovered ? 'opacity-20' : '')}>{child.value}</span>
+                            </li>
+                          )}
+                          )}
+                        </ul>
+                      </div>
                     )}
                 )}
               </div>
               ) :
               <div className="col-span-3 flex flex-col space-y-2">
                 {data.items[key].map((item, index) => {
-                  let _isHovered = highlighted.length && !item.ids.some(id => highlighted.includes(id));
+                  let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
                     return (
                       <div key={index} className="flex items-center">
-                        <div className="flex flex-none justify-end mr-3 w-[1.5rem]">
+                        <div className="flex flex-none w-[1.5rem]">
                           {item.ids.map((id) => {
-                            let _isHovered = highlighted.length && !highlighted.includes(id);
+                            let _isHovered = selectedIds.length && !selectedIds.includes(id);
                             let _color = data.minerals.find(mineral => mineral.id === id)?.color;
 
                             return (
-                              <span key={id}
-                                    className={cx("w-2 h-2 rounded-full -ml-1 first:ml-0", hoverClass, _isHovered ? 'opacity-20' : '')}
-                                    style={{ backgroundColor: _color }}>
-                              </span>
+                              <Dot key={id} color={_color} isHovered={_isHovered} />
                             )}
                           )}
                         </div>
@@ -171,7 +121,7 @@ const DataGrid = ({ data }) => {
 
       <aside className="col-start-8 flex flex-col gap-2">
         {data.minerals.map((item, index) => {
-          let isHighlighted = _highlighted.find(_item => _item.id === item.id);
+          let isHighlighted = selected.find(_item => _item.id === item.id);
 
           return (
             <div key={index} className="flex items-center justify-start">

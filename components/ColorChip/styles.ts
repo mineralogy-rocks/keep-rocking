@@ -9,13 +9,13 @@ export const getStyles= (type = "default"): Styles => {
   let defaultDarkStyles = {
     textColor: 'text-gray-800',
     backgroundColor: 'bg-red-50/60',
-    borderColor: 'border border-gray-200 hover:border-gray-300'
+    borderColor: 'border border-font-secondary'
   };
 
   let defaultLightStyles = {
     textColor: 'text-gray-100',
     backgroundColor: 'bg-red-500',
-    borderColor: 'border border-gray-200 hover:border-gray-300'
+    borderColor: 'border border-font-secondary'
   };
 
   const colors = {

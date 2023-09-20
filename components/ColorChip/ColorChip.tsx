@@ -1,4 +1,4 @@
-import cx from 'clsx';
+ import cx from 'clsx';
 
 import { getStyles } from './styles';
 
@@ -12,16 +12,16 @@ interface Props {
 
 const defaultProps = {
   type: "default",
-  hasPadding: true,
   className: "",
+  hasPadding: true,
 };
 
-export default function Chip({ type, hasPadding = true, className = "", children, ...props} : Props & typeof defaultProps) {
+const Chip = ({ type, className = "", hasPadding = true, children, ...props} : Props & typeof defaultProps) => {
 
   const { textColor, backgroundColor, borderColor } = getStyles(type);
 
   return (
-    <div className={cx("flex flex-wrap rounded transition-colors duration-300",
+    <div className={cx("flex flex-wrap rounded-sm transition-colors duration-300 w-5 h-5",
                       hasPadding ? "px-1 py-0.5" : "",
                       backgroundColor,
                       borderColor,
@@ -33,3 +33,6 @@ export default function Chip({ type, hasPadding = true, className = "", children
     </div>
   )
 }
+
+Chip.defaultProps = defaultProps
+export default Chip
