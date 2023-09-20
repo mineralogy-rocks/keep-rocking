@@ -28,7 +28,6 @@ export const getStatusGroupColor = (statuses: Status[]): string => {
 };
 
 export const getStatusColor = (statuses: [number]): string => {
-  console.log(statuses)
   for (let status of statuses.sort()) {
     let _status = Math.floor(status);
     if (_status === 0) return 'bg-green-700/70';

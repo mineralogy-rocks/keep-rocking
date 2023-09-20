@@ -1,7 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 
-export default function useSelection(items) {
+interface Props {
+  item: {
+    id: string|number;
+    hovered: boolean;
+    clicked: boolean;
+  }
+};
+
+export default function useSelection(items: [Props]): any {
   const [selected, setSelected] = useState(items.map(item_ => {
     return {
       id: item_,

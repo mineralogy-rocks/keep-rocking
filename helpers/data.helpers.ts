@@ -186,6 +186,5 @@ export const getConclusiveContext = (data) => {
     });
   });
 
-  console.log(conclusiveData)
   return conclusiveData;
 };

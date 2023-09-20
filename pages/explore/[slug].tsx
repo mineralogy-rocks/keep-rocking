@@ -13,9 +13,9 @@ import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/d
 import RelationChip from '@/components/RelationChip';
 import Dot from '@/components/Dot';
 import Chip from '@/components/Chip';
-import ColorChip from '@/components/ColorChip';
 import BarChart from '@/components/BarChart';
 import TimelineChart from '@/components/TimelineChart';
+import { ColorEntities, GroupedColorEntities } from '@/components/DataContext';
 
 
 const Section = ({ title, children }) => (
@@ -28,7 +28,7 @@ const Section = ({ title, children }) => (
 );
 
 
-const DataGrid = ({ data }) => {
+const DataContext = ({ data, isGrouping }) => {
 
   const [selected, handleSelection] = useSelection(data.minerals.map(item_ => item_.id));
   const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
@@ -49,71 +49,33 @@ const DataGrid = ({ data }) => {
                 {subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{subtitle}</span>)}
               </div>
               {key === 'color' || key === 'streak' ? (
-                <div className="col-span-3 flex flex-col flex-wrap gap-2">
-                {data.items[key].map((item, index) => {
-                  let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
+                  isGrouping ? (
+                    <GroupedColorEntities items={data.items[key]} />
+                      ) : (
+                    <ColorEntities items={data.items[key]} minerals={data.minerals} selected={selectedIds} hoverClass={hoverClass} />
+                  )
+              ) : (
+                  <div className="col-span-3 flex flex-col space-y-2">
+                    {data.items[key].map((item, index) => {
+                      let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
+                        return (
+                          <div key={index} className="flex items-center">
+                            <div className="flex flex-none w-[1.5rem]">
+                              {item.ids.map((id) => {
+                                let _isHovered = selectedIds.length && !selectedIds.includes(id);
+                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
 
-                    return (
-                      <div key={index} className="flex items-center">
-                        <div className="flex items-center">
-                          <div className="flex w-4 mr-2">
-                            {item.ids.map((id) => {
-                              let _isHovered = selectedIds.length && !selectedIds.includes(id);
-                              let _color = data.minerals.find(mineral_ => mineral_.id === id)?.color;
-                              return (
-                                <Dot key={id} color={_color} isHovered={_isHovered} />
-                              )}
-                            )}
-                          </div>
-                          <ColorChip type={item.value} hasPadding={false} className={cx(hoverClass, _isHovered ? 'opacity-20' : '')}>
-                          </ColorChip>
-                        </div>
-                        <ul className="flex flex-wrap mt-1 relative ml-2 list-none text-xs text-font-secondary">
-                          {item.children.map((child, index) => {
-                            let _isHovered = selectedIds.length && !selectedIds.some(id => child.ids.includes(id));
-
-                            return (
-                            <li key={index} className="ml-2 flex items-center relative pb-2">
-                              <div className="flex">
-                                {child.ids.map((id) => {
-                                  let _isHovered = selectedIds.length && !selectedIds.includes(id);
-                                  let _color = data.minerals.find(mineral => mineral.id === id)?.color;
-
-                                  return (
-                                    <Dot key={id} size='small' color={_color} isHovered={_isHovered} />
-                                  )}
+                                return (
+                                  <Dot key={id} color={_color} isHovered={_isHovered} />
                                 )}
-                              </div>
-                              <span className={cx("ml-1", hoverClass, _isHovered ? 'opacity-20' : '')}>{child.value}</span>
-                            </li>
-                          )}
-                          )}
-                        </ul>
-                      </div>
+                              )}
+                            </div>
+                            <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                          </div>
+                        )}
                     )}
-                )}
-              </div>
-              ) :
-              <div className="col-span-3 flex flex-col space-y-2">
-                {data.items[key].map((item, index) => {
-                  let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
-                    return (
-                      <div key={index} className="flex items-center">
-                        <div className="flex flex-none w-[1.5rem]">
-                          {item.ids.map((id) => {
-                            let _isHovered = selectedIds.length && !selectedIds.includes(id);
-                            let _color = data.minerals.find(mineral => mineral.id === id)?.color;
-
-                            return (
-                              <Dot key={id} color={_color} isHovered={_isHovered} />
-                            )}
-                          )}
-                        </div>
-                        <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
-                      </div>
-                    )}
-                )}
-              </div>}
+                  </div>)
+              }
             </Fragment>
           )}
         )}
@@ -202,9 +164,8 @@ export default function MineralPage() {
     contexts: _contexts,
   } : mineralDetailApiResponse = data;
 
-
   const contextGroups = _contexts ? groupBy(_contexts, item => item.type.name) : {};
-  const contexts = getConclusiveContext(contextGroups['Physical properties']);
+  const contexts = isGrouping ? contextGroups : getConclusiveContext(contextGroups['Physical properties']);
 
   console.log(contexts);
 
@@ -414,13 +375,14 @@ export default function MineralPage() {
 
         {contexts && (
           <Section title="Physical properties">
-            <DataGrid data={{ minerals: contexts['Physical properties'].minerals, items: contexts['Physical properties'].items }} />
+            <DataContext isGrouping={isGrouping}
+                         data={{ minerals: contexts['Physical properties'].minerals, items: contexts['Physical properties'].items }} />
           </Section>
         )}
 
         {/* {conclusiveMindatData && conclusiveMindatData.opticalProperties && (
           <Section title="Optical properties">
-            <DataGrid data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
+            <DataContext data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
           </Section>
         )} */}
       </div>
