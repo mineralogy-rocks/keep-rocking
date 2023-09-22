@@ -20,7 +20,7 @@ const defaultProps = {
 };
 
 
-const TimelineChart = ({ items, labelX, labelY, domainX, className, colorScheme }: Props & typeof defaultProps) => {
+const BarcodeChart = ({ items, labelX, labelY, domainX, className, colorScheme }: Props & typeof defaultProps) => {
   const containerRef = useRef();
 
   useEffect(() => {
@@ -65,5 +65,5 @@ const TimelineChart = ({ items, labelX, labelY, domainX, className, colorScheme 
 }
 
 
-TimelineChart.defaultProps = defaultProps;
-export default TimelineChart;
+BarcodeChart.defaultProps = defaultProps;
+export default BarcodeChart;

@@ -12,7 +12,7 @@ import RelationChip from '@/components/RelationChip';
 import { DataContext } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
-import TimelineChart from '@/components/TimelineChart';
+import BarcodeChart from '@/components/BarcodeChart';
 
 
 const Section = ({ title, children }) => (
@@ -133,9 +133,7 @@ export default function MineralPage() {
         {completeHistory.length > 0 && (
           <Section title="History">
             <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
-            <div className="flex px-2">
-            </div>
-            <TimelineChart items={completeHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
+            <BarcodeChart items={completeHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
           </Section>
         )}
 

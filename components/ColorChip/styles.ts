@@ -44,6 +44,10 @@ export const getStyles= (type = "default"): Styles => {
       ...defaultLightStyles,
       backgroundColor: 'bg-orange-500'
     },
+    pink: {
+      ...defaultLightStyles,
+      backgroundColor: 'bg-pink-500'
+    },
     purple: {
       ...defaultLightStyles,
       backgroundColor: 'bg-purple-500'

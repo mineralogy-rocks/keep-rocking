@@ -1,2 +1,2 @@
 export * from './DataContext';
-export { ColorEntities, GroupedColorEntities } from './DataContext';
+export { DataContext } from './DataContext';

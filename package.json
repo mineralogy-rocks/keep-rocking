@@ -15,6 +15,7 @@
     "@popperjs/core": "^2.11.6",
     "@tailwindcss/line-clamp": "^0.4.2",
     "clsx": "^1.2.1",
+    "d3-selection": "^3.0.0",
     "framer-motion": "^10.12.16",
     "just-clone": "^6.2.0",
     "just-filter-object": "^3.1.1",
