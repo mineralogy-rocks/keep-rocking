@@ -27,7 +27,7 @@ const Chip = ({ type, className = "", hasPadding = true, children, ...props} : P
                       borderColor,
                       className)}
          {...props}>
-      <div className={cx("flex items-center space-x-0.5 text-xs font-medium", textColor)}>
+      <div className={cx("flex items-center text-xs font-medium", textColor)}>
         {children}
       </div>
     </div>

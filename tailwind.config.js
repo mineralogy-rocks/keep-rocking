@@ -17,6 +17,7 @@ module.exports = {
           ternary: '#9ca3af',
           blue: '#1d4ed8',
           blueDark: '#1e3a8a',
+          orange: '#f3ece9',
         }
       },
       maxWidth: {
