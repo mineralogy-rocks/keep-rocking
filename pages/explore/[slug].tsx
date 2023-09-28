@@ -290,17 +290,14 @@ export default function MineralPage() {
         )}
 
 
-        {contexts && (
-          <Section title="Physical properties">
-            <DataContext isGrouping={isGrouping} contexts={contexts} />
-          </Section>
-        )}
-
-        {/* {conclusiveMindatData && conclusiveMindatData.opticalProperties && (
-          <Section title="Optical properties">
-            <DataContext data={{ minerals: conclusiveMindatData.opticalProperties.minerals, items: conclusiveMindatData.opticalProperties.items }} />
-          </Section>
-        )} */}
+        {Object.keys(contexts).map((key, index) => {
+          let context = { contextKey: key, ...contexts[key] };
+          return (
+            <Section key={index} title={key}>
+              <DataContext isGrouping={isGrouping} context={context} />
+            </Section>
+          )
+        })}
       </div>
     </>
   )

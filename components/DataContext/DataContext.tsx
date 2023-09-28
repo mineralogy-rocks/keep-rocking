@@ -2,36 +2,28 @@ import Dot from "@/components/Dot";
 import ColorChip from "@/components/ColorChip/ColorChip";
 import cx from "clsx";
 import useSelection from "@/hooks/use-selection.hook";
-import { PHYSICAL_PROPS_TITLES } from "@/lib/constants";
+import { PHYSICAL_PROPS_TITLES, SECTION_FIELDS, FIELDS } from "@/lib/constants";
 import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
 import DotChart from "@/components/DotChart";
 
 
-interface ColorEntitiesProps {
+interface colorEntitiesProps {
   items: any,
   minerals: any,
   selected: any,
   hoverClass?: string,
 };
 
-interface GroupedColorEntitiesProps {
-  items: any,
-};
-
-const ColorEntitiesDefaultProps = {
+const colorEntitiesDefaultProps = {
   items: [],
   minerals: [],
   selected: [],
   hoverClass: "",
 };
 
-const GroupedColorEntitiesDefaultProps = {
-  items: [],
-};
 
-
-const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : ColorEntitiesProps & typeof ColorEntitiesDefaultProps) => {
+const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : colorEntitiesProps & typeof colorEntitiesDefaultProps) => {
 
   const _isHovered = (ids: string | string[]) => {
     if (!Array.isArray(ids)) ids = [ids];
@@ -82,9 +74,15 @@ const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : Col
   )
 }
 
+interface groupedColorEntitiesProps {
+  items: any,
+};
 
-const GroupedColorEntities = ({ items, ...props } : GroupedColorEntitiesProps & typeof GroupedColorEntitiesDefaultProps) => {
+const groupedColorEntitiesDefaultProps = {
+  items: [],
+};
 
+const GroupedColorEntities = ({ items, ...props } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
 
   return (
     <div className="col-span-3 flex flex-col flex-wrap gap-2 divide-y">
@@ -115,40 +113,59 @@ const GroupedColorEntities = ({ items, ...props } : GroupedColorEntitiesProps & 
   )
 }
 
-const MineralDataContext = ({ contexts = {} }) => {
+interface mineralContextProps {
+  contextKey: string,
+  minerals: {
+    id: string,
+    name: string,
+    slug: string,
+    color: string,
+    statuses: [number],
+  }[],
+  items: any,
+}
 
-  // TODO: make it work with multiple contexts
-  const data = contexts['Physical properties'];
-  const [selected, handleSelection] = useSelection(data.minerals.map(item_ => item_.id));
+const mineralContextDefaultProps = {
+  contextKey: '',
+  minerals: [],
+  items: {},
+}
+
+const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProps & typeof mineralContextDefaultProps) => {
+  // TODO: make it work with multiple contexts and use SECTION_FIELDS
+  const [selected, handleSelection] = useSelection(minerals.map(item_ => item_.id));
   const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
 
   return (
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
-        {Object.keys(PHYSICAL_PROPS_TITLES).map((key, index) => {
-          if (data.items.hasOwnProperty(key) === false) return null;
-          const [title, subtitle] = PHYSICAL_PROPS_TITLES[key] || [key, null];
-          let _isHovered = selectedIds.length && !data.items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
+        {SECTION_FIELDS[contextKey].map((key, index) => {
+          if (FIELDS.hasOwnProperty(key) === false) return null;
+          let field = FIELDS[key];
+          let _isCollapsed;
+          if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
+          else _isCollapsed = field.isCollapsed;
+          let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
           let hoverClass = 'transition-opacity duration-300 ease-in-out';
 
           return (
             <Fragment key={index}>
               <div className="flex flex-col">
-                <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{title}</span>
-                {subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{subtitle}</span>)}
+                <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
+                {field.subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
               </div>
               {key === 'color' || key === 'streak' ? (
-                <ColorEntities items={data.items[key]} minerals={data.minerals} selected={selectedIds} hoverClass={hoverClass} />
+                <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />
               ) : (
                   <div className="col-span-3 flex flex-col space-y-2">
-                    {data.items[key].map((item, index) => {
+                    {items[key].map((item, index) => {
                       let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
                         return (
                           <div key={index} className="flex items-center">
                             <div className="flex flex-none w-[1.5rem]">
                               {item.ids.map((id) => {
                                 let _isHovered = selectedIds.length && !selectedIds.includes(id);
-                                let _color = data.minerals.find(mineral => mineral.id === id)?.color;
+                                let _color = minerals.find(mineral => mineral.id === id)?.color;
 
                                 return (
                                   <Dot key={id} color={_color} isHovered={_isHovered} />
@@ -167,7 +184,7 @@ const MineralDataContext = ({ contexts = {} }) => {
       </div>
 
       <aside className="col-start-8 flex flex-col gap-2">
-        {data.minerals.map((item, index) => {
+        {minerals.map((item, index) => {
           let isHighlighted = selected.find(_item => _item.id === item.id);
 
           return (
@@ -240,11 +257,13 @@ const GroupedDataContext = ({ contexts = {} }) => {
   )
 };
 
-const DataContext = ({ isGrouping = false, ...props }) => {
-  if (isGrouping) return <GroupedDataContext {...props} />;
-  return <MineralDataContext {...props} />;
-}
+const DataContext = ({ isGrouping = false, context }) => {
+  console.log(context)
+  if (isGrouping) return <GroupedDataContext {...context} />;
+  return <MineralDataContext {...context} />;
+};
 
-ColorEntities.defaultProps = ColorEntitiesDefaultProps;
-GroupedColorEntities.defaultProps = GroupedColorEntitiesDefaultProps;
+ColorEntities.defaultProps = colorEntitiesDefaultProps;
+GroupedColorEntities.defaultProps = groupedColorEntitiesDefaultProps;
+MineralDataContext.defaultProps = mineralContextDefaultProps;
 export { DataContext };

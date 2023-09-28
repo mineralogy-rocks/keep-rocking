@@ -47,9 +47,6 @@ export const DATA_CONTEXT_STRUCTURE = {
 }
 
 export const PHYSICAL_PROPS_TITLES = {
-  // the order of keys matters, it defines the order of the properties in the output
-  // comment out the keys to remove the properties from the output
-
   colorNote: ["Color note"],
   color: ["Color entities", "recognized using a custom trained NER model"],
   streakNote: ["Streak note"],
@@ -65,4 +62,106 @@ export const PHYSICAL_PROPS_TITLES = {
   hardness: ["Hardness"],
   density: ["Measured density"],
   densityCalculated: ["Calculated density"],
+};
+
+export const SECTION_FIELDS = {
+  // The order of keys matters, it defines the order of the properties in the output.
+  // Comment out the keys to remove the properties from the output
+  "Physical properties": [
+    "colorNote",
+    "color",
+    "streakNote",
+    "streak",
+    "lustre",
+    "lustreNote",
+    "fracture",
+    "fractureNote",
+    "transparency",
+    "luminescence",
+    "tenacity",
+    "hardness",
+    "density",
+    "densityCalculated",
+   ],
+  "Optical properties": [],
+};
+
+//
+let asCollapsed = (isGrouping: boolean, value: boolean) => {
+  return isGrouping ? value : false;
+};
+
+export const FIELDS = {
+  colorNote: {
+    title: "Color note",
+    subtitle: "Original color note from the source",
+    isCollapsed: function (isGrouping: boolean) { return asCollapsed.call(this, isGrouping, true) } ,
+    default: () => null,
+  },
+  color: {
+    title: "Color",
+    subtitle: "Color entities, recognized using a custom trained NER model",
+    isCollapsed: false,
+    default: () => [],
+  },
+  streakNote: {
+    title: "Streak note",
+    subtitle: "Original streak note from the source",
+    isCollapsed: function (isGrouping: boolean) { return asCollapsed.call(this, isGrouping, true) },
+    default: () => null,
+  },
+  streak: {
+    title: "Streak",
+    subtitle: "Streak entities, recognized using a custom trained NER model",
+    isCollapsed: false,
+    default: () => [],
+  },
+  lustre: {
+    title: "Lustre",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  fracture: {
+    title: "Fracture",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  transparency: {
+    title: "Transparency",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  luminescence: {
+    title: "Luminescence",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  tenacity: {
+    title: "Tenacity",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  hardness: {
+    title: "Hardness",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  density: {
+    title: "Measured density",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
+  densityCalculated: {
+    title: "Calculated density",
+    subtitle: null,
+    isCollapsed: false,
+    default: () => null,
+  },
 };
