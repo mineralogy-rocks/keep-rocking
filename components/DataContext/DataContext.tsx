@@ -142,11 +142,12 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false) return null;
           let field = FIELDS[key];
+
+          let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
+          let hoverClass = 'transition-opacity duration-300 ease-in-out';
           let _isCollapsed;
           if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
           else _isCollapsed = field.isCollapsed;
-          let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
-          let hoverClass = 'transition-opacity duration-300 ease-in-out';
 
           return (
             <Fragment key={index}>

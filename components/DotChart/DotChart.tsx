@@ -4,7 +4,6 @@ import { select } from 'd3-selection';
 import * as Plot from "@observablehq/plot";
 
 
-
 interface Props {
   items?: Array<{
     key: string,

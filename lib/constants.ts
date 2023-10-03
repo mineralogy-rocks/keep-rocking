@@ -87,7 +87,7 @@ export const SECTION_FIELDS = {
 };
 
 //
-let asCollapsed = (isGrouping: boolean, value: boolean) => {
+let _isCollapsed = (isGrouping: boolean, value: boolean) => {
   return isGrouping ? value : false;
 };
 
@@ -95,7 +95,7 @@ export const FIELDS = {
   colorNote: {
     title: "Color note",
     subtitle: "Original color note from the source",
-    isCollapsed: function (isGrouping: boolean) { return asCollapsed.call(this, isGrouping, true) } ,
+    isCollapsed: function (isGrouping: boolean) { return _isCollapsed.call(this, isGrouping, true) } ,
     default: () => null,
   },
   color: {
@@ -107,7 +107,7 @@ export const FIELDS = {
   streakNote: {
     title: "Streak note",
     subtitle: "Original streak note from the source",
-    isCollapsed: function (isGrouping: boolean) { return asCollapsed.call(this, isGrouping, true) },
+    isCollapsed: function (isGrouping: boolean) { return _isCollapsed.call(this, isGrouping, true) },
     default: () => null,
   },
   streak: {
