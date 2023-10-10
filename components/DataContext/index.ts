@@ -1,2 +1,2 @@
 export * from './DataContext';
-export { DataContext } from './DataContext';
+export { ContextController } from './DataContext';

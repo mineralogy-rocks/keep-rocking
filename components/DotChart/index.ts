@@ -1,3 +1,3 @@
-export * from './DotChart';
-export { default } from './DotChart';
+export * from './CellChart';
+export { default } from './CellChart';
 

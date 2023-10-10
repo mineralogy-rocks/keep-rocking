@@ -9,7 +9,7 @@ import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
-import { DataContext } from "@/components/DataContext";
+import { ContextController } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
 import BarcodeChart from '@/components/BarcodeChart';
@@ -97,7 +97,10 @@ export default function MineralPage() {
       members?.filter(item => item.crystal_system),
       item => item.crystal_system.name
     );
-    contexts = _contexts;
+    contexts = {};
+    _contexts.map((item) => {
+      contexts[item.type.name] = item;
+    })
   } else {
     completeHistory = history ? prepareHistory([history]) : [];
     contexts = getConclusiveContext(contextGroups['Physical properties']);
@@ -294,7 +297,7 @@ export default function MineralPage() {
           let context = { contextKey: key, ...contexts[key] };
           return (
             <Section key={index} title={key}>
-              <DataContext isGrouping={isGrouping} context={context} />
+              <ContextController isGrouping={isGrouping} context={context} />
             </Section>
           )
         })}

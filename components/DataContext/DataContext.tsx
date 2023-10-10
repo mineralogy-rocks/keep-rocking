@@ -1,11 +1,12 @@
 import Dot from "@/components/Dot";
-import ColorChip from "@/components/ColorChip/ColorChip";
+import Chip from "@/components/Chip";
+import ColorChip from "@/components/ColorChip";
 import cx from "clsx";
 import useSelection from "@/hooks/use-selection.hook";
-import { PHYSICAL_PROPS_TITLES, SECTION_FIELDS, FIELDS } from "@/lib/constants";
+import { SECTION_FIELDS, FIELDS } from "@/lib/constants";
 import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
-import DotChart from "@/components/DotChart";
+import CellChart from "@/components/DotChart";
 
 
 interface colorEntitiesProps {
@@ -85,11 +86,10 @@ const groupedColorEntitiesDefaultProps = {
 const GroupedColorEntities = ({ items, ...props } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
 
   return (
-    <div className="col-span-3 flex flex-col flex-wrap gap-2 divide-y">
+    <div className="col-span-3 flex flex-col flex-wrap divide-y">
       {items.map((item, index) => {
-
           return (
-            <div key={index} className="flex items-center">
+            <div key={index} className="flex items-center py-2">
               <div className="flex items-center">
                 <div className="flex-none w-4 mr-2">
                   <ColorChip type={item.key} hasPadding={false} className="flex items-center justify-center">
@@ -208,10 +208,10 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
   )
 };
 
-const GroupedDataContext = ({ contexts = {} }) => {
+const GroupedDataContext = ({ contextKey, data }) => {
 
+  console.log(contextKey, data)
   // TODO: make it work with multiple contexts
-  const data = contexts[0].data;
 
   const hardness = data.hardness ? [
     ...data.hardness.min.map(item => { return { key: 'min', value: item }}),
@@ -221,34 +221,51 @@ const GroupedDataContext = ({ contexts = {} }) => {
   return (
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-8 grid grid-cols-5 gap-2 text-sm">
-        {Object.keys(PHYSICAL_PROPS_TITLES).map((key, index) => {
-          if (data.hasOwnProperty(key) === false) return null;
-          const [title, subtitle] = PHYSICAL_PROPS_TITLES[key] || [key, null];
+        {SECTION_FIELDS[contextKey].map((key, index) => {
+          if (FIELDS.hasOwnProperty(key) === false) return null;
+          let field = FIELDS[key];
+          if (!data[key]) return null;
+
+          let _isCollapsed;
+          if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
+          else _isCollapsed = field.isCollapsed;
+
+          let component = null;
+          if (key === 'color' || key === 'streak') component = <GroupedColorEntities items={data[key]} />;
+          else if (key === 'hardness') {
+            let _domainX = [];
+            for (let i = 0; i <= 10; i += 0.5) _domainX.push(i);
+            component = <CellChart items={hardness} labelX="Hardness" domainX={_domainX} domainY={["max", "min"]} />
+          };
 
           return (
             <Fragment key={index}>
               <div className="flex flex-col">
-                <span className="font-semibold break-words">{title}</span>
-                {subtitle && (<span className="my-2 font-normal leading-normal break-words text-xxs">{subtitle}</span>)}
+                <span className="font-semibold break-words">{field.title}</span>
+                {field.subtitle && (<span className="my-2 font-normal leading-normal break-words text-xxs">{field.subtitle}</span>)}
               </div>
               <div className="col-span-4">
-                {key === 'color' || key === 'streak' ? (
-                  <GroupedColorEntities items={data[key]} />
-                ) : key == 'hardness' ? (
-                    <DotChart items={hardness} labelX="Hardness" />
-                ) : (
-                    <div className="flex flex-col space-y-2">
-                      {Array.isArray(data[key]) ? (
-                        data[key].map((item, index) => {
+                {component ? component : (
+                  (<div className="flex flex-col space-y-2">
+                    {Array.isArray(data[key]) ? (
+                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
+                        {data[key].map((item, index) => {
                           return (
-                            <div key={index} className="flex items-center">
-                              {item.key} - {item.value}
-                            </div>
+                            <li key={index} className="flex items-center relative">
+                              <span className="flex items-center bg-white border px-1 py-0.5 rounded">
+                                {item.key}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                </svg>
+                                {item.value}
+                              </span>
+                            </li>
                           )}
-                        )
-                      ) : (<div>{data[key]}</div>)}
-                    </div>)
-                }
+                        )}
+                      </ul>
+                    ) : (<div>{data[key]}</div>)}
+                  </div>)
+                )}
               </div>
             </Fragment>
           )}
@@ -258,7 +275,8 @@ const GroupedDataContext = ({ contexts = {} }) => {
   )
 };
 
-const DataContext = ({ isGrouping = false, context }) => {
+
+const ContextController = ({ isGrouping = false, context }) => {
   console.log(context)
   if (isGrouping) return <GroupedDataContext {...context} />;
   return <MineralDataContext {...context} />;
@@ -267,4 +285,4 @@ const DataContext = ({ isGrouping = false, context }) => {
 ColorEntities.defaultProps = colorEntitiesDefaultProps;
 GroupedColorEntities.defaultProps = groupedColorEntitiesDefaultProps;
 MineralDataContext.defaultProps = mineralContextDefaultProps;
-export { DataContext };
+export { ContextController };

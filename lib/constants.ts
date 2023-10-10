@@ -87,15 +87,15 @@ export const SECTION_FIELDS = {
 };
 
 //
-let _isCollapsed = (isGrouping: boolean, value: boolean) => {
-  return isGrouping ? value : false;
+let _getOpposite = (value: boolean, value_: boolean) => {
+  return value ? value_ : !value_;
 };
 
 export const FIELDS = {
   colorNote: {
     title: "Color note",
     subtitle: "Original color note from the source",
-    isCollapsed: function (isGrouping: boolean) { return _isCollapsed.call(this, isGrouping, true) } ,
+    isCollapsed: function (isGrouping: boolean) { return _getOpposite.call(this, isGrouping, true) } ,
     default: () => null,
   },
   color: {
@@ -107,7 +107,7 @@ export const FIELDS = {
   streakNote: {
     title: "Streak note",
     subtitle: "Original streak note from the source",
-    isCollapsed: function (isGrouping: boolean) { return _isCollapsed.call(this, isGrouping, true) },
+    isCollapsed: function (isGrouping: boolean) { return _getOpposite.call(this, isGrouping, true) },
     default: () => null,
   },
   streak: {
