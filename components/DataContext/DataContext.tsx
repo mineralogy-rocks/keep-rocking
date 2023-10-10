@@ -1,12 +1,13 @@
 import Dot from "@/components/Dot";
-import Chip from "@/components/Chip";
 import ColorChip from "@/components/ColorChip";
 import cx from "clsx";
 import useSelection from "@/hooks/use-selection.hook";
 import { SECTION_FIELDS, FIELDS } from "@/lib/constants";
 import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
-import CellChart from "@/components/DotChart";
+import CellChart from "@/components/CellChart";
+
+import typographyStyles from '@/styles/typography.module.scss';
 
 
 interface colorEntitiesProps {
@@ -86,7 +87,7 @@ const groupedColorEntitiesDefaultProps = {
 const GroupedColorEntities = ({ items, ...props } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
 
   return (
-    <div className="col-span-3 flex flex-col flex-wrap divide-y">
+    <div className="col-span-3 flex flex-col flex-wrap divide-slate-300 divide-y">
       {items.map((item, index) => {
           return (
             <div key={index} className="flex items-center py-2">
@@ -140,7 +141,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
     <div className="grid grid-cols-8 px-2">
       <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
         {SECTION_FIELDS[contextKey].map((key, index) => {
-          if (FIELDS.hasOwnProperty(key) === false) return null;
+          if (FIELDS.hasOwnProperty(key) === false || !items[key]) return null;
           let field = FIELDS[key];
 
           let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
@@ -149,18 +150,20 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
           if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
           else _isCollapsed = field.isCollapsed;
 
+          let component = null;
+          if (key === 'color' || key === 'streak') component = <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />;
+
           return (
             <Fragment key={index}>
-              <div className="flex flex-col">
+              <div className="flex flex-col p-2 h-auto">
                 <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
                 {field.subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
               </div>
-              {key === 'color' || key === 'streak' ? (
-                <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />
-              ) : (
+              {component || (
                   <div className="col-span-3 flex flex-col space-y-2">
-                    {items[key].map((item, index) => {
-                      let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
+                    {Array.isArray(items[key]) ?
+                      items[key].map((item, index) => {
+                        let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
                         return (
                           <div key={index} className="flex items-center">
                             <div className="flex flex-none w-[1.5rem]">
@@ -173,10 +176,10 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
                                 )}
                               )}
                             </div>
-                            <span className={cx(hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                            <span className={cx(typographyStyles.PropertyItem, hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                           </div>
-                        )}
-                    )}
+                        )
+                      }) : (<span className={typographyStyles.PropertyItem}>{items[key]}</span>)}
                   </div>)
               }
             </Fragment>
@@ -220,14 +223,13 @@ const GroupedDataContext = ({ contextKey, data }) => {
 
   return (
     <div className="grid grid-cols-8 px-2">
-      <div className="col-span-8 grid grid-cols-5 gap-2 text-sm">
+      <div className="col-span-8 grid grid-cols-5 gap-2 space-y-1 text-sm">
         {SECTION_FIELDS[contextKey].map((key, index) => {
-          if (FIELDS.hasOwnProperty(key) === false) return null;
+          if (FIELDS.hasOwnProperty(key) === false || !data[key]) return null;
           let field = FIELDS[key];
-          if (!data[key]) return null;
 
           let _isCollapsed;
-          if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
+          if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(true);
           else _isCollapsed = field.isCollapsed;
 
           let component = null;
@@ -240,12 +242,12 @@ const GroupedDataContext = ({ contextKey, data }) => {
 
           return (
             <Fragment key={index}>
-              <div className="flex flex-col">
+              <div className="flex flex-col border-blue-900/60 p-2 h-auto">
                 <span className="font-semibold break-words">{field.title}</span>
                 {field.subtitle && (<span className="my-2 font-normal leading-normal break-words text-xxs">{field.subtitle}</span>)}
               </div>
-              <div className="col-span-4">
-                {component ? component : (
+              <div className="col-span-4 bg-slate-100 p-2 border border-blue-900/20 rounded-sm">
+                {component || (
                   (<div className="flex flex-col space-y-2">
                     {Array.isArray(data[key]) ? (
                       <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
@@ -263,7 +265,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
                           )}
                         )}
                       </ul>
-                    ) : (<div>{data[key]}</div>)}
+                    ) : (<span className={typographyStyles.PropertyItem}>{data[key]}</span>)}
                   </div>)
                 )}
               </div>
