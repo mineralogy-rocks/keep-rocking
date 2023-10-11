@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+
 import Dot from "@/components/Dot";
 import ColorChip from "@/components/ColorChip";
 import cx from "clsx";
@@ -7,7 +9,7 @@ import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
 import CellChart from "@/components/CellChart";
 
-import typographyStyles from '@/styles/typography.module.scss';
+import UtilsStyles from "@/styles/utils.module.scss";
 
 
 interface colorEntitiesProps {
@@ -139,7 +141,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
 
   return (
     <div className="grid grid-cols-8 px-2">
-      <div className="col-span-5 grid grid-cols-4 gap-2 text-sm">
+      <div className="prop col-span-5 grid grid-cols-4 gap-2 text-sm">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false || !items[key]) return null;
           let field = FIELDS[key];
@@ -156,8 +158,8 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
           return (
             <Fragment key={index}>
               <div className="flex flex-col p-2 h-auto">
-                <span className={cx("font-semibold break-words", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
-                {field.subtitle && (<span className={cx("my-2 font-normal leading-normal break-words text-xxs", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
+                <span className={cx("prop-title", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
+                {field.subtitle && (<span className={cx("my-2 prop-subtitle", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
               </div>
               {component || (
                   <div className="col-span-3 flex flex-col space-y-2">
@@ -176,10 +178,10 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
                                 )}
                               )}
                             </div>
-                            <span className={cx(typographyStyles.PropertyItem, hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                            <span className={cx('prop item', hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                           </div>
                         )
-                      }) : (<span className={typographyStyles.PropertyItem}>{items[key]}</span>)}
+                      }) : (<span className="prop-item">{items[key]}</span>)}
                   </div>)
               }
             </Fragment>
@@ -211,6 +213,36 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
   )
 };
 
+const Collapse = ({ isCollapsed, onClick }) => {
+  return (
+    <div className="flex items-center justify-center w-20 h-6 bg-blue-200 border border-blue-500 rounded-sm cursor-pointer" onClick={onClick}>
+      <span className="text-xs font-semibold text-font-blueDark flex-nowrap">{ isCollapsed ? 'Show more' : 'Show less' }</span>
+    </div>
+  )
+};
+
+
+const Field = ({ field, isCollapsable, children }) => {
+  const [isCollapsed, setIsCollapsed] = useState(isCollapsable ? true : false);
+
+  return (
+    <Fragment>
+      <div className="flex flex-col p-2 h-auto">
+        <span className="prop-title">{field.title}</span>
+        {field.subtitle && (<span className="prop-subtitle my-2">{field.subtitle}</span>)}
+      </div>
+      <div className="col-span-4 p-2 h-auto">
+        {children}
+        {isCollapsable && (
+          <div>
+            <Collapse isCollapsed={isCollapsed} onClick={() => { setIsCollapsed(!isCollapsed) }} />
+          </div>
+        )}
+      </div>
+    </Fragment>
+  )
+}
+
 const GroupedDataContext = ({ contextKey, data }) => {
 
   console.log(contextKey, data)
@@ -221,16 +253,23 @@ const GroupedDataContext = ({ contextKey, data }) => {
     ...data.hardness.max.map(item => { return { key: 'max', value: item }})
   ] : [];
 
+  const refs = useRef([]);
+  console.log('REFS:', refs)
+
   return (
-    <div className="grid grid-cols-8 px-2">
-      <div className="col-span-8 grid grid-cols-5 gap-2 space-y-1 text-sm">
+    <div className="prop grid grid-cols-8 px-2">
+      <div  className="col-span-8 grid grid-cols-5 gap-2 space-y-1 text-sm">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false || !data[key]) return null;
           let field = FIELDS[key];
 
-          let _isCollapsed;
-          if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(true);
-          else _isCollapsed = field.isCollapsed;
+          // TODO: currently doesn't work if we are rendering a component
+          let isCollapsable : boolean, _isCollapsed : boolean;
+          if (typeof field.isCollapsed === 'function') isCollapsable = field.isCollapsed(true);
+          else isCollapsable = field.isCollapsed;
+          // used to control the state of the Collapse component
+          _isCollapsed = isCollapsable;
+          console.log(_isCollapsed)
 
           let component = null;
           if (key === 'color' || key === 'streak') component = <GroupedColorEntities items={data[key]} />;
@@ -241,35 +280,29 @@ const GroupedDataContext = ({ contextKey, data }) => {
           };
 
           return (
-            <Fragment key={index}>
-              <div className="flex flex-col border-blue-900/60 p-2 h-auto">
-                <span className="font-semibold break-words">{field.title}</span>
-                {field.subtitle && (<span className="my-2 font-normal leading-normal break-words text-xxs">{field.subtitle}</span>)}
-              </div>
-              <div className="col-span-4 bg-slate-100 p-2 border border-blue-900/20 rounded-sm">
-                {component || (
-                  (<div className="flex flex-col space-y-2">
-                    {Array.isArray(data[key]) ? (
-                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
-                        {data[key].map((item, index) => {
-                          return (
-                            <li key={index} className="flex items-center relative">
-                              <span className="flex items-center bg-white border px-1 py-0.5 rounded">
-                                {item.key}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-                                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                                </svg>
-                                {item.value}
-                              </span>
-                            </li>
-                          )}
+            <Field key={index} {...{ field, isCollapsable}}>
+              {component || (
+                (<div ref={ref => refs[key] = ref} className={cx("flex flex-col space-y-2", _isCollapsed ? "line-clamp-5" : "line-clamp-none")}>
+                  {Array.isArray(data[key]) ? (
+                    <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
+                      {data[key].map((item, index) => {
+                        return (
+                          <li key={index} className="flex items-center relative">
+                            <span className="flex items-center bg-white border px-1 py-0.5 rounded">
+                              {item.key}
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                              </svg>
+                              {item.value}
+                            </span>
+                          </li>
                         )}
-                      </ul>
-                    ) : (<span className={typographyStyles.PropertyItem}>{data[key]}</span>)}
-                  </div>)
-                )}
-              </div>
-            </Fragment>
+                      )}
+                    </ul>
+                  ) : (<span className="prop-item">{data[key]}</span>)}
+                </div>)
+              )}
+            </Field>
           )}
         )}
       </div>

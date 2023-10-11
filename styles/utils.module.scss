@@ -27,3 +27,17 @@
 .secondaryText {
   @apply text-font-secondary;
 }
+
+.prop {
+  @apply text-font-primary;
+
+  .prop-title {
+    @apply text-sm font-semibold break-words;
+  }
+  .prop-subtitle {
+    @apply text-xxs md:text-xs font-normal leading-normal break-words;
+  }
+  .prop-item {
+    @apply text-xs md:text-sm font-normal text-font-secondary;
+  }
+}
