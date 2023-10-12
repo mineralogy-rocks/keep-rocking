@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
+import React from "react";
 
 import Dot from "@/components/Dot";
+import Collapse from "@/components/Collapse";
 import ColorChip from "@/components/ColorChip";
 import cx from "clsx";
 import useSelection from "@/hooks/use-selection.hook";
@@ -213,17 +215,26 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
   )
 };
 
-const Collapse = ({ isCollapsed, onClick }) => {
-  return (
-    <div className="flex items-center justify-center w-20 h-6 bg-blue-200 border border-blue-500 rounded-sm cursor-pointer" onClick={onClick}>
-      <span className="text-xs font-semibold text-font-blueDark flex-nowrap">{ isCollapsed ? 'Show more' : 'Show less' }</span>
-    </div>
-  )
+interface fieldProps {
+  field: any,
+  isCollapsable: boolean,
+  onCollapse?: (isCollapsed: boolean) => void,
+  children?: React.ReactNode,
 };
 
+const fieldDefaultProps = {
+  field: {},
+  isCollapsable: false,
+  onCollapse: (isCollapsed) => {},
+};
 
-const Field = ({ field, isCollapsable, children }) => {
+const Field = ({ field, isCollapsable, onCollapse, children } : fieldProps & typeof fieldDefaultProps) => {
   const [isCollapsed, setIsCollapsed] = useState(isCollapsable ? true : false);
+
+  const handleCollapse = (_isCollapsed) => {
+    setIsCollapsed(_isCollapsed);
+    onCollapse(_isCollapsed);
+  }
 
   return (
     <Fragment>
@@ -234,8 +245,8 @@ const Field = ({ field, isCollapsable, children }) => {
       <div className="col-span-4 p-2 h-auto">
         {children}
         {isCollapsable && (
-          <div>
-            <Collapse isCollapsed={isCollapsed} onClick={() => { setIsCollapsed(!isCollapsed) }} />
+          <div className="mt-2 float-right">
+            <Collapse isCollapsed={isCollapsed} onClick={() => handleCollapse(!isCollapsed)} />
           </div>
         )}
       </div>
@@ -253,8 +264,39 @@ const GroupedDataContext = ({ contextKey, data }) => {
     ...data.hardness.max.map(item => { return { key: 'max', value: item }})
   ] : [];
 
-  const refs = useRef([]);
-  console.log('REFS:', refs)
+  const initialFieldsState = {};
+  SECTION_FIELDS[contextKey].map((key, index) => {
+    if (FIELDS.hasOwnProperty(key) === false || !data[key]) return;
+    let field = FIELDS[key];
+    let _state = {
+      isCollapsed: false,
+      isCollapsable: false,
+    }
+
+    let _isCollapsed;
+    if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(true);
+    else _isCollapsed = field.isCollapsed;
+
+    if (_isCollapsed) {
+      _state.isCollapsed = true;
+      _state.isCollapsable = true;
+    }
+    initialFieldsState[index] = _state;
+  });
+  const [fieldsState, setFieldsState] = useState(initialFieldsState);
+  const fieldsRefs = useRef([]);
+  fieldsRefs.current = Array(SECTION_FIELDS[contextKey].length).fill(null).map((_, i) => fieldsRefs.current[i] || React.createRef());
+  console.log(fieldsRefs.current)
+
+  // check which fields are collapsable
+  // useEffect(() => {
+  //   fieldsRefs.current.forEach((fieldRef, index) => {
+  //     if (fieldRef.current.offsetHeight < fieldRef.current.scrollHeight) {
+  //       setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: true } })
+  //     }
+  //   })
+  // }, []);
+
 
   return (
     <div className="prop grid grid-cols-8 px-2">
@@ -262,14 +304,6 @@ const GroupedDataContext = ({ contextKey, data }) => {
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false || !data[key]) return null;
           let field = FIELDS[key];
-
-          // TODO: currently doesn't work if we are rendering a component
-          let isCollapsable : boolean, _isCollapsed : boolean;
-          if (typeof field.isCollapsed === 'function') isCollapsable = field.isCollapsed(true);
-          else isCollapsable = field.isCollapsed;
-          // used to control the state of the Collapse component
-          _isCollapsed = isCollapsable;
-          console.log(_isCollapsed)
 
           let component = null;
           if (key === 'color' || key === 'streak') component = <GroupedColorEntities items={data[key]} />;
@@ -280,9 +314,11 @@ const GroupedDataContext = ({ contextKey, data }) => {
           };
 
           return (
-            <Field key={index} {...{ field, isCollapsable}}>
+            <Field key={index}
+                   onCollapse={(isCollapsed) => {setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsed: isCollapsed } })  }}
+                   {...{ field, isCollapsable: fieldsState[index].isCollapsable }}>
               {component || (
-                (<div ref={ref => refs[key] = ref} className={cx("flex flex-col space-y-2", _isCollapsed ? "line-clamp-5" : "line-clamp-none")}>
+                (<div ref={fieldsRefs[index]} className={cx("flex flex-col space-y-2", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-5" : "line-clamp-none"))}>
                   {Array.isArray(data[key]) ? (
                     <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
                       {data[key].map((item, index) => {
