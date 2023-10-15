@@ -16,9 +16,9 @@ import BarcodeChart from '@/components/BarcodeChart';
 
 
 const Section = ({ title, children }) => (
-  <section className="mt-10 px-2">
+  <section className="mt-10 px-1 sm:px-2">
     <h2 className="text-xl font-semibold text-font-blueDark">{title}</h2>
-    <div className="ml-2 mt-5">
+    <div className="sm:ml-2 mt-5">
       {children}
     </div>
   </section>
@@ -131,7 +131,7 @@ export default function MineralPage() {
 
       <div className="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mt-10 px-5">
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
-        <p className="mt-10 px-2 text-sm font-normal" dangerouslySetInnerHTML={{ __html: description }}></p>
+        <div className="mt-10 px-2 text-sm font-normal break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
 
         {completeHistory.length > 0 && (
           <Section title="History">

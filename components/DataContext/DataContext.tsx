@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import React from "react";
 
 import Dot from "@/components/Dot";
@@ -11,25 +11,23 @@ import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
 import CellChart from "@/components/CellChart";
 
-import UtilsStyles from "@/styles/utils.module.scss";
-
 
 interface colorEntitiesProps {
   items: any,
   minerals: any,
   selected: any,
   hoverClass?: string,
-};
+}
 
 const colorEntitiesDefaultProps = {
   items: [],
   minerals: [],
   selected: [],
   hoverClass: "",
-};
+}
 
 
-const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : colorEntitiesProps & typeof colorEntitiesDefaultProps) => {
+const ColorEntities = ({ items, minerals, selected, hoverClass } : colorEntitiesProps & typeof colorEntitiesDefaultProps) => {
 
   const _isHovered = (ids: string | string[]) => {
     if (!Array.isArray(ids)) ids = [ids];
@@ -41,7 +39,7 @@ const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : col
   }
 
   return (
-    <div className="col-span-3 flex flex-col flex-wrap gap-2">
+    <div className="flex flex-col flex-wrap gap-2">
       {items.map((item, index) => {
 
           return (
@@ -82,13 +80,13 @@ const ColorEntities = ({ items, minerals, selected, hoverClass, ...props } : col
 
 interface groupedColorEntitiesProps {
   items: any,
-};
+}
 
 const groupedColorEntitiesDefaultProps = {
   items: [],
-};
+}
 
-const GroupedColorEntities = ({ items, ...props } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
+const GroupedColorEntities = ({ items } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
 
   return (
     <div className="col-span-3 flex flex-col flex-wrap divide-slate-300 divide-y">
@@ -140,31 +138,38 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
   // TODO: make it work with multiple contexts and use SECTION_FIELDS
   const [selected, handleSelection] = useSelection(minerals.map(item_ => item_.id));
   const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
+  const isInteractive = minerals.length > 1;
 
   return (
-    <div className="grid grid-cols-8 px-2">
-      <div className="prop col-span-5 grid grid-cols-4 gap-2 text-sm">
+    <div className="prop flex flex-col md:gap-2 sm:grid grid-cols-8">
+      <div className="flex flex-col md:grid grid-cols-4 col-span-8 md:col-span-5 md:gap-2 mt-2 md:mt-0">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false || !items[key]) return null;
           let field = FIELDS[key];
 
           let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
           let hoverClass = 'transition-opacity duration-300 ease-in-out';
+
+          // TODO: _isCollapsed is not connected yet. Connect it as we have more data.
           let _isCollapsed;
           if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
           else _isCollapsed = field.isCollapsed;
 
           let component = null;
-          if (key === 'color' || key === 'streak') component = <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />;
+          if (key === 'color' || key === 'streak') component = (
+            <div className="ml-2 md:ml-1 col-span-3 p-2">
+              <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />
+            </div>
+          );
 
           return (
             <Fragment key={index}>
-              <div className="flex flex-col p-2 h-auto">
+              <div className="prop-header">
                 <span className={cx("prop-title", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
-                {field.subtitle && (<span className={cx("my-2 prop-subtitle", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
+                {field.subtitle && (<span className={cx("prop-subtitle", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
               </div>
               {component || (
-                  <div className="col-span-3 flex flex-col space-y-2">
+                  <div className="ml-2 sm:ml-1 col-span-3 p-2 flex flex-col">
                     {Array.isArray(items[key]) ?
                       items[key].map((item, index) => {
                         let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
@@ -180,7 +185,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
                                 )}
                               )}
                             </div>
-                            <span className={cx('prop item', hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                            <span className={cx('prop-item', hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                           </div>
                         )
                       }) : (<span className="prop-item">{items[key]}</span>)}
@@ -191,7 +196,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
         )}
       </div>
 
-      <aside className="col-start-8 flex flex-col gap-2">
+      <aside className="order-first md:order-last md:col-start-8 flex flex-col gap-2">
         {minerals.map((item, index) => {
           let isHighlighted = selected.find(_item => _item.id === item.id);
 
@@ -202,12 +207,12 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
                             statuses={item.statuses}
                             className="flex-none"
                             hasArrow={false}
-                            hasClose={isHighlighted && isHighlighted.clicked}
-                            onMouseEnter={() => { handleSelection(item.id, true) }}
-                            onMouseLeave={() => { handleSelection(item.id, false) }}
-                            onClick={() => { handleSelection(item.id, false, true)  }}
-                            onClose={(e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) }}
-                            type={isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
+                            hasClose={isInteractive && isHighlighted && isHighlighted.clicked}
+                            onMouseEnter={isInteractive ? () => { handleSelection(item.id, true) } : null}
+                            onMouseLeave={isInteractive ? () => { handleSelection(item.id, false) } : null}
+                            onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : null}
+                            onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : null}
+                            type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
             </div>)
         })}
       </aside>
@@ -220,27 +225,27 @@ interface fieldProps {
   isCollapsable: boolean,
   onCollapse?: (isCollapsed: boolean) => void,
   children?: React.ReactNode,
-};
+}
 
 const fieldDefaultProps = {
   field: {},
   isCollapsable: false,
   onCollapse: (isCollapsed) => {},
-};
+}
 
 const Field = ({ field, isCollapsable, onCollapse, children } : fieldProps & typeof fieldDefaultProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(isCollapsable ? true : false);
+  const [isCollapsed, setIsCollapsed] = useState(isCollapsable);
 
   const handleCollapse = (_isCollapsed) => {
     setIsCollapsed(_isCollapsed);
     onCollapse(_isCollapsed);
-  }
+  };
 
   return (
     <Fragment>
-      <div className="flex flex-col p-2 h-auto">
+      <div className="prop-header">
         <span className="prop-title">{field.title}</span>
-        {field.subtitle && (<span className="prop-subtitle my-2">{field.subtitle}</span>)}
+        {field.subtitle && (<span className="prop-subtitle">{field.subtitle}</span>)}
       </div>
       <div className="col-span-4 p-2 h-auto">
         {children}
@@ -256,7 +261,6 @@ const Field = ({ field, isCollapsable, onCollapse, children } : fieldProps & typ
 
 const GroupedDataContext = ({ contextKey, data }) => {
 
-  console.log(contextKey, data)
   // TODO: make it work with multiple contexts
 
   const hardness = data.hardness ? [
@@ -284,23 +288,22 @@ const GroupedDataContext = ({ contextKey, data }) => {
     initialFieldsState[index] = _state;
   });
   const [fieldsState, setFieldsState] = useState(initialFieldsState);
-  const fieldsRefs = useRef([]);
-  fieldsRefs.current = Array(SECTION_FIELDS[contextKey].length).fill(null).map((_, i) => fieldsRefs.current[i] || React.createRef());
-  console.log(fieldsRefs.current)
+  const fieldsRefs = SECTION_FIELDS[contextKey].map(() => React.createRef());
 
-  // check which fields are collapsable
-  // useEffect(() => {
-  //   fieldsRefs.current.forEach((fieldRef, index) => {
-  //     if (fieldRef.current.offsetHeight < fieldRef.current.scrollHeight) {
-  //       setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: true } })
-  //     }
-  //   })
-  // }, []);
+  // check which fields can be collapsed and which shouldn't be based on clientHeight
+  useEffect(() => {
+    fieldsRefs.map((ref, index) => {
+      if (!ref.current) return;
+      if (!fieldsState[index].isCollapsable) return;
+      let _shouldCollapsable = ref.current.clientHeight > 100;
+      setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: _shouldCollapsable } });
+    })
+  }, []);
 
 
   return (
-    <div className="prop grid grid-cols-8 px-2">
-      <div  className="col-span-8 grid grid-cols-5 gap-2 space-y-1 text-sm">
+    <div className="prop grid grid-cols-8">
+      <div className="col-span-8 flex flex-col md:grid grid-cols-5 gap-1 md:gap-2">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (FIELDS.hasOwnProperty(key) === false || !data[key]) return null;
           let field = FIELDS[key];
@@ -311,33 +314,36 @@ const GroupedDataContext = ({ contextKey, data }) => {
             let _domainX = [];
             for (let i = 0; i <= 10; i += 0.5) _domainX.push(i);
             component = <CellChart items={hardness} labelX="Hardness" domainX={_domainX} domainY={["max", "min"]} />
-          };
+          }
 
           return (
             <Field key={index}
                    onCollapse={(isCollapsed) => {setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsed: isCollapsed } })  }}
                    {...{ field, isCollapsable: fieldsState[index].isCollapsable }}>
-              {component || (
-                (<div ref={fieldsRefs[index]} className={cx("flex flex-col space-y-2", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-5" : "line-clamp-none"))}>
-                  {Array.isArray(data[key]) ? (
-                    <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
-                      {data[key].map((item, index) => {
-                        return (
-                          <li key={index} className="flex items-center relative">
-                            <span className="flex items-center bg-white border px-1 py-0.5 rounded">
-                              {item.key}
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                              </svg>
-                              {item.value}
-                            </span>
-                          </li>
+              <div className="ml-2 sm:ml-1 ">
+                {component || (
+                  (<div ref={fieldsRefs[index]}
+                        className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
+                    {Array.isArray(data[key]) ? (
+                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
+                        {data[key].map((item, index) => {
+                          return (
+                            <li key={index} className="flex items-center relative">
+                              <span className="flex items-center bg-white border px-1 py-0.5 rounded">
+                                {item.key}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                </svg>
+                                {item.value}
+                              </span>
+                            </li>
+                          )}
                         )}
-                      )}
-                    </ul>
-                  ) : (<span className="prop-item">{data[key]}</span>)}
-                </div>)
-              )}
+                      </ul>
+                    ) : (<span className="prop-item">{data[key]}</span>)}
+                  </div>)
+                )}
+              </div>
             </Field>
           )}
         )}
@@ -348,7 +354,6 @@ const GroupedDataContext = ({ contextKey, data }) => {
 
 
 const ContextController = ({ isGrouping = false, context }) => {
-  console.log(context)
   if (isGrouping) return <GroupedDataContext {...context} />;
   return <MineralDataContext {...context} />;
 };
