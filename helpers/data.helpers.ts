@@ -26,7 +26,7 @@ export const mergeFormulas = (formulas: Formula[], inheritanceChain=[]) => {
         name: item.name,
         slug: item.slug,
         statuses: item.statuses,
-        depth: item.depth + 1,
+        depth: item.depth,
       };
     });
     data = [...data, ...item.formulas];

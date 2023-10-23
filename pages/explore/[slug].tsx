@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import cx from 'clsx';
 
 import groupBy from 'just-group-by';
-import { STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP } from '@/lib/constants';
+import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP} from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
@@ -66,7 +66,7 @@ export default function MineralPage() {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  const {
+  let {
     name,
     description,
     statuses,
@@ -82,6 +82,32 @@ export default function MineralPage() {
     inheritance_chain,
     contexts: _contexts,
   } : mineralDetailApiResponse = data;
+
+  if (inheritance_chain) {
+    let inheritedContexts = [];
+     inheritance_chain.map(item => {
+        item.contexts.map(i => {
+          inheritedContexts.push({
+            ...i,
+            mineral: {
+              id: item.id,
+              name: item.name,
+              slug: item.slug,
+              statuses: item.statuses
+            }
+          })
+        })
+    })
+    _contexts.forEach((item, index) => {
+      item.mineral = {
+        id: data.id,
+        name: data.name,
+        slug: data.slug,
+        statuses: data.statuses
+      }
+    })
+    _contexts = [..._contexts, ...inheritedContexts];
+  }
 
   const contextGroups = _contexts ? groupBy(_contexts, item => item.type.name) : {};
   let contexts = null;
@@ -182,30 +208,42 @@ export default function MineralPage() {
               )}
             </div>
 
-            {structures && (
-                <div className="mt-7">
-                  <h3 className="text-sm font-medium text-font-blueDark">Structural statistics based on <span className="font-bold">{structures.count}</span> samples</h3>
-                  <table className="table-auto text-xs md:text-sm max-w-md mt-5">
-                    <thead>
-                      <tr>
-                        <th className="px-2 py-1"></th>
-                        <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
-                        <th className="px-2 py-1 text-start font-semibold">Average</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {STRUCTURAL_DATA_KEYS.map((key, index) => (
-                        <tr key={index} className="">
-                          <td className="px-2 py-1 font-semibold">{key}</td>
-                          <td className="px-2 py-1 text-font-secondary">{structures[key].min}—{structures[key].max}</td>
-                          <td className="px-2 py-1 text-font-secondary">{structures[key].avg}</td>
-                        </tr>
-                        )
+            {structures.length > 0 && (
+              <div className="mt-7">
+                <h3 className="text-sm font-medium text-font-blueDark">Structural statistics based on{' '}
+                  <span className="font-bold">{structures.reduce((acc, item) => acc + item.count, 0)} </span>
+                  samples</h3>
+                {structures.map(_structure => {
+                  let crystalSystem = CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown';
+                  return (
+                    <div key={_structure.crystal_system} className="flex flex-col mt-5">
+                      {structures.length > 1 && (
+                        <h4 className="text-sm font-medium text-font-blueDark">{crystalSystem} - {_structure.count} samples</h4>
                       )}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                      <table className="table-auto text-xs md:text-sm max-w-md mt-5">
+                        <thead>
+                          <tr>
+                            <th className="px-2 py-1"></th>
+                            <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
+                            <th className="px-2 py-1 text-start font-semibold">Average</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {STRUCTURAL_DATA_KEYS.map((key, index) => (
+                            <tr key={index} className="">
+                              <td className="px-2 py-1 font-semibold">{key}</td>
+                              <td className="px-2 py-1 text-font-secondary">{_structure.min[key]}—{_structure.max[key]}</td>
+                              <td className="px-2 py-1 text-font-secondary">{_structure.avg[key]}</td>
+                            </tr>
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                )}
+              </div>
+            )}
           </Section>
         )}
 
@@ -272,7 +310,7 @@ export default function MineralPage() {
               </div>
             </div>
 
-            {elements && (
+            {elements.length > 0 && (
                 <div className="mt-7">
                   <h3 className="text-sm font-medium text-font-blueDark">Elements recorded on EPMA</h3>
                   <div className="flex flex-col mt-5">

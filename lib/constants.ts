@@ -1,12 +1,21 @@
-import { mindatDataNode } from "@/lib/types";
-
-
 export const IMA_STATUS_CHOICES = {
   approved: "APPROVED",
   discredited: "DISCREDITED",
   pending: "PENDING_PUBLICATION",
   grandfathered: "GRANDFATHERED",
   questionable: "QUESTIONABLE",
+};
+
+export const CRYSTAL_SYSTEM_CHOICES = {
+  1: "Hexagonal",
+  2: "Isometric",
+  3: "Monoclinic",
+  4: "Orthorhombic",
+  5: "Tetragonal",
+  6: "Triclinic",
+  7: "Trigonal",
+  8: "Amorphous",
+  9: "Icosahedral",
 };
 
 export const STATUS_GROUPS_PLURAL = {
