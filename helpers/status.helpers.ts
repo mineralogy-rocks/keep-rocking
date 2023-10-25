@@ -68,6 +68,6 @@ export const getIMAStatus = (status: string): string => {
     case IMA_STATUS_CHOICES.questionable:
       return 'questionable';
     default:
-      return 'approved';
+      return 'unknown';
   }
 };

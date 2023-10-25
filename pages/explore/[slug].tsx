@@ -26,8 +26,7 @@ const Section = ({ title, children }) => (
 );
 
 const CrystallographyNode = ({ item = null, isInherited = true, className = "", ...props }) => (
-  <div className={cx("relative p-2 rounded flex flex-col text-xs ml-2",
-                     "bg-white ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
+  <div className={cx("relative p-2 rounded flex flex-col text-xs ml-2 bg-white ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
                      className
                   )}>
     {item && (
@@ -61,47 +60,84 @@ const CrystallographyCards = ({ structures, members }) => {
   const structuresCount = structures.reduce((acc, item) => acc + item.count, 0);
 
   const chosenMembers = useMemo(() => {
+    // filter by crystal system if it's not null
     if (chosenStructure.crystal_system) return members.filter(_member => _member.crystal_system?.id === chosenStructure.crystal_system) || [];
+    // otherwise show 'Unknown System' and filter members accordingly
     return members.filter(_member => _member.crystal_system === null) || [];
   }, [chosenStructure, members]);
 
   return (
     <div className="gap-2">
       <div className="flex flex-wrap gap-3">
-        {structures.map(_structure => {
-          let _localMembers = members.filter(_member => _member.crystal_system?.id == _structure.crystal_system);
+        {structures.map((_structure, index) => {
+          let _localMembers = members.filter(_member => {
+            if (_structure.crystal_system) return _member.crystal_system?.id == _structure.crystal_system;
+            return _member.crystal_system === null;
+          });
           let crystalSystem = (CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown') + ' System';
+
           return (
             <Fragment key={_structure.crystal_system}>
-              <div className={cx("cursor-pointer relative w-64 rounded-sm p-3 transition bg-white hover:ring-1 ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
-                                 chosenStructure.crystal_system == _structure.crystal_system ? "ring-1" : "")}
+              <div className={cx("cursor-pointer relative w-56 rounded-sm p-3 transition ring-1 ring-slate-300/40",
+                                 chosenStructure.crystal_system == _structure.crystal_system ? "ring-1 ring-slate-600/[0.04] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50")}
                    onClick={() => setChosenStructure(_structure)}>
-                <div className="relative grid grid-cols-2 gap-2">
-                  <div>
+                <div className="relative flex flex-col gap-2">
+                  <div className="flex">
                     <Chip type="default" className="mt-1 bg-indigo-300/90">
                       <span className="font-semibold flex-1 text-start text-indigo-700">{crystalSystem}</span>
                     </Chip>
-                    <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
-                      <span>{_structure.count} measurement(s)</span>
-                      <span>{_localMembers.length} member(s)</span>
-                    </div>
                   </div>
-                  <div className="flex flex-col items-center text-xs font-medium text-font-blueDark py-1">
-                    <span className="flex-1 text-end">{(_localMembers.length / members.length * 100).toFixed(2)}% of members</span>
-                    <span className="flex-1 text-end mt-1">{(_structure.count / structuresCount * 100).toFixed(2)}% of structures</span>
+                  <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
+                    <span><b>{_structure.count}</b> measurement(s) or <b>{(_structure.count / structuresCount * 100).toFixed(2)}%</b></span>
+                    <span><b>{_localMembers.length}</b> member(s) or <b>{(_localMembers.length / members.length * 100).toFixed(2)}%</b></span>
                   </div>
                 </div>
+                <svg viewBox="0 0 384 12" fill="none" aria-hidden="true" className="absolute right-0 top-full w-[384px] max-w-[120%] transition">
+                  <mask id=":r1t:-a" maskUnits="userSpaceOnUse" x="48" y="0" width="269" height="4" style={{ maskType: 'alpha' }}>
+                    <path transform="rotate(180 316.656 4)" fill="#C4C4C4" d="M316.656 4h268v4h-268z"></path>
+                  </mask>
+                  <g filter="url(#:r1t:-b)" mask="url(#:r1t:-a)">
+                    <path transform="rotate(180 292.656 1)" fill="url(#:r1t:-c)" d="M292.656 1h220v2h-220z"></path>
+                  </g>
+                  <mask id=":r1t:-d" maskUnits="userSpaceOnUse" x="116" y="0" width="268" height="12" style={{ maskType: 'alpha' }}>
+                    <path transform="rotate(180 384 12)" fill="#C4C4C4" d="M384 12h268v12H384z"></path>
+                  </mask>
+                  <g filter="url(#:r1t:-e)" mask="url(#:r1t:-d)">
+                    <path transform="rotate(180 360 1)" fill="url(#:r1t:-f)" d="M360 1h220v2H360z"></path>
+                  </g>
+                  <defs>
+                    <linearGradient id=":r1t:-c" x1="292.656" y1="1" x2="512.656" y2="1" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#A78BFA" stop-opacity="0"></stop>
+                      <stop offset=".323" stop-color="#1A1AF9"></stop>
+                      <stop offset=".672" stop-color="#AF17B4" stop-opacity=".3"></stop>
+                      <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
+                    </linearGradient>
+                    <linearGradient id=":r1t:-f" x1="360" y1="1" x2="580" y2="1" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#A78BFA" stop-opacity="0"></stop>
+                      <stop offset=".323" stop-color="#1A1AF9"></stop>
+                      <stop offset=".672" stop-color="#AF17B4" stop-opacity=".3"></stop>
+                      <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
+                    </linearGradient>
+                    <filter id=":r1t:-b" x="71.656" y="-2" width="222" height="4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                      <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                      <feGaussianBlur stdDeviation=".5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
+                    </filter>
+                    <filter id=":r1t:-e" x="131" y="-10" width="238" height="20" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                      <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                      <feGaussianBlur stdDeviation="4.5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
+                    </filter>
+                  </defs>
+                </svg>
               </div>
             </Fragment>
           )}
         )}
       </div>
-
-      <span className="text-xs text-font-secondary mt-2">Note: percentage indicates the volume of structural data in our warehouse</span>
-
-      <div className="grid sm:grid-cols-2 mt-5 gap-10 mx-1">
+      <div className="grid sm:grid-cols-2 mt-7 gap-10 mx-1">
         <div className="p-2 text-xs sm:text-sm">
-          {STRUCTURAL_DATA_KEYS.map((key, index) => {
+          {chosenStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {
             let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] && chosenStructure.min[key] === chosenStructure.avg[key];
             return (
               <div key={index} className="flex">
@@ -180,26 +216,34 @@ export default function MineralPage() {
 
   const contextGroups = _contexts ? groupBy(_contexts, item => item.type.name) : {};
   let contexts = null;
-
-  let completeHistory = [];
+  let conclusiveHistory = [];
 
   if (isGrouping) {
-    completeHistory = prepareHistory(
+    conclusiveHistory = prepareHistory(
       members?.map(item => item.history).filter(item => item !== null) || []
     );
     contexts = {};
     _contexts.map((item) => {
       contexts[item.type.name] = item;
     })
+    // We explicitly add empty crystal system to the list if it's not there
+    // so that we are showing at least members with unknown crystal system
+    // and without any structural data
+    if (
+        !!structures.length &&
+        !structures.find(item => item.crystal_system === null) &&
+        members.find(item => item.crystal_system === null)
+    ) {
+      structures.push({ crystal_system: null, count: 0 })
+    }
   } else {
-    completeHistory = history ? prepareHistory([history]) : [];
+    conclusiveHistory = history ? prepareHistory([history]) : [];
     contexts = getConclusiveContext(contextGroups['Physical properties']);
   }
+
   console.log(contexts)
 
-
-  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || structures;
-
+  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || !!structures.length;
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
                         id: data.id,
@@ -223,10 +267,10 @@ export default function MineralPage() {
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
         <div className="mt-10 px-2 text-sm font-normal break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
 
-        {completeHistory.length > 0 && (
+        {conclusiveHistory.length > 0 && (
           <Section title="History">
             <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
-            <BarcodeChart items={completeHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
+            <BarcodeChart items={conclusiveHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
           </Section>
         )}
 
@@ -243,49 +287,12 @@ export default function MineralPage() {
                   }
                   {inheritance_chain.map((item, index) => {
                     if (item.crystallography) return (
-                    <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
+                      <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
                     )}
                   )}
                 </>
               )}
             </div>
-
-            {false && (
-              <div className="mt-7">
-                <h3 className="text-sm font-medium text-font-blueDark">Structural statistics based on{' '}
-                  <span className="font-bold">{structures.reduce((acc, item) => acc + item.count, 0)} </span>
-                  samples</h3>
-                {structures.map(_structure => {
-                  let crystalSystem = CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown';
-                  return (
-                    <div key={_structure.crystal_system} className="flex flex-col mt-5">
-                      {structures.length > 1 && (
-                        <h4 className="text-sm font-medium text-font-blueDark">{crystalSystem} - {_structure.count} samples</h4>
-                      )}
-                      <table className="table-auto text-xs md:text-sm max-w-md mt-5">
-                        <thead>
-                          <tr>
-                            <th className="px-2 py-1"></th>
-                            <th className="px-2 py-1 text-start font-semibold">Min—Max</th>
-                            <th className="px-2 py-1 text-start font-semibold">Average</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {STRUCTURAL_DATA_KEYS.map((key, index) => (
-                            <tr key={index} className="">
-                              <td className="px-2 py-1 font-semibold">{key}</td>
-                              <td className="px-2 py-1 text-font-secondary">{_structure.min[key]}—{_structure.max[key]}</td>
-                              <td className="px-2 py-1 text-font-secondary">{_structure.avg[key]}</td>
-                            </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                )}
-              </div>
-            )}
           </Section>
         )}
 
@@ -352,7 +359,7 @@ export default function MineralPage() {
               </div>
             </div>
 
-            {elements.length > 0 && (
+            {!!elements.length && (
                 <div className="mt-7">
                   <h3 className="text-sm font-medium text-font-blueDark">Elements recorded on EPMA</h3>
                   <div className="flex flex-col mt-5">
@@ -373,7 +380,7 @@ export default function MineralPage() {
         )}
 
 
-        {Object.keys(contexts).map((key, index) => {
+        {contexts && Object.keys(contexts).map((key, index) => {
           let context = { contextKey: key, ...contexts[key] };
           return (
             <Section key={index} title={key}>

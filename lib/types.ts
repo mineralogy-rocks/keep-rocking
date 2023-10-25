@@ -12,6 +12,8 @@ export type exploreApiResponse = {
   name: string;
   slug: string;
   ns_index: string;
+  ima_statuses: string[];
+  ima_notes: string[];
   ima_symbol: string;
   description: string;
   is_grouping: boolean;

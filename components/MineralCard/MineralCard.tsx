@@ -42,7 +42,7 @@ export function SnippetWrapper({ className="", title, subtitle="", children }) {
   )
 };
 
-export default function MineralCard({ index, mineral, mindatContext = {}, isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
+export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
 
   const intersectionRef = useRef(null);
   const intersection = useIntersection(intersectionRef, {
@@ -100,7 +100,7 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
 
           <div className="col-span-3 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
             <SnippetWrapper title="Classification">
-              <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index, statuses: mineral.statuses }} />
+              <ClassificationSnippet data={{ ima_statuses: mineral.ima_statuses, ns_index: mineral.ns_index, statuses: mineral.statuses }} />
             </SnippetWrapper>
             <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}

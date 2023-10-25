@@ -38,13 +38,13 @@ export default function ClassificationSnippet({ data }) {
   const { data: DanaData, error: DanaError, isLoading: DanaIsLoading } = useMindatApi(
     danaIndex ? `/dana-8/subgroups/?index=${danaIndex}` : null
   );
-  const _fields = ['strunz_index', 'dana_index', 'ima_status',];
+  const _fields = ['strunz_index', 'dana_index', 'ima_statuses',];
 
-  const { statuses, strunz_index, dana_index, ima_status } : {
+  const { statuses, strunz_index, dana_index, ima_statuses } : {
     statuses: Status[],
     strunz_index: any,
     dana_index: any,
-    ima_status: any
+    ima_statuses: any
   } = data;
   const groups = groupBy(statuses, item => item.group.name);
   let _groups = [];
@@ -82,7 +82,12 @@ export default function ClassificationSnippet({ data }) {
     }
   };
 
-  if (data && _fields.some(key => Object.keys(data).includes(key)) && _fields.some(key => data[key]) || _groups.length > 0) {
+  if (
+    data &&
+    _fields.some(key => Object.keys(data).includes(key)) &&
+    _fields.some(key => data[key] && data[key].length) ||
+    _groups.length > 0
+  ) {
     return (
       <div className="flex flex-col gap-1">
         {_groups.length > 0 && (
@@ -111,15 +116,15 @@ export default function ClassificationSnippet({ data }) {
         <motion.div key={data.id}
                     variants={ container }
                     initial={ 'loading' }
-                    animate={ !!(ima_status || strunz_index || dana_index) ? 'ready' : 'loading' }>
-          {ima_status && (
+                    animate={ !!(ima_statuses || strunz_index || dana_index) ? 'ready' : 'loading' }>
+          {ima_statuses && (
             <motion.div className="flex w-full" variants={item}>
               <div className="flex flex-wrap gap-1">
-                {ima_status.map((status, id) => {
-                  let _status = getIMAStatus(status);
+                {ima_statuses.map((status, index) => {
+                  let _status = getIMAStatus(status.key);
                     return (
-                      <Chip key={id} className="rounded" type={_status}>
-                        <span className="font-medium">{camelize(status)}</span>
+                      <Chip key={index} className="rounded" type={_status}>
+                        <span className="font-medium">{camelize(status.key)}</span>
                       </Chip>
                     )
                   })
