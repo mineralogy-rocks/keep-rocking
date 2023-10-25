@@ -73,18 +73,23 @@ const CrystallographyCards = ({ structures, members }) => {
           let crystalSystem = (CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown') + ' System';
           return (
             <Fragment key={_structure.crystal_system}>
-              <div className={cx("relative w-64 rounded-sm p-3 transition bg-white hover:ring-1 ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
+              <div className={cx("cursor-pointer relative w-64 rounded-sm p-3 transition bg-white hover:ring-1 ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
                                  chosenStructure.crystal_system == _structure.crystal_system ? "ring-1" : "")}
                    onClick={() => setChosenStructure(_structure)}>
-                <div className="relative flex">
-                  <Chip type="default" className="mt-1 bg-indigo-300/90">
-                    <span className="font-semibold flex-1 text-start text-indigo-700">{crystalSystem}</span>
-                  </Chip>
-                  <span className="text-sm font-medium flex-1 text-end text-font-blueDark py-1">{(_structure.count / structuresCount * 100).toFixed(2)}%</span>
-                </div>
-                <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
-                  <span>{_structure.count} measurement(s)</span>
-                  <span>{_localMembers.length} member(s)</span>
+                <div className="relative grid grid-cols-2 gap-2">
+                  <div>
+                    <Chip type="default" className="mt-1 bg-indigo-300/90">
+                      <span className="font-semibold flex-1 text-start text-indigo-700">{crystalSystem}</span>
+                    </Chip>
+                    <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
+                      <span>{_structure.count} measurement(s)</span>
+                      <span>{_localMembers.length} member(s)</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center text-xs font-medium text-font-blueDark py-1">
+                    <span className="flex-1 text-end">{(_localMembers.length / members.length * 100).toFixed(2)}% of members</span>
+                    <span className="flex-1 text-end mt-1">{(_structure.count / structuresCount * 100).toFixed(2)}% of structures</span>
+                  </div>
                 </div>
               </div>
             </Fragment>

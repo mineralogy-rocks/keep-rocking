@@ -77,10 +77,10 @@ export const SECTION_FIELDS = {
   // The order of keys matters, it defines the order of the properties in the output.
   // Comment out the keys to remove the properties from the output
   "Physical properties": [
-    "colorNote",
     "color",
-    "streakNote",
+    "colorNote",
     "streak",
+    "streakNote",
     "lustre",
     "lustreNote",
     "fracture",
