@@ -18,6 +18,9 @@ module.exports = {
           blue: '#1d4ed8',
           blueDark: '#1e3a8a',
           orange: '#f3ece9',
+        },
+        gray: {
+          DEFAULT: '#f1f1f1',
         }
       },
       maxWidth: {

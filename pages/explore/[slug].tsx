@@ -1,3 +1,4 @@
+import {Fragment, useMemo, useState} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -26,7 +27,7 @@ const Section = ({ title, children }) => (
 
 const CrystallographyNode = ({ item = null, isInherited = true, className = "", ...props }) => (
   <div className={cx("relative p-2 rounded flex flex-col text-xs ml-2",
-                     "outline-dashed outline-[1px] outline-gray-400",
+                     "bg-white ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
                      className
                   )}>
     {item && (
@@ -52,6 +53,69 @@ const CrystallographyNode = ({ item = null, isInherited = true, className = "", 
       )}
     </div>
   </div>);
+
+
+const CrystallographyCards = ({ structures, members }) => {
+
+  const [chosenStructure, setChosenStructure] = useState(structures[0] || null);
+  const structuresCount = structures.reduce((acc, item) => acc + item.count, 0);
+
+  const chosenMembers = useMemo(() => {
+    if (chosenStructure.crystal_system) return members.filter(_member => _member.crystal_system?.id === chosenStructure.crystal_system) || [];
+    return members.filter(_member => _member.crystal_system === null) || [];
+  }, [chosenStructure, members]);
+
+  return (
+    <div className="gap-2">
+      <div className="flex flex-wrap gap-3">
+        {structures.map(_structure => {
+          let _localMembers = members.filter(_member => _member.crystal_system?.id == _structure.crystal_system);
+          let crystalSystem = (CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown') + ' System';
+          return (
+            <Fragment key={_structure.crystal_system}>
+              <div className={cx("relative w-64 rounded-sm p-3 transition bg-white hover:ring-1 ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
+                                 chosenStructure.crystal_system == _structure.crystal_system ? "ring-1" : "")}
+                   onClick={() => setChosenStructure(_structure)}>
+                <div className="relative flex">
+                  <Chip type="default" className="mt-1 bg-indigo-300/90">
+                    <span className="font-semibold flex-1 text-start text-indigo-700">{crystalSystem}</span>
+                  </Chip>
+                  <span className="text-sm font-medium flex-1 text-end text-font-blueDark py-1">{(_structure.count / structuresCount * 100).toFixed(2)}%</span>
+                </div>
+                <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
+                  <span>{_structure.count} measurement(s)</span>
+                  <span>{_localMembers.length} member(s)</span>
+                </div>
+              </div>
+            </Fragment>
+          )}
+        )}
+      </div>
+
+      <span className="text-xs text-font-secondary mt-2">Note: percentage indicates the volume of structural data in our warehouse</span>
+
+      <div className="grid sm:grid-cols-2 mt-5 gap-10 mx-1">
+        <div className="p-2 text-xs sm:text-sm">
+          {STRUCTURAL_DATA_KEYS.map((key, index) => {
+            let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] && chosenStructure.min[key] === chosenStructure.avg[key];
+            return (
+              <div key={index} className="flex">
+                <span className="px-2 py-1 font-semibold">{key}</span>
+                {_allEqual ? (
+                  <span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}</span>
+                ) : (<span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}—{chosenStructure.max[key]} ({chosenStructure.avg[key]})</span>)}
+              </div>
+            )}
+          )}
+        </div>
+        <div className="flex flex-wrap justify-start items-start gap-1 p-2 w-full h-min">
+           {chosenMembers.map((item) => (
+             <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
+           ))}
+        </div>
+      </div>
+    </div>)
+};
 
 
 export default function MineralPage() {
@@ -113,15 +177,10 @@ export default function MineralPage() {
   let contexts = null;
 
   let completeHistory = [];
-  let membersCrystallography = null;
 
   if (isGrouping) {
     completeHistory = prepareHistory(
       members?.map(item => item.history).filter(item => item !== null) || []
-    );
-    membersCrystallography = groupBy(
-      members?.filter(item => item.crystal_system),
-      item => item.crystal_system.name
     );
     contexts = {};
     _contexts.map((item) => {
@@ -134,7 +193,7 @@ export default function MineralPage() {
   console.log(contexts)
 
 
-  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || membersCrystallography;
+  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || structures;
 
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
@@ -169,29 +228,7 @@ export default function MineralPage() {
         {hasCrystallography && (
           <Section title="Structural context">
             <div className="flex flex-wrap gap-2">
-              {isGrouping && membersCrystallography ? (
-                Object.entries(membersCrystallography).map(([key, value], index) => (
-                  <div key={index} className="max-w-md relative p-2 rounded text-xs outline-dashed outline-[1px] outline-gray-400 h-full">
-                    <h3 className="mb-3 flex">
-                      <Chip type="default" className="mt-1 bg-indigo-300/90">
-                        <span className="font-semibold flex-1 text-start text-indigo-700">{key}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <span className="font-semibold text-indigo-800">
-                          {value.length}
-                        </span>
-                      </Chip>
-                    </h3>
-                    <div className="flex flex-wrap justify-start items-center gap-1 ml-2 mt-2">
-                      {value.map((item) => (
-                        <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
-                      ))}
-                    </div>
-                  </div>
-                )
-                )
-              ) : (
+              {isGrouping && structures.length > 0 ? <CrystallographyCards structures={structures} members={members} /> : (
                 <>
                   {crystallography && (
                     <CrystallographyNode isInherited={false}
@@ -208,7 +245,7 @@ export default function MineralPage() {
               )}
             </div>
 
-            {structures.length > 0 && (
+            {false && (
               <div className="mt-7">
                 <h3 className="text-sm font-medium text-font-blueDark">Structural statistics based on{' '}
                   <span className="font-bold">{structures.reduce((acc, item) => acc + item.count, 0)} </span>
