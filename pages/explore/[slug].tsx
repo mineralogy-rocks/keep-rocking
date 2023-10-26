@@ -109,13 +109,13 @@ const CrystallographyCards = ({ structures, members }) => {
                     <linearGradient id=":r1t:-c" x1="292.656" y1="1" x2="512.656" y2="1" gradientUnits="userSpaceOnUse">
                       <stop stop-color="#A78BFA" stop-opacity="0"></stop>
                       <stop offset=".323" stop-color="#1A1AF9"></stop>
-                      <stop offset=".672" stop-color="#AF17B4" stop-opacity=".3"></stop>
+                      <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.3 + 0.3}></stop>
                       <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
                     </linearGradient>
                     <linearGradient id=":r1t:-f" x1="360" y1="1" x2="580" y2="1" gradientUnits="userSpaceOnUse">
                       <stop stop-color="#A78BFA" stop-opacity="0"></stop>
                       <stop offset=".323" stop-color="#1A1AF9"></stop>
-                      <stop offset=".672" stop-color="#AF17B4" stop-opacity=".3"></stop>
+                      <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.4 + 0.3}></stop>
                       <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
                     </linearGradient>
                     <filter id=":r1t:-b" x="71.656" y="-2" width="222" height="4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
