@@ -43,7 +43,10 @@ export type mineralDetailApiResponse = {
   crystallography: Crystallography,
   history: History;
   structures: any[];
-  elements: any[];
+  elements: {
+    element: string;
+    count: number;
+  }[],
   inheritance_chain?: Inheritance[];
   members?: GroupingMember[];
   contexts: any[];

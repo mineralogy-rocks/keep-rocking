@@ -13,15 +13,15 @@ interface Props {
 };
 
 const defaultProps = {
-  className: "",
-  colorScheme: "BuRd",
+  items: [],
   labelX: null,
   labelY: null,
+  domainX: null,
 };
 
 
-const BarcodeChart = ({ items, labelX, labelY, domainX, className, colorScheme }: Props & typeof defaultProps) => {
-  const containerRef = useRef();
+const BarcodeChart = ({ items, labelX, labelY, domainX }: Props & typeof defaultProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!items) return;
@@ -52,15 +52,12 @@ const BarcodeChart = ({ items, labelX, labelY, domainX, className, colorScheme }
         ),
       ],
     });
-    if (containerRef.current) {
-      containerRef.current.appendChild(plot);
-    }
+    containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);
 
   return (
-    <div ref={containerRef}>
-    </div>
+    <div ref={containerRef}></div>
   )
 }
 

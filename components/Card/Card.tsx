@@ -3,28 +3,33 @@ import cx from "clsx";
 
 interface Props {
     className?: string,
+    isHoverable?: boolean,
     isHovered?: boolean,
     onClick?: (event: React.MouseEvent) => void,
     children?: React.ReactNode,
+    offset?: number,
 };
 
 const defaultProps = {
     className: "",
+    isHoverable: true,
     isHovered: false,
     onClick: () => {},
     children: null,
+    offset: 0.323,
 };
 
 
-const Card = ({ className, isHovered, onClick, children }) => {
+const Card = ({ className, isHoverable, isHovered, onClick, children, offset }: Props & typeof defaultProps) => {
 
     const clickHandler = (event: React.MouseEvent) => {
         onClick && onClick(event);
     };
 
+
     return (
-        <div className={cx(className, "cursor-pointer relative w-56 rounded-sm p-3 transition ring-1 ring-slate-300/40",
-                                 isHovered ? "ring-1 ring-slate-600/[0.04] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50")}
+        <div className={cx(className, isHoverable ? "cursor-pointer transition" : "bg-white", "relative w-56 rounded-sm p-3 ring-1 ring-slate-300/40",
+                           isHoverable && (isHovered ? "ring-slate-600/[0.04] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50"))}
                    onClick={clickHandler}>
             {children}
             <svg viewBox="0 0 384 12" fill="none" aria-hidden="true" className="absolute right-0 top-full w-[384px] max-w-[120%] transition">
@@ -42,24 +47,24 @@ const Card = ({ className, isHovered, onClick, children }) => {
               </g>
               <defs>
                 <linearGradient id=":r1t:-c" x1="292.656" y1="1" x2="512.656" y2="1" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#A78BFA" stop-opacity="0"></stop>
-                  <stop offset=".323" stop-color="#1A1AF9"></stop>
-                  <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.3 + 0.3}></stop>
-                  <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
+                  <stop stopColor="#A78BFA" stopOpacity="0"></stop>
+                  <stop offset={offset} stopColor="#1A1AF9"></stop>
+                  <stop offset={1 - offset} stopColor="#AF17B4" stopOpacity="0.3"></stop>
+                  <stop offset="1" stopColor="#1336AC" stopOpacity="0"></stop>
                 </linearGradient>
                 <linearGradient id=":r1t:-f" x1="360" y1="1" x2="580" y2="1" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#A78BFA" stop-opacity="0"></stop>
-                  <stop offset=".323" stop-color="#1A1AF9"></stop>
-                  <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.4 + 0.3}></stop>
-                  <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
+                  <stop stopColor="#A78BFA" stopOpacity="0"></stop>
+                  <stop offset={offset} stopColor="#1A1AF9"></stop>
+                  <stop offset={1 - offset} stopColor="#AF17B4" stopOpacity="0.6"></stop>
+                  <stop offset="1" stopColor="#1336AC" stopOpacity="0"></stop>
                 </linearGradient>
-                <filter id=":r1t:-b" x="71.656" y="-2" width="222" height="4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <filter id=":r1t:-b" x="71.656" y="-2" width="222" height="4" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                  <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
                   <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
                   <feGaussianBlur stdDeviation=".5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
                 </filter>
-                <filter id=":r1t:-e" x="131" y="-10" width="238" height="20" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                <filter id=":r1t:-e" x="131" y="-10" width="238" height="20" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                  <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
                   <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
                   <feGaussianBlur stdDeviation="4.5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
                 </filter>

@@ -6,23 +6,28 @@ import cx from 'clsx';
 
 
 interface Props {
+  isAnimated?: boolean,
   items?: Array<{
-    id: string,
+    id: number,
     value: number,
-    label: string,
-    subLabel: string,
+    label: string|number,
+    subLabel: string|number,
   }>,
+  className?: string,
+  color?: string,
+  highlightThreshold?: number,
 };
 
 const defaultProps = {
   isAnimated: false,
+  items: [],
   className: "",
   color: "#14b8a6",
   highlightThreshold: null,
 };
 
 
-const BarChart = ({ isAnimated = false, items, className, color, highlightThreshold }: Props & typeof defaultProps) => {
+const BarChart = ({ isAnimated, items, className, color, highlightThreshold }: Props & typeof defaultProps) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const variants: Variants = {
@@ -56,14 +61,16 @@ const BarChart = ({ isAnimated = false, items, className, color, highlightThresh
                             width: "8px",
                             bottom: 0,
                             height: `${(item.value / maxValue * 100)}%`,
-                            borderRadius: "2px",
+                            borderRadius: "1px",
                             backgroundColor: color,
+                            borderColor: '#0a9181',
+                            borderWidth: '0.1px',
                             position: "absolute"
                           }}>
               </motion.div>
             </div>
-            <div className="flex flex-1 shrink-0 flex-col px-2 justify-center text-center basis-[35px] w-[35px]">
-              <div className="text-xxs font-normal">{item.subLabel}</div>
+            <div className="mt-1 flex flex-1 shrink-0 flex-col px-2 justify-center text-center basis-[35px] w-[35px]">
+              <div className="text-xxs font-medium">{item.subLabel}</div>
               <div className={cx(" text-xs md:text-sm font-medium", highlightThreshold && item.value >= highlightThreshold ? "border-b border-b-violet-500" : "")}>{item.label}</div>
             </div>
           </div>

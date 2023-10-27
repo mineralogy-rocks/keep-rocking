@@ -1,15 +1,17 @@
-import {Fragment, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import cx from 'clsx';
+import * as Sentry from "@sentry/nextjs";
 
+import clone from 'just-clone';
 import groupBy from 'just-group-by';
 import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP} from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
+import Card from '@/components/Card';
 import { ContextController } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
@@ -25,10 +27,8 @@ const Section = ({ title, children }) => (
   </section>
 );
 
-const CrystallographyNode = ({ item = null, isInherited = true, className = "", ...props }) => (
-  <div className={cx("relative p-2 rounded flex flex-col text-xs ml-2 bg-white ring-gray-500 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]",
-                     className
-                  )}>
+const CrystallographyNode = ({ item = null, isInherited = true, ...props }) => (
+  <Card className="flex flex-col text-xs" isHoverable={false}>
     {item && (
       <div className="flex justify-start items-center">
         <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
@@ -51,13 +51,23 @@ const CrystallographyNode = ({ item = null, isInherited = true, className = "", 
         </span>
       )}
     </div>
-  </div>);
+  </Card>);
 
 
 const CrystallographyCards = ({ structures, members }) => {
 
-  const [chosenStructure, setChosenStructure] = useState(structures[0] || null);
-  const structuresCount = structures.reduce((acc, item) => acc + item.count, 0);
+  const localStructures = useMemo(() => clone(structures).map((item, index) => {
+    item._members = members.filter(_member => {
+      if (item.crystal_system) return _member.crystal_system?.id == item.crystal_system;
+      return _member.crystal_system === null;
+    });
+    item._offset = Math.random() * 0.2 + 0.2;
+    item._crystalSystem = (CRYSTAL_SYSTEM_CHOICES[item.crystal_system] || 'Unknown') + ' System';
+    return item;
+  }), [structures, members]);
+
+  const [chosenStructure, setChosenStructure] = useState(localStructures[0] || null);
+  const structuresCount = localStructures.reduce((acc, item) => acc + item.count, 0);
 
   const chosenMembers = useMemo(() => {
     // filter by crystal system if it's not null
@@ -66,72 +76,28 @@ const CrystallographyCards = ({ structures, members }) => {
     return members.filter(_member => _member.crystal_system === null) || [];
   }, [chosenStructure, members]);
 
+
   return (
     <div className="gap-2">
       <div className="flex flex-wrap gap-3">
-        {structures.map((_structure, index) => {
-          let _localMembers = members.filter(_member => {
-            if (_structure.crystal_system) return _member.crystal_system?.id == _structure.crystal_system;
-            return _member.crystal_system === null;
-          });
-          let crystalSystem = (CRYSTAL_SYSTEM_CHOICES[_structure.crystal_system] || 'Unknown') + ' System';
-
+        {localStructures.map((structure, index) => {
           return (
-            <Fragment key={_structure.crystal_system}>
-              <div className={cx("cursor-pointer relative w-56 rounded-sm p-3 transition ring-1 ring-slate-300/40",
-                                 chosenStructure.crystal_system == _structure.crystal_system ? "ring-1 ring-slate-600/[0.04] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50")}
-                   onClick={() => setChosenStructure(_structure)}>
-                <div className="relative flex flex-col gap-2">
-                  <div className="flex">
-                    <Chip type="default" className="mt-1 bg-indigo-300/90">
-                      <span className="font-semibold flex-1 text-start text-indigo-700">{crystalSystem}</span>
-                    </Chip>
-                  </div>
-                  <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
-                    <span><b>{_structure.count}</b> measurement(s) or <b>{(_structure.count / structuresCount * 100).toFixed(2)}%</b></span>
-                    <span><b>{_localMembers.length}</b> member(s) or <b>{(_localMembers.length / members.length * 100).toFixed(2)}%</b></span>
-                  </div>
+            <Card key={index}
+                  isHovered={chosenStructure.crystal_system == structure.crystal_system}
+                  onClick={() => setChosenStructure(structure)}
+                  offset={structure._offset}>
+              <div className="relative flex flex-col gap-2">
+                <div className="flex">
+                  <Chip type="default" className="mt-1 bg-indigo-300/90">
+                    <span className="font-semibold flex-1 text-start text-indigo-700">{structure._crystalSystem}</span>
+                  </Chip>
                 </div>
-                <svg viewBox="0 0 384 12" fill="none" aria-hidden="true" className="absolute right-0 top-full w-[384px] max-w-[120%] transition">
-                  <mask id=":r1t:-a" maskUnits="userSpaceOnUse" x="48" y="0" width="269" height="4" style={{ maskType: 'alpha' }}>
-                    <path transform="rotate(180 316.656 4)" fill="#C4C4C4" d="M316.656 4h268v4h-268z"></path>
-                  </mask>
-                  <g filter="url(#:r1t:-b)" mask="url(#:r1t:-a)">
-                    <path transform="rotate(180 292.656 1)" fill="url(#:r1t:-c)" d="M292.656 1h220v2h-220z"></path>
-                  </g>
-                  <mask id=":r1t:-d" maskUnits="userSpaceOnUse" x="116" y="0" width="268" height="12" style={{ maskType: 'alpha' }}>
-                    <path transform="rotate(180 384 12)" fill="#C4C4C4" d="M384 12h268v12H384z"></path>
-                  </mask>
-                  <g filter="url(#:r1t:-e)" mask="url(#:r1t:-d)">
-                    <path transform="rotate(180 360 1)" fill="url(#:r1t:-f)" d="M360 1h220v2H360z"></path>
-                  </g>
-                  <defs>
-                    <linearGradient id=":r1t:-c" x1="292.656" y1="1" x2="512.656" y2="1" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#A78BFA" stop-opacity="0"></stop>
-                      <stop offset=".323" stop-color="#1A1AF9"></stop>
-                      <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.3 + 0.3}></stop>
-                      <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
-                    </linearGradient>
-                    <linearGradient id=":r1t:-f" x1="360" y1="1" x2="580" y2="1" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#A78BFA" stop-opacity="0"></stop>
-                      <stop offset=".323" stop-color="#1A1AF9"></stop>
-                      <stop offset=".672" stop-color="#AF17B4" stop-opacity={Math.random() * 0.4 + 0.3}></stop>
-                      <stop offset="1" stop-color="#1336AC" stop-opacity="0"></stop>
-                    </linearGradient>
-                    <filter id=":r1t:-b" x="71.656" y="-2" width="222" height="4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                      <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
-                      <feGaussianBlur stdDeviation=".5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
-                    </filter>
-                    <filter id=":r1t:-e" x="131" y="-10" width="238" height="20" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                      <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
-                      <feGaussianBlur stdDeviation="4.5" result="effect1_foregroundBlur_311_43467"></feGaussianBlur>
-                    </filter>
-                  </defs>
-                </svg>
+                <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
+                  <span><b>{structure.count}</b> measurement(s) or <b>{(structure.count / structuresCount * 100).toFixed(2)}%</b></span>
+                  <span><b>{structure._members.length}</b> member(s) or <b>{(structure._members.length / members.length * 100).toFixed(2)}%</b></span>
+                </div>
               </div>
-            </Fragment>
+            </Card>
           )}
         )}
       </div>
@@ -170,6 +136,7 @@ export default function MineralPage() {
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
+
 
   let {
     name,
@@ -240,8 +207,6 @@ export default function MineralPage() {
     conclusiveHistory = history ? prepareHistory([history]) : [];
     contexts = getConclusiveContext(contextGroups['Physical properties']);
   }
-
-  console.log(contexts)
 
   const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || !!structures.length;
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
