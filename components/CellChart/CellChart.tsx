@@ -25,7 +25,7 @@ const defaultProps = {
 
 
 const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Props & typeof defaultProps) => {
-  const containerRef = useRef();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!items) return;
@@ -49,9 +49,7 @@ const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Pro
       ],
     });
 
-    if (containerRef.current) {
-      containerRef.current.appendChild(plot);
-    }
+    containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);
 
