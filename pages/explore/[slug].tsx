@@ -124,19 +124,30 @@ const CrystallographyCards = ({ structures, members }) => {
     </div>)
 };
 
+export async function getServerSideProps({ params }) {
 
-export default function MineralPage() {
+  const data = await fetcher('/mineral/' + params.slug + '/');
+  console.log(data)
+
+  return {
+    props: {
+      data
+    },
+  }
+}
+
+export default function MineralPage({ data }) {
+
   const router = useRouter();
-
-  const { data, error, isLoading } = useSWR(
-    router.isReady ? '/mineral/' + router.query.slug + '/' : null,
-    fetcher,
-  );
-
-
-  if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
+  // const { data, error, isLoading } = useSWR(
+  //   router.isReady ? '/mineral/' + router.query.slug + '/' : null,
+  //   fetcher,
+  // );
+  //
+  // if (error) return <div>failed to load</div>;
+  // if (!data) return <div>loading...</div>;
 
   let {
     name,
