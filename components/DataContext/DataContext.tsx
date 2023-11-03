@@ -100,11 +100,11 @@ const GroupedColorEntities = ({ items } : groupedColorEntitiesProps & typeof gro
                   </ColorChip>
                 </div>
               </div>
-              <ul className="flex flex-wrap relative gap-1 ml-2 list-none text-xs text-font-secondary font-normal">
+              <ul className="flex flex-wrap relative gap-1 ml-2 list-none text-xs text-font-blueDark font-medium">
                 {item.entities.map((entity, index) => {
                   return (
                     <li key={index} className="flex items-center relative">
-                      <span className="bg-white border px-1 py-0.5 rounded">{entity}</span>
+                      <span className="bg-white border border-slate-200 px-1 py-0.5 rounded">{entity}</span>
                     </li>
                   )}
                 )}
@@ -325,7 +325,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
                   (<div ref={fieldsRefs[index]}
                         className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
                     {Array.isArray(data[key]) ? (
-                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-secondary font-medium">
+                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-blueDark font-medium">
                         {data[key].map((item, index) => {
                           return (
                             <li key={index} className="flex items-center relative">

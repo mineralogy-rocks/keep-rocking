@@ -1,8 +1,5 @@
 import {useMemo, useState} from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import useSWR from 'swr';
-import * as Sentry from "@sentry/nextjs";
 
 import clone from 'just-clone';
 import groupBy from 'just-group-by';
@@ -61,7 +58,8 @@ const CrystallographyCards = ({ structures, members }) => {
       if (item.crystal_system) return _member.crystal_system?.id == item.crystal_system;
       return _member.crystal_system === null;
     });
-    item._offset = Math.random() * 0.2 + 0.2;
+    // item._offset = Math.random() * 0.2 + 0.2;
+    item._offset = (1 / structures.length * index) * 0.2 + 0.2;
     item._crystalSystem = (CRYSTAL_SYSTEM_CHOICES[item.crystal_system] || 'Unknown') + ' System';
     return item;
   }), [structures, members]);
@@ -124,11 +122,20 @@ const CrystallographyCards = ({ structures, members }) => {
     </div>)
 };
 
-export async function getServerSideProps({ params }) {
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
 
+export async function getStaticProps({ params }) {
   const data = await fetcher('/mineral/' + params.slug + '/');
-  console.log(data)
-
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
   return {
     props: {
       data
@@ -138,7 +145,7 @@ export async function getServerSideProps({ params }) {
 
 export default function MineralPage({ data }) {
 
-  const router = useRouter();
+  // const router = useRouter();
   if (!data) return <div>loading...</div>;
 
   // const { data, error, isLoading } = useSWR(
