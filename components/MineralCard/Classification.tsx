@@ -112,12 +112,9 @@ export default function ClassificationSnippet({ data }) {
           </ul>
         )}
 
-        <motion.div key={data.id}
-                    variants={ container }
-                    initial={ 'loading' }
-                    animate={ !!(ima_statuses || strunz_index || dana_index) ? 'ready' : 'loading' }>
+        <div key={data.id}>
           {ima_statuses && (
-            <motion.div className="flex w-full" variants={item}>
+            <div className="flex w-full">
               <div className="flex flex-wrap gap-1">
                 {ima_statuses.map((status, index) => {
                     return (
@@ -128,7 +125,7 @@ export default function ClassificationSnippet({ data }) {
                   })
                 }
               </div>
-            </motion.div>
+            </div>
           )}
           {strunz_index && (
             <motion.div className="flex flex-wrap items-center text-xs" variants={item}>
@@ -174,7 +171,7 @@ export default function ClassificationSnippet({ data }) {
               </div>
             </motion.div>
           )}
-        </motion.div>
+        </div>
       </div>
     )
   };

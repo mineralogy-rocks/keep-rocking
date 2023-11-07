@@ -250,17 +250,17 @@ export default function MineralPage({ data }) {
         <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
         <div className="mt-10 px-2 text-sm font-normal break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
 
-        {conclusiveHistory.length > 0 && (
+        {!!conclusiveHistory.length && (
           <Section title="History">
             <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
-            <BarcodeChart items={conclusiveHistory} labelX="Year" domainX={Object.values(HISTORY_DATA_MAP)} />
+            <BarcodeChart items={conclusiveHistory} labelX="Year" domainY={Object.values(HISTORY_DATA_MAP)} />
           </Section>
         )}
 
         {hasCrystallography && (
           <Section title="Structural context">
             <div className="flex flex-wrap gap-2">
-              {isGrouping && structures.length > 0 ? <CrystallographyCards structures={structures} members={members} /> : (
+              {isGrouping && !!structures.length ? <CrystallographyCards structures={structures} members={members} /> : (
                 <>
                   {crystallography && (
                     <CrystallographyNode isInherited={false}
@@ -279,7 +279,7 @@ export default function MineralPage({ data }) {
           </Section>
         )}
 
-        {conclusiveFormulas.length > 0 && (
+        {!!conclusiveFormulas.length && (
           <Section title="Chemical context">
             <div className="flex flex-col flex-wrap gap-5 px-2">
               <h3 className="text-sm font-medium text-font-blueDark">Stoichiometric formulas</h3>

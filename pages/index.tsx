@@ -134,7 +134,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="text-base md:text-lg leading-normal text-left mt-7">
+          <p className="text-base md:text-lg font-medium text-font-primary leading-normal text-left mt-7">
             <strong>Mineralogy.rocks</strong> provide seamless and simple way to access and filter mineralogical and related data.
             Our platform is designed both for researchers and developers.
           </p>
@@ -145,7 +145,7 @@ export default function Home() {
     <section>
       <div className={cx(typographyStyles.Section, "")}>
         <h3 className="text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
-        <p className="text-base md:text-lg leading-normal text-start mt-7">
+        <p className="text-base md:text-lg font-medium text-font-primary leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
             Find the proper data subset and explore the relations between minerals.
         </p>
@@ -153,36 +153,36 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
             <div className="md:col-span-6 flex flex-col">
                 <h4 className={typographyStyles.Subtitle}>Researchers</h4>
-                <p className="text-base md:text-lg leading-normal text-left mt-5">
+                <p className="text-base md:text-lg font-medium text-font-primary leading-normal text-left mt-5">
                     Check out our filtering system at <Link href="/explore" className={utilsStyles.link}>mineralogy.rocks/explore</Link>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
                 </p>
             </div>
 
             <div className="md:col-span-6 flex flex-col">
-              <div className="flex flex-col gap-2 text-left text-base md:text-lg leading-normal">
+              <div className="flex flex-col gap-2 text-left text-base md:text-lg font-medium text-font-secondary leading-normal">
                 <div className="flex flex-wrap items-center">
-                  <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">1</span>
-                  <p className="flex-1">
-                    <code className="font-normal bg-slate-100 px-1 py-0.5 rounded">WHERE</code> discovery year <em>between</em> 1999 and 2001
+                  <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">1</span>
+                  <p className="flex-1 font-medium text-font-primary">
+                    <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-primary">WHERE</code> discovery year <b>between</b> 1999 and 2001
                   </p>
                 </div>
                 <div className="flex flex-row">
                   <span className="ml-8">🤖 found 1, 401 species</span>
                 </div>
                 <div className="flex flex-wrap items-center">
-                    <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">2</span>
-                    <p className="flex-1">
-                      <code className="font-normal bg-slate-100 px-1 py-0.5 rounded">AND</code> discovery country <em>in</em> EU
+                    <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">2</span>
+                    <p className="flex-1 font-medium text-font-primary">
+                      <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-primary">AND</code> discovery country <b>in</b> EU
                     </p>
                 </div>
                 <div className="flex flex-row">
                   <span className="ml-8">🤖 found 198 species</span>
                 </div>
                 <div className="flex flex-wrap items-center">
-                    <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-semibold flex items-center mr-2">3</span>
-                    <p className="text-base md:text-lg leading-normal">
-                      <code className="font-normal bg-slate-100 px-1 py-0.5 rounded">AND</code> mineral formula <em>contains</em> As<sup>5+</sup>
+                    <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">3</span>
+                    <p className="text-base md:text-lg leading-normal font-medium text-font-primary">
+                      <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-primary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -195,13 +195,10 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
           <div className="md:col-span-6 flex flex-col">
             <h3 className={typographyStyles.Subtitle}>Developers</h3>
-            <p className="text-base md:text-lg leading-normal mt-5">
+            <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-5">
               The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
-              through your favourite <code className="font-normal bg-slate-200 px-1 py-0.5 rounded">http client</code>.
+              through your favourite <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-primary">http client</code>.
               Reach out to us if you need an API key.
-            </p>
-            <p className="text-base md:text-lg leading-normal mt-2">
-              Importantly, our system is built around <a className={utilsStyles.linkExternal} href="https://api.mindat.org" target="_blank" rel="noopener noreferrer">Mindat API</a>, which is a fascinating resource!
             </p>
           </div>
 
@@ -242,7 +239,7 @@ export default function Home() {
     <section>
       <div className={typographyStyles.Section}>
         <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
-        <p className="text-base md:text-lg leading-normal text-left mt-5">
+        <p className="text-base md:text-lg font-medium text-font-primary leading-normal text-left mt-5">
           The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
         </p>
@@ -275,7 +272,7 @@ export default function Home() {
           <div className="md:col-span-6 flex flex-col space-y-6 md:space-y-2">
             <div className="flex flex-col">
               <h4 className={typographyStyles.Subtitle}>Flexible data fetching</h4>
-              <p className="text-base md:text-lg leading-normal mt-5">
+              <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-5">
                 Export the data in a preferred format or connect your application directly to our <strong>API</strong>.
                 We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
               </p>
@@ -283,7 +280,7 @@ export default function Home() {
 
             <div className="flex flex-col">
               <h4 className={typographyStyles.Subtitle}>Share the query</h4>
-              <p className="text-base md:text-lg leading-normal mt-5">
+              <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-5">
                 All filtering systems are connected to the query params of the <strong>URL string</strong> - you’ll <em>never</em> loose your results once you obtained them.
               </p>
             </div>
@@ -295,7 +292,7 @@ export default function Home() {
     <section>
       <div className={typographyStyles.Section}>
         <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Do research</h3>
-        <p className="text-base md:text-lg leading-normal mt-7">
+        <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-7">
           We will gladly assist you in finding the right data in a right format.
           We believe in open science and open source—things that make our lives better.
         </p>
@@ -305,7 +302,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className={typographyStyles.Subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg leading-normal mt-5">
+            <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-5">
               Join our computing community <a className={utilsStyles.linkExternal} href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
               <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
             </p>
@@ -314,7 +311,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className={typographyStyles.Subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg leading-normal mt-5">
+            <p className="text-base md:text-lg font-medium text-font-primary leading-normal mt-5">
               The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className={utilsStyles.linkExternal} href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
               <a className={utilsStyles.linkExternal} href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
               and <a className={utilsStyles.linkExternal} href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
@@ -343,7 +340,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-screen-md text-center mt-10">
-          <p className="text-base md:text-lg">
+          <p className="text-base md:text-lg font-medium text-font-primary">
             This project 3007/01/01 has received funding from the European Union&apos;s Horizon 2020 research and innovation programme
             under the <strong>Marie Skłodowska-Curie grant agreement No 945478</strong>.
           </p>

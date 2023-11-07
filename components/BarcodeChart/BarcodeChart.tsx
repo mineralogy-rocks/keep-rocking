@@ -9,18 +9,18 @@ interface Props {
     key: string,
     value: number,
   }>,
-  domainX?: any[],
+  domainY?: any[],
 };
 
 const defaultProps = {
   items: [],
   labelX: null,
   labelY: null,
-  domainX: null,
+  domainY: null,
 };
 
 
-const BarcodeChart = ({ items, labelX, labelY, domainX }: Props & typeof defaultProps) => {
+const BarcodeChart = ({ items, labelX, labelY, domainY }: Props & typeof defaultProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const BarcodeChart = ({ items, labelX, labelY, domainX }: Props & typeof default
         legend: true,
       },
       x: { label: labelX, grid: true },
-      y: { label: labelY, domain: domainX, paddingInner: 0.1, paddingOuter: 0.1 },
+      y: { label: labelY, domain: domainY, paddingInner: 0.1, paddingOuter: 0.1 },
       style: {
         backgroundColor: "transparent",
       },
