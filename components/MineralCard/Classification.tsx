@@ -3,7 +3,6 @@ import groupBy from 'just-group-by';
 import { motion, Variants } from 'framer-motion';
 
 import { getRelationDesignation } from './MineralCard.helpers';
-import { getIMAStatus } from '@/helpers/status.helpers';
 import { camelize } from '@utils';
 import { useMindatApi } from '@/hooks/use-mindat-api';
 import { Status } from '@/lib/interfaces';
@@ -121,10 +120,9 @@ export default function ClassificationSnippet({ data }) {
             <motion.div className="flex w-full" variants={item}>
               <div className="flex flex-wrap gap-1">
                 {ima_statuses.map((status, index) => {
-                  let _status = getIMAStatus(status.key);
                     return (
-                      <Chip key={index} className="rounded" type={_status}>
-                        <span className="font-medium">{camelize(status.key)}</span>
+                      <Chip key={index} className="rounded" type={status.toLowerCase()}>
+                        <span className="font-medium">{camelize(status)}</span>
                       </Chip>
                     )
                   })
