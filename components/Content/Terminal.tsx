@@ -10,11 +10,11 @@ export default function Terminal({ children }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="overflow-hidden max-w-lg shadow-surface-medium flex bg-red-50 h-38 max-h-40 sm:max-h-[none] rounded-lg hover:bg-red-100/50 transition-all duration-500"
+    <div className="overflow-hidden max-w-lg shadow-surface-low hover:shadow-fuchsia-200/70 hover:shadow-2xl flex bg-red-50 h-38 max-h-40 sm:max-h-[none] rounded-lg transition-all duration-50"
          onMouseEnter={() => setIsHovered(true)}
          onMouseLeave={() => setIsHovered(false)}>
       <div className="group w-full flex flex-col">
-        <div className="flex-none bg-gray-600 group-hover:bg-gray-700 transition-all duration-500">
+        <div className="flex-none bg-gray-600 transition-all duration-500">
           <div className="flex items-center justify-between">
             <div className="flex items-center h-8 space-x-1.5 px-3">
               <div className="w-3 h-3 flex items-center justify-center bg-red-600 rounded-full">

@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 import React from "react";
 
+import clone from "just-clone";
+
 import Dot from "@/components/Dot";
 import Collapse from "@/components/Collapse";
 import ColorChip from "@/components/ColorChip";
@@ -268,8 +270,9 @@ const GroupedDataContext = ({ contextKey, data }) => {
     ...data.hardness.max.map(item => { return { key: 'max', value: item }})
   ] : [];
 
-  const initialFieldsState = {};
+  const initialFieldsState = [];
   SECTION_FIELDS[contextKey].map((key, index) => {
+    initialFieldsState.push({});
     if (FIELDS.hasOwnProperty(key) === false || !data[key]) return;
     let field = FIELDS[key];
     let _state = {
@@ -290,13 +293,12 @@ const GroupedDataContext = ({ contextKey, data }) => {
   const [fieldsState, setFieldsState] = useState(initialFieldsState);
   const fieldsRefs = SECTION_FIELDS[contextKey].map(() => React.createRef());
 
-  // check which fields can be collapsed and which shouldn't be based on clientHeight
+  // check which fields should be collapsed based on clientHeight
   useEffect(() => {
     fieldsRefs.map((ref, index) => {
       if (!ref.current) return;
       if (!fieldsState[index].isCollapsable) return;
-      let _shouldCollapsable = ref.current.clientHeight > 100;
-      setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: _shouldCollapsable } });
+      setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: ref.current.clientHeight > 100 } });
     })
   }, []);
 

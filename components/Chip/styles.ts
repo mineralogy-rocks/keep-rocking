@@ -16,7 +16,7 @@ export const getStyles= (type = "default"): Styles => {
       textColor: 'text-green-800',
       backgroundColor: 'bg-green-300/30'
     },
-    pending: {
+    'pending publication': {
       textColor: 'text-gray-800',
       backgroundColor: 'bg-gray-300/70'
     },
@@ -43,5 +43,5 @@ export const getStyles= (type = "default"): Styles => {
       borderColor: ''
     },
   };
-  return colors[type];
+  return colors[type] || colors.default;
 };

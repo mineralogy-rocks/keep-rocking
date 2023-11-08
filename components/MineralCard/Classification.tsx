@@ -118,7 +118,7 @@ export default function ClassificationSnippet({ data }) {
               <div className="flex flex-wrap gap-1">
                 {ima_statuses.map((status, index) => {
                     return (
-                      <Chip key={index} className="rounded" type={status.toLowerCase()}>
+                      <Chip key={index} className="rounded" type={status}>
                         <span className="font-medium">{camelize(status)}</span>
                       </Chip>
                     )
