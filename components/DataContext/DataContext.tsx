@@ -292,14 +292,16 @@ const GroupedDataContext = ({ contextKey, data }) => {
   });
   const [fieldsState, setFieldsState] = useState(initialFieldsState);
   const fieldsRefs = SECTION_FIELDS[contextKey].map(() => React.createRef());
-
+console.log(fieldsState)
   // check which fields should be collapsed based on clientHeight
   useEffect(() => {
-    fieldsRefs.map((ref, index) => {
-      if (!ref.current) return;
-      if (!fieldsState[index].isCollapsable) return;
-      setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsable: ref.current.clientHeight > 100 } });
-    })
+    const updatedFieldsState = fieldsState.map((field, index) => {
+      const isCollapsable = fieldsRefs[index].current ? fieldsState[index].isCollapsable && fieldsRefs[index].current.clientHeight > 100 : false;
+      console.log(index, isCollapsable)
+      return { ...field, isCollapsable };
+    });
+
+  setFieldsState(updatedFieldsState);
   }, []);
 
 

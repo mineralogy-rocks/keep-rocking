@@ -200,7 +200,7 @@ export default function Explore() {
                   return (
                     <motion.div key={index}
                                 initial={{
-                                  opacity: 0.6,
+                                  opacity: 0.8,
                                   y: 20
                                 }}
                                 animate={{
@@ -209,10 +209,8 @@ export default function Explore() {
                                 }}
                                 transition={{
                                   type: 'spring',
-                                  ease: 'easeInOut',
-                                  bounce: 0.9,
-                                  stiffness: 90,
-                                  damping: 7,
+                                  bounce: 0.2,
+                                  duration: 1,
                                   delay: 0.1*index
                                 }}>
                       <MineralCard key={item.slug}
