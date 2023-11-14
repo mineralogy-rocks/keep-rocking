@@ -115,15 +115,27 @@ export default function Home() {
 
     <header>
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center mt-24 text-center justify-center">
+        <div className="relative flex items-center mt-24 text-center justify-center">
           <h1 className="max-w-md font-black text-6xl sm:text-7xl md:text-8xl mx-auto">
             Explore.
             Extract.
             Research.
           </h1>
+          <div className="absolute translate-x-2 lg:translate-x-[50px] translate-y-8 w-[300px] md:w-[400px] lg:w-[500px]">
+            <svg width="100%" height="auto" viewBox="0 0 500 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M55.1377 314.886C42.4469 303.886 45.4469 297.386 44.1377 283.886C44.1377 269.886 38.6318 246.328 38.6318 246.328C24.7383 213.712 -4.69149 124.177 0.637545 85.304C5.96657 46.4308 41.9375 24.055 79.431 11.3501C116.925 -1.35485 168 -2.67212 226 3.82775C284 10.3276 328 16.328 357 34.328C386 52.328 392 54.8279 417 82.828C434.51 109.565 449.608 127.59 463.121 163.809C476.634 200.027 493.192 247.813 499.663 279.859C506.134 311.906 509.179 332.386 501.947 356.089C494.715 379.792 482.534 410.891 456.27 422.078C430.005 433.266 369.863 432.508 344.36 423.216C318.857 413.925 305.865 410.516 285.5 399.328C265.135 388.14 261 385.328 226 369.328C185.5 356.089 185 351.828 152.5 343.828" fill="url(#paint0_linear_510_4495)" fillOpacity="0.05"/>
+              <defs>
+                <linearGradient id="paint0_linear_510_4495" x1="27.9468" y1="-34.114" x2="533.947" y2="-34.114" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#3800A8"/>
+                  <stop offset="1" stopColor="#F500AB"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
         </div>
 
-        <div className="mx-auto px-6 sm:px-8 mt-14 md:mt-20">
+        <div className="relative mx-auto px-6 sm:px-8 mt-14 md:mt-20 z-10">
           <div className="flex justify-center">
             <Link href="/explore">
                 <span className={cx(utilsStyles.link, 'group flex items-center font-bold')}>Start Exploring
