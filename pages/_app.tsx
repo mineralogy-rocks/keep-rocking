@@ -3,15 +3,21 @@ import '../styles/globals.scss';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
 
-import localFont from '@next/font/local';
+// import localFont from '@next/font/local';
+import { Inter } from '@next/font/google';
 
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 
 
-const inter = localFont({
-  src: '../public/assets/fonts/Inter-VariableFont_slnt,wght.ttf',
-  weight: '100..900',
+// const inter = localFont({
+//   src: '../public/assets/fonts/Inter-VariableFont_slnt,wght.ttf',
+//   weight: '100..900',
+//   display: 'swap',
+//   variable: '--font-inter'
+// });
+
+const inter = Inter({
   display: 'swap',
   variable: '--font-inter'
 });
