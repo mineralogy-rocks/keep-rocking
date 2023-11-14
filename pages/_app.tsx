@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 
 
 const inter = localFont({
-  src: '../public/fonts/Inter-VariableFont_slnt,wght.ttf',
+  src: '../fonts/Inter-VariableFont_slnt,wght.ttf',
   weight: '100..900',
   display: 'swap',
   variable: '--font-inter'
