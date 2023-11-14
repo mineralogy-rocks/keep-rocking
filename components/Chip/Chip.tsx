@@ -17,7 +17,7 @@ export default function Chip({ type = "default", className = "", isLoading = fal
     onClick && onClick(e);
   }
 
-  const { textColor, backgroundColor, borderColor } = getStyles(type);
+  const { textColor, backgroundColor, borderColor } = getStyles(type.toLowerCase());
 
   return (
     <div className={clsx("flex flex-wrap rounded px-1 py-0.5 transition-colors duration-300",

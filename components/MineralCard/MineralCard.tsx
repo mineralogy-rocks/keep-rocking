@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import utilsStyles  from '@/styles/utils.module.scss';
 import NoData from './NoData';
-import RelationChip from './RelationChip';
+import RelationChip from '@/components/RelationChip';
 import ClassificationSnippet from './Classification';
 import DiscoverySnippet from './Discovery';
 import RelationSnippet from './Relation';
@@ -42,7 +42,7 @@ export function SnippetWrapper({ className="", title, subtitle="", children }) {
   )
 };
 
-export default function MineralCard({ index, mineral, mindatContext = {}, isVisible } : { index: number, mineral: exploreApiResponse, mindatContext, isVisible: (boolean) => void }) {
+export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
 
   const intersectionRef = useRef(null);
   const intersection = useIntersection(intersectionRef, {
@@ -60,17 +60,21 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
 
   return (
       <div ref={intersectionRef}
-          id={'mineralCard-' + index}
-          className="relative scroll-mt-16 bg-white shadow-surface-low sm:rounded p-4 mx-auto h-auto transition-all duration-200">
+           id={'mineralCard-' + index}
+           className="relative scroll-mt-16 bg-white shadow-surface-low sm:rounded p-4 mx-auto h-auto transition-all duration-200">
         <div className="grid grid-cols-3 gap-2">
           <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
             <span className="italic text-base">{mineral.ima_symbol}</span>
             <div className="ml-5 space-y-1">
               <div className="flex">
                 <div className={clsx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-                <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
-                {mineral.name}
-                </h1>
+                {/* <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
+                  {mineral.name}
+                </h1> */}
+                <InternalLink className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words"
+                              href={`/explore/${mineral.slug}`}
+                              text={mineral.name}
+                              hasIcon={false} />
               </div>
               <div className="flex flex-wrap items-center gap-1">
                 {mineralFormula && (
@@ -96,7 +100,7 @@ export default function MineralCard({ index, mineral, mindatContext = {}, isVisi
 
           <div className="col-span-3 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2">
             <SnippetWrapper title="Classification">
-              <ClassificationSnippet data={{...mindatContext, ns_index: mineral.ns_index, statuses: mineral.statuses }} />
+              <ClassificationSnippet data={{ ima_statuses: mineral.ima_statuses, ns_index: mineral.ns_index, statuses: mineral.statuses }} />
             </SnippetWrapper>
             <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}

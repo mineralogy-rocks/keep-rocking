@@ -7,7 +7,7 @@
 }
 
 .link {
-  @apply font-bold text-font-blue hover:text-font-blueDark cursor-pointer;
+  @apply text-font-blue hover:text-font-blueDark cursor-pointer;
 }
 
 .linkSmall {
@@ -26,4 +26,24 @@
 
 .secondaryText {
   @apply text-font-secondary;
+}
+
+// TODO: move to separate file
+.prop {
+  @apply text-font-primary px-1 sm:px-2;
+  .prop-grid {
+    @apply flex flex-col col-span-8;
+  }
+  .prop-header {
+    @apply flex flex-col p-2 h-auto;
+    .prop-title {
+      @apply text-sm font-semibold sm:font-medium break-normal;
+    }
+    .prop-subtitle {
+      @apply ml-1 mt-1 text-xs sm:text-xs font-medium leading-normal break-words text-font-secondary;
+    }
+  }
+  .prop-item {
+    @apply text-xs sm:text-sm font-normal text-font-secondary;
+  }
 }

@@ -1,10 +1,10 @@
-export type CardStyles = {
+export type Styles = {
   textColor: string;
   backgroundColor: string;
   borderColor?: string;
 }
-export const getStyles= (type = "default"): CardStyles => {
-  const _colors = {
+export const getStyles= (type = "default"): Styles => {
+  const colors = {
     default: {
       textColor: 'text-gray-800',
       backgroundColor: 'bg-indigo-200 focus:bg-red-300',
@@ -16,7 +16,7 @@ export const getStyles= (type = "default"): CardStyles => {
       textColor: 'text-green-800',
       backgroundColor: 'bg-green-300/30'
     },
-    pending: {
+    'pending publication': {
       textColor: 'text-gray-800',
       backgroundColor: 'bg-gray-300/70'
     },
@@ -36,7 +36,12 @@ export const getStyles= (type = "default"): CardStyles => {
       textColor: 'text-gray-600',
       backgroundColor: 'bg-gray-100',
       borderColor: 'border border-gray-200 hover:border-gray-300'
-    }
+    },
+    black: {
+      textColor: 'text-orange-50',
+      backgroundColor: 'bg-black',
+      borderColor: ''
+    },
   };
-  return _colors[type];
+  return colors[type] || colors.default;
 };

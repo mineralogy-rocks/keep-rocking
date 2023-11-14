@@ -18,9 +18,40 @@ export interface Formula {
     url: string;
   };
   show_on_site: boolean;
-  created_at: Date;
+  created_at: string;
   from?: From;
 }
+
+export interface FormulaGroupBySource {
+  [key: string]: Formula[];
+}
+
+export interface Crystallography {
+  id: number;
+  mineral?: string;
+  crystal_system: BaseIdName;
+  crystal_class?: BaseIdName;
+  space_group?: BaseIdName;
+}
+
+export interface CrystallographyGrouped extends BaseIdName{
+  count: number;
+  minerals: {
+    id: string;
+    name: string;
+    slug: string;
+    statuses: [number];
+  }[];
+};
+
+export interface GroupingMember extends BaseIdName {
+  slug : string;
+  description: string;
+  url: string;
+  statuses: [number];
+  crystal_system: BaseIdName;
+  history: History;
+};
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
@@ -40,6 +71,15 @@ export interface Status {
   description_short: string;
   description_long: string;
 }
+
+export interface StatusWithRelation extends Status {
+  mineral: {
+    id: string;
+    name: string;
+    slug: string;
+    mindat_id?: number;
+  }
+};
 
 export interface Relation {
   id: string;
@@ -67,6 +107,18 @@ export interface History {
   first_known_use: string;
 }
 
+export interface Inheritance {
+  mindat_id: number|null;
+  id: string;
+  name: string;
+  slug: string;
+  statuses: [number];
+  depth: number;
+  formulas: Formula[];
+  crystallography: Crystallography|null;
+  contexts: any[];
+};
+
 export interface Link {
   name: string;
   link: string;
@@ -76,3 +128,4 @@ export interface colorTuple {
   textColor: string;
   backgroundColor: string;
 }
+
