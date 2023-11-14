@@ -1,7 +1,5 @@
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import React from "react";
-
-import clone from "just-clone";
 
 import Dot from "@/components/Dot";
 import Collapse from "@/components/Collapse";
@@ -284,25 +282,13 @@ const GroupedDataContext = ({ contextKey, data }) => {
     if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(true);
     else _isCollapsed = field.isCollapsed;
 
-    if (_isCollapsed) {
+    if (_isCollapsed && data[key].split(' ').length > 30) {
       _state.isCollapsed = true;
       _state.isCollapsable = true;
     }
     initialFieldsState[index] = _state;
   });
   const [fieldsState, setFieldsState] = useState(initialFieldsState);
-  const fieldsRefs = SECTION_FIELDS[contextKey].map(() => React.createRef());
-console.log(fieldsState)
-  // check which fields should be collapsed based on clientHeight
-  useEffect(() => {
-    const updatedFieldsState = fieldsState.map((field, index) => {
-      const isCollapsable = fieldsRefs[index].current ? fieldsState[index].isCollapsable && fieldsRefs[index].current.clientHeight > 100 : false;
-      console.log(index, isCollapsable)
-      return { ...field, isCollapsable };
-    });
-
-  setFieldsState(updatedFieldsState);
-  }, []);
 
 
   return (
@@ -326,8 +312,7 @@ console.log(fieldsState)
                    {...{ field, isCollapsable: fieldsState[index].isCollapsable }}>
               <div className="ml-2 sm:ml-1 ">
                 {component || (
-                  (<div ref={fieldsRefs[index]}
-                        className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
+                  (<div className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
                     {Array.isArray(data[key]) ? (
                       <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-blueDark font-medium">
                         {data[key].map((item, index) => {

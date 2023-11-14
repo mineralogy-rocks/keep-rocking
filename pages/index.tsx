@@ -121,21 +121,31 @@ export default function Home() {
             Extract.
             Research.
           </h1>
-          <div className="absolute translate-x-2 lg:translate-x-[50px] translate-y-8 w-[300px] md:w-[400px] lg:w-[500px]">
-            <svg width="100%" height="auto" viewBox="0 0 500 450" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M55.1377 314.886C42.4469 303.886 45.4469 297.386 44.1377 283.886C44.1377 269.886 38.6318 246.328 38.6318 246.328C24.7383 213.712 -4.69149 124.177 0.637545 85.304C5.96657 46.4308 41.9375 24.055 79.431 11.3501C116.925 -1.35485 168 -2.67212 226 3.82775C284 10.3276 328 16.328 357 34.328C386 52.328 392 54.8279 417 82.828C434.51 109.565 449.608 127.59 463.121 163.809C476.634 200.027 493.192 247.813 499.663 279.859C506.134 311.906 509.179 332.386 501.947 356.089C494.715 379.792 482.534 410.891 456.27 422.078C430.005 433.266 369.863 432.508 344.36 423.216C318.857 413.925 305.865 410.516 285.5 399.328C265.135 388.14 261 385.328 226 369.328C185.5 356.089 185 351.828 152.5 343.828" fill="url(#paint0_linear_510_4495)" fillOpacity="0.05"/>
+          <div className="absolute translate-x-2 lg:translate-x-5 translate-y-2 w-[300px] md:w-[400px] lg:w-[500px]">
+            <svg width="100%" height="auto" viewBox="0 0 500 410" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_521_89)">
+                <path d="M385.365 41.5733C433.265 64.1733 494.165 88.8733 501.165 123.773C508.065 158.673 460.965 203.673 423.265 240.173C385.565 276.673 357.165 304.573 316.965 333.873C276.765 363.173 224.765 393.873 173.865 389.373C122.965 384.773 73.1653 345.073 39.7653 292.973C6.26534 240.873 -10.8347 176.573 13.8653 133.873C38.4653 91.2733 104.765 70.2733 154.065 47.9733C203.265 25.6733 235.465 1.97331 268.965 0.273313C302.465 -1.32669 337.365 19.0733 385.365 41.5733Z" fill="url(#paint0_linear_521_89)" fillOpacity="0.05"/>
+                <path d="M388.502 52.6427C438.502 77.6427 490.402 125.743 500.302 183.743C510.202 241.743 478.102 309.643 428.102 353.143C378.102 396.643 310.202 415.743 245.702 412.343C181.302 408.843 120.202 382.943 75.9019 339.443C31.5019 295.943 3.90186 234.843 0.401859 170.343C-3.19814 105.743 17.4018 37.6427 61.7018 12.6427C106.102 -12.3573 174.202 5.74267 232.302 15.7427C290.402 25.7427 338.502 27.6427 388.502 52.6427Z" fill="url(#paint1_linear_521_89)" fillOpacity="0.05"/>
+              </g>
               <defs>
-                <linearGradient id="paint0_linear_510_4495" x1="27.9468" y1="-34.114" x2="533.947" y2="-34.114" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint0_linear_521_89" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026" gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3800A8"/>
                   <stop offset="1" stopColor="#F500AB"/>
                 </linearGradient>
+                <linearGradient id="paint1_linear_521_89" x1="27.7238" y1="-32.7187" x2="529.686" y2="-32.7187" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#3800A8"/>
+                  <stop offset="1" stopColor="#F500AB"/>
+                </linearGradient>
+                <clipPath id="clip0_521_89">
+                  <rect width="503" height="413" fill="white"/>
+                </clipPath>
               </defs>
             </svg>
           </div>
 
         </div>
 
-        <div className="relative mx-auto px-6 sm:px-8 mt-14 md:mt-20 z-10">
+        <div className="relative mx-auto px-6 sm:px-8 mt-14 md:mt-24 z-10">
           <div className="flex justify-center">
             <Link href="/explore">
                 <span className={cx(utilsStyles.link, 'group flex items-center font-bold')}>Start Exploring
