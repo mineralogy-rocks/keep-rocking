@@ -19,10 +19,22 @@ export function ExternalLink({ className='', href, text, isIcon=true } : {
   )
 };
 
-export function InternalLink({ href, text } : { href: string, text: string }) {
+export function InternalLink({ className='', href, text, hasIcon=true } : { className?: string, href: string, text: string, hasIcon?: boolean }) {
   return (
     <Link href={href} className="flex group items-center" target="_blank">
-      <span className="text-xs text-font-blue font-semibold hover:text-font-blueDark hover:underline cursor-pointer">{text}</span>
+      <span className={clsx("text-xs text-font font-semibold hover:text-font-blueDark hover:underline cursor-pointer", className)}>{text}</span>
+      {hasIcon && (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+        </svg>
+      )}
+    </Link>
+  )
+};
+
+export function IconLink({ href } : { href: string }) {
+  return (
+    <Link href={href} className="flex group items-center" target="_blank">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
       </svg>

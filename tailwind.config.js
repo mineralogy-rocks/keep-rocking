@@ -13,9 +13,14 @@ module.exports = {
         font: {
           DEFAULT: '#1e293b',
           primary: '#0f172a',
-          secondary: '#64748b',
+          secondary: '#4d5c72',
+          ternary: '#9ca3af',
           blue: '#1d4ed8',
           blueDark: '#1e3a8a',
+          orange: '#f3ece9',
+        },
+        gray: {
+          DEFAULT: '#f1f1f1',
         }
       },
       maxWidth: {
@@ -79,6 +84,14 @@ module.exports = {
           to: {
             opacity: 0.2,
           }
+        },
+        blink: {
+          "0%,100%": {
+            opacity: 1,
+          },
+          "50%": {
+            opacity: 0.5,
+          },
         }
       },
       boxShadow: ({ theme }) => ({
@@ -93,6 +106,12 @@ module.exports = {
           2px 4px 5.6px -1.1px hsl(210deg 12% 67% / 0.29),
           4.6px 9.1px 12.8px -1.6px hsl(210deg 12% 67% / 0.35);
         `,
+        "pink": `
+          0.1px 0.4px 0.5px hsl(285deg 40% 52% / 0.25),
+          0.4px 1.2px 1.5px -0.6px hsl(285deg 40% 52% / 0.27),
+          0.9px 2.8px 3.6px -1.3px hsl(285deg 40% 52% / 0.31),
+          2.1px 6.6px 8.4px -1.9px hsl(285deg 40% 52% / 0.34);
+        `
       })
     },
   },

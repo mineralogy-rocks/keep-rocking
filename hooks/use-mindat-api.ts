@@ -8,7 +8,7 @@ import { abortableMiddleware } from '@/middleware/abortable-swr';
 export const useMindatApi = (queryParams: string, options = {}) => {
   const debouncedQueryParams = useDebounce(queryParams, 300);
 
-  const { data, error, isLoading, isValidating } = useSWRImmutable(
+  const { data, error, isLoading, isValidating } = useSWRImmutable<any>(
     debouncedQueryParams ? debouncedQueryParams : null,
     mindatFetcher,
     { use: [ abortableMiddleware ], ...options }

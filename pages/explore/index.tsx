@@ -2,17 +2,16 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
+import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
 import { fetcher } from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
-import { useMindatApi } from '@/hooks/use-mindat-api';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import SearchInput from '@/components/SearchInput';
-import LoadingDots from '@/components/LoadingDots';
 import Checkbox from '@/components/Checkbox';
 import MineralCard from '@/components/MineralCard';
 import { Paginator, SmallPaginator } from '@/components/Paginator';
@@ -20,7 +19,7 @@ import TableOfContents from '@/components/TableOfContents';
 
 const additionalParams = [
   'cursor',
-]
+];
 
 const initialSearchQueryParams = {
   cursor: '',
@@ -151,11 +150,6 @@ export default function Explore() {
     return;
   }, [debouncedQueryParams]);
 
-  let dataAvailable = data?.results?.filter(item => item.mindat_id !== null).map(item => item.mindat_id).join(',') ?? null;
-
-  const { data: mindatData, error: mindatError, isLoading: mindatIsLoading } = useMindatApi(
-    dataAvailable ? `/mr-items/?id__in=${dataAvailable}` : null
-  );
 
   useEffect(() => {
     setIsSearching(false);
@@ -183,20 +177,6 @@ export default function Explore() {
                     value="ima_only"
                     checked={queryParams.ima_only}
                     onChange={(e) => handleSearch({ ima_only: e.target.checked })} />
-              {mindatIsLoading && (
-                <div className="hidden md:flex mr-1">
-                  <span className="ml-2 text-xs font-normal text-gray-700">Requesting data from mindat</span>
-                  <LoadingDots className="relative ml-1 top-0.5" isSmall={true} />
-                </div>
-              )}
-              {(!!mindatError && !mindatIsLoading) && (
-                <div className="hidden md:flex text-xs text-red-500 justify-center items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 mr-1">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
-                  </svg>
-                  <span>Couldn&apos;t connect to mindat API.</span>
-                </div>
-              )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
@@ -214,18 +194,34 @@ export default function Explore() {
                 No results found.
               </div>
             )}
-
-            <div className="space-y-6 sm:space-y-3">
-              {isActive && data && data.results?.map((item, index) => {
-                return (
-                  <MineralCard key={item.slug}
-                               index={index}
-                               mineral={item}
-                               mindatContext={mindatData?.results.filter(item_ => item_.id === item.mindat_id)[0] ?? null}
-                               isVisible={(e) => handleVisibleItems(e, index)} />
-                );
-              })}
-            </div>
+            {isActive && data && data.results?.length > 0 && (
+              <div className="space-y-6 sm:space-y-3">
+                {data.results.map((item, index) => {
+                  return (
+                    <motion.div key={index}
+                                initial={{
+                                  opacity: 0.8,
+                                  y: 20
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  y: 0
+                                }}
+                                transition={{
+                                  type: 'spring',
+                                  bounce: 0.2,
+                                  duration: 1,
+                                  delay: 0.1*index
+                                }}>
+                      <MineralCard key={item.slug}
+                                   index={index}
+                                   mineral={item}
+                                   isVisible={(e) => handleVisibleItems(e, index)} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
 
             {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
           </div>

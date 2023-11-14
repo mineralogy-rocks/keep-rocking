@@ -3,7 +3,7 @@
 }
 
 .Paragraph {
-  @apply text-base md:text-lg leading-relaxed text-left;
+  @apply text-base md:text-lg leading-relaxed text-left text-font-secondary;
 }
 
 .List {
@@ -23,5 +23,5 @@
 }
 
 .Subtitle {
-  @apply font-bold text-base md:text-lg uppercase text-font-blueDark;
+  @apply font-bold text-base md:text-lg text-font-blueDark;
 }

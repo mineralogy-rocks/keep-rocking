@@ -6,7 +6,7 @@ export async function fetcher(
   init?: RequestInit
 ): Promise<any> {
 
-  const apiUrl:string = process.env.API_URL;
+  const apiUrl:string = process.env.API_URL; // 'http://backend:8000'
   const apiKey:string = process.env.API_KEY;
 
   const res = await fetch(apiUrl + input, {
@@ -14,8 +14,11 @@ export async function fetcher(
       'Authorization': `Api-Key ${apiKey}`,
       'Content-Type': 'application/json',
     }, ...init})
+
   if (!res.ok) {
-    throw new Error("An error occurred while fetching the data.")
+    // instead of throwing an error, we return null
+    // which allows us to render 404 pages
+    return null;
   }
   return res.json()
 };
