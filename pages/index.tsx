@@ -116,14 +116,6 @@ export default function Home() {
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="relative flex items-center mt-24 text-center justify-center">
-          <button
-              type="button"
-              onClick={() => {
-                throw new Error("Sentry Test Error");
-              }}
-            >
-              Break the world
-            </button>
           <h1 className="max-w-md font-black text-6xl sm:text-7xl md:text-8xl mx-auto">
             Explore.
             Extract.

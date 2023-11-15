@@ -99,26 +99,26 @@ const CrystallographyCards = ({ structures, members }) => {
           )}
         )}
       </div>
-      <div className="grid sm:grid-cols-2 mt-7 gap-10 mx-1">
-        <div className="p-2 text-xs sm:text-sm">
-          {chosenStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {
-            let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] && chosenStructure.min[key] === chosenStructure.avg[key];
-            return (
-              <div key={index} className="flex">
-                <span className="px-2 py-1 font-semibold">{key}</span>
-                {_allEqual ? (
-                  <span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}</span>
-                ) : (<span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}—{chosenStructure.max[key]} ({chosenStructure.avg[key]})</span>)}
-              </div>
-            )}
-          )}
-        </div>
-        <div className="flex flex-wrap justify-start items-start gap-1 p-2 w-full h-min">
-           {chosenMembers.map((item) => (
-             <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
-           ))}
-        </div>
-      </div>
+      {/*<div className="grid sm:grid-cols-2 mt-7 gap-10 mx-1">*/}
+      {/*  <div className="p-2 text-xs sm:text-sm">*/}
+      {/*    {chosenStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {*/}
+      {/*      let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] && chosenStructure.min[key] === chosenStructure.avg[key];*/}
+      {/*      return (*/}
+      {/*        <div key={index} className="flex">*/}
+      {/*          <span className="px-2 py-1 font-semibold">{key}</span>*/}
+      {/*          {_allEqual ? (*/}
+      {/*            <span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}</span>*/}
+      {/*          ) : (<span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}—{chosenStructure.max[key]} ({chosenStructure.avg[key]})</span>)}*/}
+      {/*        </div>*/}
+      {/*      )}*/}
+      {/*    )}*/}
+      {/*  </div>*/}
+      {/*  <div className="flex flex-wrap justify-start items-start gap-1 p-2 w-full h-min">*/}
+      {/*     {chosenMembers.map((item) => (*/}
+      {/*       <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />*/}
+      {/*     ))}*/}
+      {/*  </div>*/}
+      {/*</div>*/}
     </div>)
 };
 
