@@ -6,7 +6,7 @@ const nextConfig = {
   swcMinify: true,
 
   env: {
-    API_KEY: process.env.API_KEY,
+    API_KEY: process.env.SECRET_API_KEY,
     API_URL: process.env.API_URL,
 
     SENTRY_DSN: process.env.SENTRY_DSN,
