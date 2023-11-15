@@ -102,7 +102,7 @@ const CrystallographyCards = ({ structures, members }) => {
       <div className="grid sm:grid-cols-2 mt-7 gap-10 mx-1">
         <div className="p-2 text-xs sm:text-sm">
           {chosenStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {
-            let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] && chosenStructure.min[key] === chosenStructure.avg[key];
+            let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] === chosenStructure.avg[key];
             return (
               <div key={index} className="flex">
                 <span className="px-2 py-1 font-semibold">{key}</span>
