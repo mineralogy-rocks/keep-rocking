@@ -10,6 +10,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        lilac: {
+          DEFAULT: '#F500AB',
+        },
         font: {
           DEFAULT: '#1e293b',
           primary: '#0f172a',

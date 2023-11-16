@@ -5,7 +5,7 @@ import clone from 'just-clone';
 import groupBy from 'just-group-by';
 import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP} from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
-import { fetcher } from '@/helpers/fetcher.helpers';
+import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
 import Card from '@/components/Card';
@@ -122,15 +122,16 @@ const CrystallographyCards = ({ structures, members }) => {
     </div>)
 };
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
+// export async function getStaticPaths() {
+//   return {
+//     paths: [],
+//     fallback: 'blocking',
+//   }
+// }
 
-export async function getStaticProps({ params }) {
-  const data = await fetcher('/mineral/' + params.slug + '/');
+export async function getServerSideProps({ params }) {
+  const data = await clientFetcher('/mineral/' + params.slug + '/');
+
   if (!data) {
     return {
       notFound: true,
@@ -142,6 +143,25 @@ export async function getStaticProps({ params }) {
     },
   }
 }
+
+
+// export async function getStaticProps({ params }) {
+//   // const data = await fetcher('/mineral/' + params.slug + '/');
+//   const data = await fetch('/api/explore/' + params.slug + '/',     {headers: {
+//       'Content-Type': 'application/json',
+//     }}).then(res => res.json());
+//
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     }
+//   }
+//   return {
+//     props: {
+//       data
+//     },
+//   }
+// }
 
 export default function MineralPage({ data }) {
 

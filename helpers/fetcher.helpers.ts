@@ -5,6 +5,23 @@ export async function fetcher(
   input: any,
   init?: RequestInit
 ): Promise<any> {
+  const res = await fetch('/api/explore/mineral?' + input, {
+    headers: {
+      'Content-Type': 'application/json',
+    }, ...init})
+
+  if (!res.ok) {
+    // instead of throwing an error, we return null
+    // which allows us to render 404 pages
+    return null;
+  }
+  return res.json()
+};
+
+export async function clientFetcher(
+  input: any,
+  init?: RequestInit
+): Promise<any> {
 
   const apiUrl:string = process.env.API_URL; // 'http://backend:8000'
   const apiKey:string = process.env.API_KEY;

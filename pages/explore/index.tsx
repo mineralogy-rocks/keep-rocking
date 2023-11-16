@@ -112,7 +112,7 @@ export default function Explore() {
   };
 
   const { data, error, mutate, isLoading } = useSWR(
-    debouncedSearch && 'q' in _routerParams ? '/mineral/?' + new URLSearchParams(_routerParams).toString() : null,
+    debouncedSearch && 'q' in _routerParams ? new URLSearchParams(_routerParams).toString() : null,
     (url, params) => fetcher(url, params),
     {
       use: [ abortableMiddleware ],
