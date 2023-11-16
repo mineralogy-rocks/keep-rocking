@@ -53,9 +53,19 @@ export default function Home() {
     return;
   }, [htmlTypedCode]);
 
+
+  const [magicEnabled, setMagicEnabled] = useState(true);
+
+  useEffect(() => {
+    const magic = sessionStorage.getItem('magicEnabled');
+    if (magic === 'false') {
+      setMagicEnabled(false);
+    }
+    return;
+  }, []);
+
   useEffect(() => {
 
-    const codeTypingDisabled = sessionStorage.getItem('codeTypingDisabled');
     const typeCode = (index, line) => {
       if (index === code.length) {
         return;
@@ -96,10 +106,11 @@ export default function Home() {
       typeNextCharacter();
     };
 
-    if (!codeTypingDisabled) {
+    if (magicEnabled) {
       if (isInView) {
         typeCode(0, code[0]);
-        sessionStorage.setItem('codeTypingDisabled', 'true');
+        setMagicEnabled(false);
+        sessionStorage.setItem('magicEnabled', 'false');
       }
     } else {
       setTypedCode(code.join('\n'));
@@ -121,41 +132,39 @@ export default function Home() {
             Extract.
             Research.
           </h1>
-          <div className="absolute translate-x-2 lg:translate-x-5 translate-y-2 mx-10">
-            <motion.svg style={{ width: '100%', height: 413 }} viewBox="0 0 510 413" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="absolute translate-x-2 lg:translate-x-5 translate-y-2 mx-1 sm:mx-10">
+            <motion.svg style={{ width: '100%', height: 640 }} viewBox="0 0 650 640" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_521_89)">
-                <motion.path
-                            // animate={
-                            //   {
-                            //     rotate: 30,
-                            //     transition: {
-                            //       type: "spring",
-                            //       bounce: 0.3,
-                            //       damping: 10,
-                            //       mass: 2,
-                            //       stiffness: 20,
-                            //       delay: 0.5,
-                            //     }
-                            //   }
-                            // }
-                             d="M385.365 41.5733C433.265 64.1733 494.165 88.8733 501.165 123.773C508.065 158.673 460.965 203.673 423.265 240.173C385.565 276.673 357.165 304.573 316.965 333.873C276.765 363.173 224.765 393.873 173.865 389.373C122.965 384.773 73.1653 345.073 39.7653 292.973C6.26534 240.873 -10.8347 176.573 13.8653 133.873C38.4653 91.2733 104.765 70.2733 154.065 47.9733C203.265 25.6733 235.465 1.97331 268.965 0.273313C302.465 -1.32669 337.365 19.0733 385.365 41.5733Z"
+                <motion.path animate={
+                             magicEnabled ? {
+                                rotate: 28,
+                                transition: {
+                                  type: "spring",
+                                  bounce: 0.3,
+                                  damping: 10,
+                                  mass: 4,
+                                  stiffness: 20,
+                                  delay: 0.5,
+                                }
+                              } : {}
+                            }
+                             d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
                              fill="url(#paint0_linear_521_89)"
                              fillOpacity="0.05"/>
-                <motion.path
-                            //   animate={
-                            //   {
-                            //     rotate: -200,
-                            //     transition: {
-                            //       type: "spring",
-                            //       bounce: 0.3,
-                            //       damping: 10,
-                            //       mass: 2,
-                            //       stiffness: 20,
-                            //       delay: 0.7,
-                            //     }
-                            //   }
-                            // }
-                             d="M388.502 52.6427C438.502 77.6427 490.402 125.743 500.302 183.743C510.202 241.743 478.102 309.643 428.102 353.143C378.102 396.643 310.202 415.743 245.702 412.343C181.302 408.843 120.202 382.943 75.9019 339.443C31.5019 295.943 3.90186 234.843 0.401859 170.343C-3.19814 105.743 17.4018 37.6427 61.7018 12.6427C106.102 -12.3573 174.202 5.74267 232.302 15.7427C290.402 25.7427 338.502 27.6427 388.502 52.6427Z"
+                <motion.path animate={
+                              magicEnabled ? {
+                                rotate: 13,
+                                transition: {
+                                  type: "spring",
+                                  bounce: 0.3,
+                                  damping: 10,
+                                  mass: 1,
+                                  stiffness: 20,
+                                  delay: 0.7,
+                                }
+                              } : {}
+                            }
+                             d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
                              fill="url(#paint1_linear_521_89)"
                              fillOpacity="0.05"/>
               </g>
@@ -169,7 +178,7 @@ export default function Home() {
                   <stop offset="1" stopColor="#F500AB"/>
                 </linearGradient>
                 <clipPath id="clip0_521_89">
-                  <rect width="503" height="413" fill="white"/>
+                  <rect width="650" height="640" fill="white"/>
                 </clipPath>
               </defs>
             </motion.svg>
