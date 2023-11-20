@@ -55,40 +55,39 @@ export default function Home() {
 
 
   const [magicEnabled, setMagicEnabled] = useState(true);
-  const landingAnimations = magicEnabled ? [
-    {
-      animate: {
-        rotate: 28,
-        transition: {
-          type: "spring",
-          bounce: 0.3,
-          damping: 10,
-          mass: 4,
-          stiffness: 20,
-          delay: 0.5,
-        }
-     }
-    },
-    {
-      animate: {
-        rotate: 13,
-        transition: {
-          type: "spring",
-          bounce: 0.3,
-          damping: 10,
-          mass: 4,
-          stiffness: 20,
-          delay: 0.5,
-        }
-     }
-    }
-  ] : [
-    {}, {}
-  ];
+  const [landingAnimations, setLandingAnimations] = useState([{}, {}]);
 
   useEffect(() => {
     const magic = sessionStorage.getItem('magicEnabled');
     if (magic === 'false') setMagicEnabled(false);
+    else setLandingAnimations([
+      {
+        animate: {
+          rotate: 28,
+          transition: {
+            type: "spring",
+            bounce: 0.3,
+            damping: 10,
+            mass: 4,
+            stiffness: 20,
+            delay: 0.5,
+          }
+       }
+      },
+      {
+        animate: {
+          rotate: 13,
+          transition: {
+            type: "spring",
+            bounce: 0.3,
+            damping: 10,
+            mass: 4,
+            stiffness: 20,
+            delay: 0.5,
+          }
+       }
+      }
+    ])
     return;
   }, []);
 
@@ -178,7 +177,7 @@ export default function Home() {
                             //   }
                             //  }
                             //  initial={ magicEnabled ? {} : { rotate: 28 }}
-                             style={{ transform: 'rotate(28deg)', transformOrigin: 'center center' }}
+                             style={ !magicEnabled && { transform: 'rotate(28deg)', transformOrigin: 'center center' }}
                              d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
                              fill="url(#paint0_linear_521_89)"
                              fillOpacity="0.05" {...landingAnimations[0]} />
@@ -197,7 +196,7 @@ export default function Home() {
                              //  }
                              // }
                              // initial={ magicEnabled ? {} : { rotate: 13 }}
-                             style={{ transform: 'rotate(13deg)', transformOrigin: 'center center' }}
+                             style={ !magicEnabled && { transform: 'rotate(13deg)', transformOrigin: 'center center' }}
                              d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
                              fill="url(#paint1_linear_521_89)"
                              fillOpacity="0.05" {...landingAnimations[1]} />
