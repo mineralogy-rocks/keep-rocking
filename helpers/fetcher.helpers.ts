@@ -30,13 +30,8 @@ export async function clientFetcher(
     headers: {
       'Authorization': `Api-Key ${apiKey}`,
       'Content-Type': 'application/json',
-    }, ...init})
-
-  if (!res.ok) {
-    // instead of throwing an error, we return null
-    // which allows us to render 404 pages
-    return null;
-  }
+    }, ...init
+  })
   return res.json()
 };
 

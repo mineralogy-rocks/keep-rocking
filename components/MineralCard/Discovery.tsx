@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useSWR from 'swr';
 import clsx from 'clsx';
 
-import { fetcher } from '@/helpers/fetcher.helpers';
+import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 import Button from './Button';
 import Tooltip from './Tooltip';
@@ -19,7 +19,7 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
 
   const { data: countryData, error, isLoading } = useSWR(
     country ? '/mineral/' + slug + '/grouping-members/?status=1&discovery_country=' + country : null,
-    fetcher,
+    clientFetcher,
     {
       use: [ abortableMiddleware ],
       keepPreviousData: false,

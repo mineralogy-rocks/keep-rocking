@@ -122,46 +122,37 @@ const CrystallographyCards = ({ structures, members }) => {
     </div>)
 };
 
-// export async function getStaticPaths() {
-//   return {
-//     paths: [],
-//     fallback: 'blocking',
-//   }
-// }
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
 
-export async function getServerSideProps({ params }) {
-  const data = await clientFetcher('/mineral/' + params.slug + '/');
+export async function getStaticProps({ params }) {
+  try {
+    const data = await clientFetcher('/api/explore/' + params.slug + '/', {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
 
-  if (!data) {
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
+    return {
+      props: {
+        data
+      },
+    }
+  } catch (err) {
     return {
       notFound: true,
     }
   }
-  return {
-    props: {
-      data
-    },
-  }
 }
-
-
-// export async function getStaticProps({ params }) {
-//   // const data = await fetcher('/mineral/' + params.slug + '/');
-//   const data = await fetch('/api/explore/' + params.slug + '/',     {headers: {
-//       'Content-Type': 'application/json',
-//     }}).then(res => res.json());
-//
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-//   return {
-//     props: {
-//       data
-//     },
-//   }
-// }
 
 export default function MineralPage({ data }) {
 
