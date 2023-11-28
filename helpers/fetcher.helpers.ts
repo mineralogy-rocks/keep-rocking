@@ -32,6 +32,13 @@ export async function clientFetcher(
       'Content-Type': 'application/json',
     }, ...init
   })
+
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
+    throw new Error("An error occurred while fetching the data.")
+  }
   return res.json()
 };
 

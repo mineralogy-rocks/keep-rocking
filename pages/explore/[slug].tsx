@@ -130,27 +130,17 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  try {
-    const data = await clientFetcher('/api/explore/' + params.slug + '/', {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+  const data = await clientFetcher('/mineral/' + params.slug + '/');
 
-    if (!data) {
-      return {
-        notFound: true,
-      }
-    }
-    return {
-      props: {
-        data
-      },
-    }
-  } catch (err) {
+  if (!data) {
     return {
       notFound: true,
     }
+  }
+  return {
+    props: {
+      data: data,
+    },
   }
 }
 
