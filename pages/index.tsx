@@ -672,7 +672,7 @@ export default function Home() {
           </a>
         </div>
         <p className="mt-10 text-font-secondary leading-normal">
-          This project's identification number is 3007/01/01 and it is funded from the European Union&apos;s Horizon 2020 research and innovation programme
+          This project&apos;s identification number is 3007/01/01 and it is funded from the European Union&apos;s Horizon 2020 research and innovation programme
           under the Marie Skłodowska-Curie grant agreement No 945478.
         </p>
       </div>
