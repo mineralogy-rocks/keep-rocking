@@ -19,7 +19,8 @@ import Footer from '../components/Footer';
 
 const inter = Inter({
   display: 'swap',
-  variable: '--font-inter'
+  variable: '--font-inter',
+  subsets: ['latin']
 });
 
 export default function App({ Component, pageProps }: AppProps) {
