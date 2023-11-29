@@ -2,7 +2,7 @@ import { useState } from "react";
 
 
 function Header({ text, isHovered }) {
-    return <div className="mr-5 transition-all duration-500 text-white font-medium text-xs md:text-sm justify-end">{text}</div>;
+    return <div className="mr-5 transition-all duration-500 text-white font-semibold text-xs md:text-sm justify-end">{text}</div>;
 }
 
 
@@ -18,17 +18,17 @@ export default function Terminal({ children }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center h-8 space-x-1.5 px-3">
               <div className="w-3 h-3 flex items-center justify-center bg-red-600 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3 hidden group-hover:block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-3 h-3 hidden group-hover:block">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
               <div className="w-3 h-3 flex items-center justify-center bg-yellow-500 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3 hidden group-hover:block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-3 h-3 hidden group-hover:block">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                 </svg>
               </div>
               <div className="w-3 h-3 flex items-center justify-center bg-green-500 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3 hidden group-hover:block -rotate-45">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-3 h-3 hidden group-hover:block -rotate-45">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                 </svg>
               </div>

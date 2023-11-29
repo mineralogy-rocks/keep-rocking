@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useSWR from 'swr';
 
 import { CrystalSystem } from '@/lib/interfaces';
-import { fetcher } from '@/helpers/fetcher.helpers';
+import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import Button from './Button';
@@ -31,7 +31,7 @@ export default function CrystallographySnippet({ isGrouping, slug, data } : { is
 
   const { data: _data, error, isLoading } = useSWR(
     selectedId ? '/mineral/' + slug + '/grouping-members/?status=1&crystal_system=' + selectedId : null,
-    fetcher,
+    clientFetcher,
     {
       use: [ abortableMiddleware ],
       keepPreviousData: false,
