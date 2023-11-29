@@ -55,7 +55,6 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
     if (intersection?.isIntersecting) isVisible(true);
     else isVisible(false);
     return;
-    // eslint-disable-line react-hooks/exhaustive-deps
   }, [intersection?.isIntersecting]);
 
 
