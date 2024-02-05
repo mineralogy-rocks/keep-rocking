@@ -3,11 +3,13 @@ import { STATUS_GROUPS_PLURAL } from '@/lib/constants';
 
 export const getRelevantFormula = (formulas: Formula[]) => {
   const relevandFormula = formulas.find((formula) => formula.show_on_site);
-  if (relevandFormula) {
-    return relevandFormula;
-  }
+  if (relevandFormula) return relevandFormula;
   return formulas[0];
 };
+
+export const getSelfOrInheritedProp = (mineral, prop) => {
+
+}
 
 export const getRelationEndpoint = (statusGroupId: number) => {
   // TODO: This is a temporary solution. We should have a better way to
