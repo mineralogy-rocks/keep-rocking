@@ -1,5 +1,6 @@
 import { Formula } from '@/lib/interfaces';
 import { STATUS_GROUPS_PLURAL } from '@/lib/constants';
+import { toArray } from '@utils';
 
 export const getRelevantFormula = (formulas: Formula[]) => {
   const relevandFormula = formulas.find((formula) => formula.show_on_site);
@@ -7,8 +8,23 @@ export const getRelevantFormula = (formulas: Formula[]) => {
   return formulas[0];
 };
 
-export const getSelfOrInheritedProp = (mineral, prop) => {
+export const getSelfOrInheritedProp = (data, inheritanceChain, key = 'formulas') => {
+  // The priority is given to inheritance props if available. If not, fallback to self props.
+  if (data && !inheritanceChain.length) return { from: null, [key]: data };
 
+  if (!inheritanceChain.length) return null;
+
+  let _chain = inheritanceChain[0];
+
+  return {
+    from: {
+      id: _chain.id,
+      name: _chain.name,
+      slug: _chain.slug,
+      statuses: _chain.statuses
+    },
+    [key]: toArray(_chain[key])
+  };
 }
 
 export const getRelationEndpoint = (statusGroupId: number) => {

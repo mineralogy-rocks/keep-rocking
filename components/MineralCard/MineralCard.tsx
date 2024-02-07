@@ -12,9 +12,9 @@ import DiscoverySnippet from './Discovery';
 import RelationSnippet from './Relation';
 import CrystallographySnippet from './Crystallography';
 import { InternalLink, ExternalLink } from '@/components/Link';
-import { getRelevantFormula } from './MineralCard.helpers';
+import { getRelevantFormula, getSelfOrInheritedProp } from './MineralCard.helpers';
 import { getStatusGroupColor } from '@/helpers/status.helpers';
-
+import { INHERITANCE_PROP_CHOICES } from "@/lib/constants";
 
 
 function LinksSnippet({ data }) {
@@ -49,7 +49,20 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
     rootMargin: '-56px 0px 0px 0px',
     threshold: 0.5
   });
-  const mineralFormula = getRelevantFormula(mineral.formulas);
+  let _formulas = getSelfOrInheritedProp(
+    mineral.formulas,
+    mineral.inheritance_chain.filter(_item => _item.prop === INHERITANCE_PROP_CHOICES['formula']),
+    'formulas'
+  );
+  let _crystallography = getSelfOrInheritedProp(
+    mineral.crystallography,
+    mineral.inheritance_chain.map(_item => _item.prop ===  INHERITANCE_PROP_CHOICES['crystallography']),
+    'crystallography'
+  );
+
+  const mineralFormula = { from: _formulas.from, ...getRelevantFormula(_formulas.formulas) };
+  const mineralCrystallography = { from: _crystallography.from, crystallography: _crystallography.crystallography };
+  console.log(mineralCrystallography);
 
   useEffect(() => {
     if (intersection?.isIntersecting) isVisible(true);
@@ -105,7 +118,7 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}
                                       slug={mineral.slug}
-                                      data={mineral.crystal_systems} />
+                                      data={mineralCrystallography} />
             </SnippetWrapper>
 
             <SnippetWrapper title="Discovery">

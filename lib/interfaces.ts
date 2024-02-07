@@ -112,8 +112,8 @@ export interface Inheritance {
   id: string;
   name: string;
   slug: string;
+  prop: number,
   statuses: [number];
-  depth: number;
   formulas: Formula[];
   crystallography: Crystallography|null;
   contexts: any[];

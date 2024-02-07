@@ -8,6 +8,12 @@ export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+export const toArray = (value: any): any[] => {
+  if (Array.isArray(value)) return value;
+  if (value) return [value];
+  return [];
+}
+
 export const getRange = (min: number|string, max: number|string): string|null => {
   if (!min || !max) return null;
   const minStr = String(min);

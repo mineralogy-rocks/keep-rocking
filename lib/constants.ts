@@ -18,6 +18,11 @@ export const CRYSTAL_SYSTEM_CHOICES = {
   9: "Icosahedral",
 };
 
+export const INHERITANCE_PROP_CHOICES = {
+  formula: 1,
+  crystallography: 2
+};
+
 export const STATUS_GROUPS_PLURAL = {
   2: "Synonyms",
   3: "Varieties",
