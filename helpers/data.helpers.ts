@@ -3,7 +3,7 @@ import groupBy from 'just-group-by';
 
 import { Formula } from '@/lib/interfaces';
 import { mineralDetailApiResponse } from '@/lib/types';
-import { HISTORY_DATA_MAP, DATA_CONTEXT_STRUCTURE } from '@/lib/constants';
+import { HISTORY_DATA_MAP, DATA_CONTEXT_STRUCTURE, PHYSICAL_DATA_CONTEXT_NAME } from '@/lib/constants';
 
 import { capitalize, compareColors, getRange, getNumeric, concatStrings } from "@utils";
 
@@ -96,7 +96,7 @@ export const parsePhysicalProperties = (data) => {
 
 
 const _createEmptyContext = () => ({
-  'Physical properties': {
+  PHYSICAL_DATA_CONTEXT_NAME: {
     minerals: [],
     items: {}
   },
@@ -168,7 +168,7 @@ export const getConclusiveContext = (data) => {
   const conclusiveData = _createEmptyContext();
   const props = [
     {
-      key: 'Physical properties',
+      key: PHYSICAL_DATA_CONTEXT_NAME,
       callback: parsePhysicalProperties,
     },
     // Add more properties as needed

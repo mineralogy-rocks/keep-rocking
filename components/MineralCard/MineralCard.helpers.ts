@@ -10,21 +10,20 @@ export const getRelevantFormula = (formulas: Formula[]) => {
 
 export const getSelfOrInheritedProp = (data, inheritanceChain, key = 'formulas') => {
   // The priority is given to inheritance props if available. If not, fallback to self props.
-  if (data && !inheritanceChain.length) return { from: null, [key]: data };
-
-  if (!inheritanceChain.length) return null;
+  if (data && !inheritanceChain.length) return [ null, data ];
+  if (!inheritanceChain.length) return [ null, null ];
 
   let _chain = inheritanceChain[0];
-
-  return {
-    from: {
+  return [
+    {
       id: _chain.id,
+      mindat_id: _chain.mindat_id,
       name: _chain.name,
       slug: _chain.slug,
       statuses: _chain.statuses
     },
-    [key]: toArray(_chain[key])
-  };
+    toArray(_chain[key])
+  ];
 }
 
 export const getRelationEndpoint = (statusGroupId: number) => {

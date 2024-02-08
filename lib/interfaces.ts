@@ -4,6 +4,8 @@ export interface BaseIdName {
 }
 
 export interface From {
+  id: string;
+  mindat_id?: number;
   slug: string;
   name: string;
   statuses: [number];
@@ -55,7 +57,7 @@ export interface GroupingMember extends BaseIdName {
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
-  from?: From;
+  // from?: From;
 }
 
 export interface StatusGroup {

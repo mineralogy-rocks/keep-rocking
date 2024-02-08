@@ -23,6 +23,16 @@ export const INHERITANCE_PROP_CHOICES = {
   crystallography: 2
 };
 
+export const PHYSICAL_DATA_CONTEXT_ID = 1;
+export const OPTICAL_DATA_CONTEXT_ID = 2;
+export const PHYSICAL_DATA_CONTEXT_NAME = "Physical Properties";
+export const OPTICAL_DATA_CONTEXT_NAME = "Optical Properties";
+
+export const DATA_CONTEXT_TYPES = {
+  [PHYSICAL_DATA_CONTEXT_ID]: PHYSICAL_DATA_CONTEXT_NAME,
+  [OPTICAL_DATA_CONTEXT_ID]: OPTICAL_DATA_CONTEXT_NAME,
+};
+
 export const STATUS_GROUPS_PLURAL = {
   2: "Synonyms",
   3: "Varieties",
@@ -81,7 +91,7 @@ export const PHYSICAL_PROPS_TITLES = {
 export const SECTION_FIELDS = {
   // The order of keys matters, it defines the order of the properties in the output.
   // Comment out the keys to remove the properties from the output
-  "Physical properties": [
+  [PHYSICAL_DATA_CONTEXT_NAME]: [
     "color",
     "colorNote",
     "streak",
@@ -97,7 +107,7 @@ export const SECTION_FIELDS = {
     "density",
     "densityCalculated",
    ],
-  "Optical properties": [],
+  [OPTICAL_DATA_CONTEXT_NAME]: [],
 };
 
 //

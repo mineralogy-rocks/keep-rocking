@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useSWR from 'swr';
 
-import { CrystalSystem } from '@/lib/interfaces';
+import { From, CrystalSystem } from '@/lib/interfaces';
 import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { abortableMiddleware } from '@/middleware/abortable-swr';
 
@@ -22,7 +22,7 @@ function ButtonWithRelation(props) {
   )
 }
 
-export default function CrystallographySnippet({ isGrouping, slug, data } : { isGrouping: boolean, slug: string, data: CrystalSystem[] }) {
+export default function CrystallographySnippet({ isGrouping, slug, data, from = null } : { isGrouping: boolean, slug: string, data: CrystalSystem[], from: From }) {
 
   const [selectedId, setSelectedId] = useState('');
   const handleSelection = (newSelectionId) => {
@@ -50,7 +50,7 @@ export default function CrystallographySnippet({ isGrouping, slug, data } : { is
             <Tooltip key={id}
                      isShown={isCurrent && !!_data}
                      button={(open) => <ButtonWithRelation {...{
-                        from: item.from,
+                        from: from,
                         item: {
                           key: item.name,
                           value: item.count ?? null

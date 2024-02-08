@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import clone from 'just-clone';
 import groupBy from 'just-group-by';
-import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP} from '@/lib/constants';
+import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES, PHYSICAL_DATA_CONTEXT_ID} from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
@@ -200,7 +200,7 @@ export default function MineralPage({ data }) {
     _contexts = [..._contexts, ...inheritedContexts];
   }
 
-  const contextGroups = _contexts ? groupBy(_contexts, item => item.type.name) : {};
+  const contextGroups = _contexts ? groupBy(_contexts, item => item.context) : {};
   let contexts = null;
   let conclusiveHistory = [];
 
@@ -210,7 +210,7 @@ export default function MineralPage({ data }) {
     );
     contexts = {};
     _contexts.map((item) => {
-      contexts[item.type.name] = item;
+      contexts[DATA_CONTEXT_TYPES[item.context]] = item;
     })
     // We explicitly add empty crystal system to the list if it's not there
     // so that we are showing at least members with unknown crystal system
@@ -224,7 +224,7 @@ export default function MineralPage({ data }) {
     }
   } else {
     conclusiveHistory = history ? prepareHistory([history]) : [];
-    contexts = getConclusiveContext(contextGroups['Physical properties']);
+    contexts = getConclusiveContext(contextGroups[DATA_CONTEXT_TYPES[PHYSICAL_DATA_CONTEXT_ID]]);
   }
 
   const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || !!structures.length;

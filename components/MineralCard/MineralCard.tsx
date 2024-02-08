@@ -49,20 +49,16 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
     rootMargin: '-56px 0px 0px 0px',
     threshold: 0.5
   });
-  let _formulas = getSelfOrInheritedProp(
+  const [_formulasFrom, _formulas] = getSelfOrInheritedProp(
     mineral.formulas,
     mineral.inheritance_chain.filter(_item => _item.prop === INHERITANCE_PROP_CHOICES['formula']),
     'formulas'
   );
-  let _crystallography = getSelfOrInheritedProp(
+  const [_crystallographyFrom, _crystallography] = getSelfOrInheritedProp(
     mineral.crystallography,
-    mineral.inheritance_chain.map(_item => _item.prop ===  INHERITANCE_PROP_CHOICES['crystallography']),
+    mineral.inheritance_chain.filter(_item => _item.prop ===  INHERITANCE_PROP_CHOICES['crystallography']),
     'crystallography'
   );
-
-  const mineralFormula = { from: _formulas.from, ...getRelevantFormula(_formulas.formulas) };
-  const mineralCrystallography = { from: _crystallography.from, crystallography: _crystallography.crystallography };
-  console.log(mineralCrystallography);
 
   useEffect(() => {
     if (intersection?.isIntersecting) isVisible(true);
@@ -90,12 +86,12 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
                               hasIcon={false} />
               </div>
               <div className="flex flex-wrap items-center gap-1">
-                {mineralFormula && (
-                  <h2 className="break-words max-w-full" dangerouslySetInnerHTML={{ __html: mineralFormula.formula }}></h2>
+                {!!_formulas.length && (
+                  <h2 className="break-words max-w-full" dangerouslySetInnerHTML={{ __html: getRelevantFormula(_formulas).formula }}></h2>
                 )}
-                {mineralFormula?.from && (
+                {_formulasFrom && (
                   <div className="flex flex-row items-center gap-x-1">
-                    <RelationChip {...{ name: mineralFormula.from.name, statuses: mineralFormula.from.statuses}} />
+                    <RelationChip {...{ name: _formulasFrom.name, statuses: _formulasFrom.statuses}} />
                   </div>
                 )}
               </div>
@@ -118,7 +114,8 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}
                                       slug={mineral.slug}
-                                      data={mineralCrystallography} />
+                                      data={_crystallography}
+                                      from={_crystallographyFrom} />
             </SnippetWrapper>
 
             <SnippetWrapper title="Discovery">
