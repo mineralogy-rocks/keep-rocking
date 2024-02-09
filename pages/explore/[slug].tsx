@@ -55,12 +55,12 @@ const CrystallographyCards = ({ structures, members }) => {
 
   const localStructures = useMemo(() => clone(structures).map((item, index) => {
     item._members = members.filter(_member => {
-      if (item.crystal_system) return _member.crystal_system?.id == item.crystal_system;
+      if (item.crystal_system) return _member.crystal_system == item.crystal_system;
       return _member.crystal_system === null;
     });
     // item._offset = Math.random() * 0.2 + 0.2;
     item._offset = (1 / structures.length * index) * 0.2 + 0.2;
-    item._crystalSystem = (CRYSTAL_SYSTEM_CHOICES[item.crystal_system] || 'Unknown') + ' System';
+    item._crystalSystem = item.crystal_system ? CRYSTAL_SYSTEM_CHOICES[item.crystal_system] + ' System' : 'Unclassified';
     return item;
   }), [structures, members]);
 
@@ -69,7 +69,7 @@ const CrystallographyCards = ({ structures, members }) => {
 
   const chosenMembers = useMemo(() => {
     // filter by crystal system if it's not null
-    if (chosenStructure.crystal_system) return members.filter(_member => _member.crystal_system?.id === chosenStructure.crystal_system) || [];
+    if (chosenStructure.crystal_system) return members.filter(_member => _member.crystal_system === chosenStructure.crystal_system) || [];
     // otherwise show 'Unknown System' and filter members accordingly
     return members.filter(_member => _member.crystal_system === null) || [];
   }, [chosenStructure, members]);
