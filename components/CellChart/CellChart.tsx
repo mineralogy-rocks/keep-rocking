@@ -22,6 +22,9 @@ const defaultProps = {
   domainY: [],
 };
 
+const makeTransparent = (svg: SVGElement) => {
+  svg.style.background = "transparent";
+}
 
 
 const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Props & typeof defaultProps) => {
@@ -38,16 +41,22 @@ const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Pro
       style: {
         backgroundColor: "transparent",
       },
+      className: "cell-chart",
       marks: [
         Plot.cell(
           items,
           Plot.group(
             { fill: "count" },
-            { fill: "value", x: "value", y: "key", stroke: "black", strokeWidth: 0.5 }
+            { fill: "value", x: "value", y: "key", stroke: "black", strokeWidth: 0.2 }
           ),
         ),
       ],
     });
+
+    // A workaround to make the background of the SVG transparent
+    for (const svg of plot.getElementsByTagName("svg")) {
+      if (svg instanceof SVGElement) makeTransparent(svg);
+    }
 
     containerRef.current.appendChild(plot);
     return () => plot.remove();

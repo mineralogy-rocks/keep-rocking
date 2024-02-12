@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import clone from 'just-clone';
 import groupBy from 'just-group-by';
-import {CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES, PHYSICAL_DATA_CONTEXT_ID} from '@/lib/constants';
+import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES, PHYSICAL_DATA_CONTEXT_ID } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { clientFetcher } from '@/helpers/fetcher.helpers';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
