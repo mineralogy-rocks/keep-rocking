@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import type { Metadata } from 'next';
 
 import clsx from 'clsx';
 
@@ -6,12 +6,13 @@ import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
 
+export const metadata: Metadata = {
+  title: 'About',
+}
+
+
 export default function Home() {
   return <>
-    <Head>
-      <title>mineralogy.rocks - about</title>
-    </Head>
-
     <div className="max-w-6xl mx-auto px-6 sm:px-8">
       <header>
         <div className="flex items-center mt-10 text-start justify-start">

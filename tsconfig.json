@@ -8,14 +8,28 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["./components/*"],
-      "@/hooks/*": ["./hooks/*"],
-      "@/lib/*": ["./lib/*"],
+      "@/components/*": [
+        "./app/components/*"
+      ],
+      "@/hooks/*": [
+        "./hooks/*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
       // "@constants": ["./constants/index.js"],
-      "@/helpers/*": ["./helpers/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/middleware/*": ["./middleware/*"],
-      "@utils": ["./utils/index.ts"]
+      "@/helpers/*": [
+        "./helpers/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ],
+      "@/middleware/*": [
+        "./middleware/*"
+      ],
+      "@utils": [
+        "./utils/index.ts"
+      ]
     },
     "allowJs": true,
     "skipLibCheck": true,
@@ -28,14 +42,21 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
-  ],
+  ]
 }

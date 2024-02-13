@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
+import { Metadata } from 'next';
 
 import { motion } from 'framer-motion';
 import useSWR from 'swr';
@@ -28,6 +28,10 @@ const initialSearchQueryParams = {
 const initialQueryParams = {
   ...initialSearchQueryParams,
   ima_only: false
+};
+
+export const metadata: Metadata = {
+  title: 'Explore',
 };
 
 export default function Explore() {
@@ -159,10 +163,6 @@ export default function Explore() {
 
   return (
     <>
-      <Head>
-        <title>mineralogy.rocks - explore</title>
-      </Head>
-
       <div className="relative max-w-full mx-auto px-0 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'

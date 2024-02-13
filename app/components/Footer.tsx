@@ -3,7 +3,7 @@ import Link from 'next/link';
 import cx from 'clsx';
 
 import { LogoCube } from '@/components/Logo';
-import utilsStyles from '../styles/utils.module.scss';
+import utilsStyles from '@/styles/utils.module.scss';
 
 
 const ExternalLink = ({ href, children }) => (

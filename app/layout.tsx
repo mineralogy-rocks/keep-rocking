@@ -1,5 +1,10 @@
-import { Metadata } from 'next';
-import {Inter} from "@next/font/google";
+import type { Metadata, Viewport } from 'next';
+import { Inter } from "next/font/google";
+import NavBar from '@/components/NavBar';
+import Footer from '@/components/Footer';
+
+import '@/styles/globals.scss';
+
 
 const inter = Inter({
   display: 'swap',
@@ -7,22 +12,24 @@ const inter = Inter({
   subsets: ['latin']
 });
 
+const title = 'mineralogy.rocks';
+
 export const metadata: Metadata = {
-  title: 'Mineralogy Rocks',
+  title: { template: `%s | ${title}`, default: title },
   description: 'A service provides access to mineralogical and related data.',
-  themeColor: '#ffffff',
-
   generator: 'Next.js',
-  author: 'Mineralogy Rocks',
   keywords: ['mineralogy', 'geology', 'minerals', 'rocks', 'earth', 'science'],
-
 };
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+}
 
 export default function RootLayout({ children }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -32,8 +39,14 @@ export default function RootLayout({ children }: {
 
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="text-black tracking-normal font-normal antialiased selection:bg-sky-400 selection:text-white">
-        {children}
+      <body className="tracking-normal font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font">
+        <main className="max-w-full mx-auto relative text-font">
+          <NavBar/>
+          <div className="min-h-[70vh] pt-10">
+            {children}
+          </div>
+          <Footer/>
+        </main>
       </body>
     </html>
   );

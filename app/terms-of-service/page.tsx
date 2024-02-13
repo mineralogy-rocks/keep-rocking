@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import clsx from 'clsx';
@@ -6,13 +6,14 @@ import clsx from 'clsx';
 import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
+export const metadata: Metadata = {
+  title: 'terms',
+}
+
+
 export default function Terms() {
   return (
     <>
-      <Head>
-        <title>mineralogy.rocks - Terms</title>
-      </Head>
-
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <header>
           <div className="flex flex-col mt-10 text-start justify-start">

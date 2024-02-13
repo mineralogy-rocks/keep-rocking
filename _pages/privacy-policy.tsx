@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import { Metadata } from 'next';
 
 import clsx from 'clsx';
 
@@ -6,12 +6,14 @@ import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
 
+export const metadata: Metadata = {
+  title: 'Privacy',
+}
+
+
 export default function PrivacyPolicy({}) {
   return (
     <>
-      <Head>
-        <title>mineralogy.rocks - privacy</title>
-      </Head>
 
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <header>

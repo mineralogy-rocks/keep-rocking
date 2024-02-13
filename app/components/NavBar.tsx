@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname } from "next/navigation";
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -9,8 +11,8 @@ import utilsStyles from '@/styles/utils.module.scss';
 
 
 function NavItem({href, text}) {
-  const router = useRouter();
-  const isActive = router.pathname === href;
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
       <Link href={href}>

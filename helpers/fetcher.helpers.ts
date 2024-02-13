@@ -23,8 +23,8 @@ export async function clientFetcher(
   init?: RequestInit
 ): Promise<any> {
 
-  const apiUrl:string = process.env.API_URL; // 'http://backend:8000'
-  const apiKey:string = process.env.API_KEY;
+  const apiUrl:string = process.env.API_URL || '';
+  const apiKey:string = process.env.API_KEY || '';
 
   const res = await fetch(apiUrl + input, {
     headers: {
@@ -47,8 +47,8 @@ export async function mindatFetcher(
   init?: RequestInit
 ): Promise<paginatedApiResponse> {
 
-  const apiUrl:string = process.env.MINDAT_API_URL;
-  const apiKey:string = process.env.MINDAT_API_KEY;
+  const apiUrl:string = process.env.MINDAT_API_URL || '';
+  const apiKey:string = process.env.MINDAT_API_KEY || '';
 
   const res = await fetch(apiUrl + input, {
     headers: {
