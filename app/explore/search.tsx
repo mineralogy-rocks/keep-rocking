@@ -1,16 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { motion } from 'framer-motion';
-import useSWR from 'swr';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
-import { clientFetcher } from '@/helpers/fetcher.helpers';
 import useDebounce from '@/hooks/use-debounce.hook';
-import { abortableMiddleware } from '@/middleware/abortable-swr';
 
 import SearchInput from '@/components/SearchInput';
 import Checkbox from '@/components/Checkbox';
@@ -31,7 +28,17 @@ const initialQueryParams = {
   ima_only: false
 };
 
-export default function Searcg() {
+export default async function Search({
+  onSearch = () => {},
+                               }: {
+  onSearch?: (value: exploreApiRequest) => void,
+}) {
+
+  const searchHandler = async (value: exploreApiRequest) => {
+    return await onSearch(value);
+  };
+  const error = null;
+  const [data, setData] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isMounted, setIsMounted] = useState(false);
@@ -58,12 +65,12 @@ export default function Searcg() {
 
   useEffect(() => {
     if(!router) return;
-    if (searchParams.q || searchParams.ima_only) {
+    if (searchParams.get('q') || searchParams.get('ima_only')) {
       setQueryParams({
-        cursor: searchParams.cursor?.toString() ?? '',
-        ima_only: searchParams.ima_only?.toString() === 'true' ?? false
+        cursor: searchParams.get('cursor')?.toString() ?? '',
+        ima_only: searchParams.get('ima_only')?.toString() === 'true' ?? false
       });
-      setSearchTerm(searchParams.q?.toString() ?? '');
+      setSearchTerm(searchParams.get('q')?.toString() ?? '');
     };
   }, [router]);
 
@@ -74,6 +81,16 @@ export default function Searcg() {
       setSearchTerm(value);
     } else resetSearch();
   };
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
 
   const handlePageChange = (url: string) => {
     let _url = new URL(url);
@@ -110,33 +127,21 @@ export default function Searcg() {
 
     setSearchTerm('');
     setQueryParams({...queryParams, ...initialSearchQueryParams});
-    mutate(undefined, false);
   };
 
-  const { data, error, mutate, isLoading } = useSWR(
-    debouncedSearch && 'q' in _routerParams ? '/mineral/?' + new URLSearchParams(_routerParams).toString() : null,
-    (url, params) => clientFetcher(url, params),
-    {
-      use: [ abortableMiddleware ],
-      keepPreviousData: true,
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
 
   useEffect(() => {
     if (isMounted) {
       if (debouncedSearch) {
         if (!isDeferred && 'cursor' in _cleanQueryParams) {
-          router.push({ query: { ..._cleanQueryParams, q: debouncedSearch } });
+          router.push('explore?' + new URLSearchParams({ ..._cleanQueryParams, q: debouncedSearch }).toString());
           setIsDeferred(false);
           return;
         }
         let _queryParams = isDeferred ? filter(debouncedQueryParams, (key, val) => !additionalParams.includes(key)) : _cleanQueryParams;
-        router.push({ query: { ..._queryParams, q: debouncedSearch } });
+        router.push('explore?' + new URLSearchParams({ ..._queryParams, q: debouncedSearch }).toString());
       } else {
-        router.push({ query: {..._persistantQueryParams} });
+        router.push('explore?' + new URLSearchParams({ ..._persistantQueryParams }).toString());
       }
       setIsDeferred(false);
     }
@@ -147,7 +152,8 @@ export default function Searcg() {
     if (isMounted && !isDeferred && Object.keys(_cleanQueryParams).length > 0) {
       let _query: any = { ..._cleanQueryParams };
       if (searchTerm) _query.q = searchTerm;
-      router.push({ query: _query });
+      router.push('explore?' + new URLSearchParams(_query).toString());
+      searchHandler(_query);
     }
     return;
   }, [debouncedQueryParams]);
@@ -164,7 +170,7 @@ export default function Searcg() {
       <div className="relative max-w-full mx-auto px-0 sm:px-10 md:px-5">
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
-                       isLoading={isSearching || isLoading}
+                       isLoading={isSearching}
                        searchValue={searchTerm}
                        onChange={(value) => handleSearchTerm(value)}
                        onReset={resetSearch} />

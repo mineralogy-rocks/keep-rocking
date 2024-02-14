@@ -26,11 +26,14 @@ export async function clientFetcher(
   const apiUrl:string = process.env.API_URL || '';
   const apiKey:string = process.env.API_KEY || '';
 
+  // add abort signal to the request
+  let controller = new AbortController();
+
   const res = await fetch(apiUrl + input, {
     headers: {
       'Authorization': `Api-Key ${apiKey}`,
       'Content-Type': 'application/json',
-    }, ...init
+    }, ...init, signal: controller.signal
   })
 
   if (res.status === 404) {
@@ -60,3 +63,4 @@ export async function mindatFetcher(
   }
   return res.json()
 };
+
