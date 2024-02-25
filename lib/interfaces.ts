@@ -131,3 +131,14 @@ export interface colorTuple {
   backgroundColor: string;
 }
 
+export interface initialSearchQuery {
+  cursor: string;
+}
+
+export interface initialQuery extends initialSearchQuery {
+  ima_only: boolean;
+}
+
+export interface ExploreQuery extends initialQuery {
+  q: string;
+}

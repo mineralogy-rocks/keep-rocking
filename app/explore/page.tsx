@@ -1,25 +1,21 @@
 import { Suspense } from "react";
 import filter from 'just-filter-object';
 
-import { exploreApiRequest } from '@/lib/types';
-import { clientFetcher } from '@/helpers/fetcher.helpers';
+import { getExplore } from "@/actions";
+import {exploreApiRequest} from "@/lib/types";
 
 import Search from './search';
 
 
-async function getMinerals(params) {
-  'use server';
-
-  return await clientFetcher('/mineral/?' + new URLSearchParams(params).toString());
-}
-
 export default async function Explore({ searchParams }) {
-  const initialQuery: any = filter(Object.assign({}, searchParams), (key, value) => value !== '' && value !== null);
-  // const data = initialQuery ?  await getMinerals(initialQuery) : [];
+  const cleanQuery: exploreApiRequest = filter(Object.assign({}, searchParams), (key, value) => value !== '' && value !== null);
+  let data = null;
+  if ('q' in cleanQuery) data = await getExplore('?' + new URLSearchParams(cleanQuery).toString());
+
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Search onSearch={getMinerals} />
+    <Suspense fallback={<div></div>}>
+      <Search data={data}/>
     </Suspense>
   );
 }

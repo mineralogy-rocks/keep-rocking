@@ -26,7 +26,6 @@ const colorEntitiesDefaultProps = {
   hoverClass: "",
 }
 
-
 const ColorEntities = ({ items, minerals, selected, hoverClass } : colorEntitiesProps & typeof colorEntitiesDefaultProps) => {
 
   const _isHovered = (ids: string | string[]) => {

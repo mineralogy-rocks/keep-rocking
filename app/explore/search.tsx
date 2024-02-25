@@ -1,12 +1,14 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+
 
 import { motion } from 'framer-motion';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
+import { initialSearchQuery, initialQuery, ExploreQuery } from '@/lib/interfaces';
 import useDebounce from '@/hooks/use-debounce.hook';
 
 import SearchInput from '@/components/SearchInput';
@@ -15,30 +17,27 @@ import MineralCard from '@/components/MineralCard';
 import { Paginator, SmallPaginator } from '@/components/Paginator';
 import TableOfContents from '@/components/TableOfContents';
 
+
 const additionalParams = [
   'cursor',
 ];
 
-const initialSearchQueryParams = {
+const initialSearchQueryParams: initialSearchQuery = {
   cursor: '',
 };
 
-const initialQueryParams = {
+const initialQueryParams: initialQuery = {
   ...initialSearchQueryParams,
   ima_only: false
 };
 
-export default async function Search({
-  onSearch = () => {},
+export default function Search({
+  data,
                                }: {
-  onSearch?: (value: exploreApiRequest) => void,
+  data?: any,
 }) {
 
-  const searchHandler = async (value: exploreApiRequest) => {
-    return await onSearch(value);
-  };
   const error = null;
-  const [data, setData] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isMounted, setIsMounted] = useState(false);
@@ -51,13 +50,11 @@ export default async function Search({
   // used to show the search results
   const [isActive, setIsActive] = useState(false);
 
-
   const debouncedQueryParams = useDebounce(queryParams, 200);
   const debouncedSearch = useDebounce(searchTerm, 600);
   const _persistantQueryParams = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
   // remove cursor= and other stale filters from query params
   const _cleanQueryParams = filter(debouncedQueryParams, (key, val) => val !== '' && val !== undefined);
-  const _routerParams: any = filter(Object.assign({}, searchParams), (key, value) => value !== '' && value !== null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -81,16 +78,6 @@ export default async function Search({
       setSearchTerm(value);
     } else resetSearch();
   };
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams]
-  )
 
   const handlePageChange = (url: string) => {
     let _url = new URL(url);
@@ -151,19 +138,20 @@ export default async function Search({
   useEffect(() => {
     if (isMounted && !isDeferred && Object.keys(_cleanQueryParams).length > 0) {
       let _query: any = { ..._cleanQueryParams };
-      if (searchTerm) _query.q = searchTerm;
+      if (searchTerm) {
+        _query.q = searchTerm;
+      }
       router.push('explore?' + new URLSearchParams(_query).toString());
-      searchHandler(_query);
     }
     return;
   }, [debouncedQueryParams]);
-
 
   useEffect(() => {
     setIsSearching(false);
     setIsActive(true);
     return;
   }, [data, error,]);
+
 
   return (
     <>

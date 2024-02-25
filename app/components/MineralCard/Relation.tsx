@@ -3,8 +3,7 @@ import { Relation } from '@/lib/interfaces';
 import { useState } from 'react';
 import useSWR from 'swr';
 
-import { clientFetcher } from '@/helpers/fetcher.helpers';
-import { abortableMiddleware } from '@/middleware/abortable-swr';
+import { getExplore } from "@/actions";
 import Button from './Button';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
@@ -19,10 +18,9 @@ export default function RelationSnippet({ isGrouping, slug, data } : { isGroupin
   };
 
   const { data: relationData, error, isLoading } = useSWR(
-    relation ? '/mineral/' + slug + '/' + relation : null,
-    clientFetcher,
+    relation ? slug + '/' + relation : null,
+    (url) => getExplore(url),
     {
-      use: [ abortableMiddleware ],
       keepPreviousData: false,
       revalidateIfStale: false,
       revalidateOnFocus: false,

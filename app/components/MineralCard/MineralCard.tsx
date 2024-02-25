@@ -77,13 +77,11 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <div className="ml-5 space-y-1">
               <div className="flex">
                 <div className={clsx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-                {/* <h1 className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words">
-                  {mineral.name}
-                </h1> */}
                 <InternalLink className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words"
                               href={`/explore/${mineral.slug}`}
                               text={mineral.name}
-                              hasIcon={false} />
+                              hasIcon={false}
+                              prefetch={true} />
               </div>
               <div className="flex flex-wrap items-center gap-1">
                 {!!_formulas.length && (

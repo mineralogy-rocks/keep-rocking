@@ -1,9 +1,10 @@
-import { useState } from 'react';
+'use client';
+
+import {useState} from 'react';
 import useSWR from 'swr';
 import clsx from 'clsx';
 
-import { clientFetcher } from '@/helpers/fetcher.helpers';
-import { abortableMiddleware } from '@/middleware/abortable-swr';
+import { getExplore } from '@/actions';
 import Button from './Button';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
@@ -18,10 +19,9 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
   };
 
   const { data: countryData, error, isLoading } = useSWR(
-    country ? '/mineral/' + slug + '/grouping-members/?status=1&discovery_country=' + country : null,
-    clientFetcher,
+    country ? slug + '/grouping-members/?status=1&discovery_country=' + country : null,
+    (url) => getExplore(url),
     {
-      use: [ abortableMiddleware ],
       keepPreviousData: false,
       revalidateIfStale: false,
       revalidateOnFocus: false,

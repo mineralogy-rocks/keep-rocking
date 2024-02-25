@@ -19,9 +19,9 @@ export function ExternalLink({ className='', href, text, isIcon=true } : {
   )
 };
 
-export function InternalLink({ className='', href, text, hasIcon=true } : { className?: string, href: string, text: string, hasIcon?: boolean }) {
+export function InternalLink({ className='', href, text, hasIcon=true, prefetch=false } : { className?: string, href: string, text: string, hasIcon?: boolean, prefetch?: boolean }) {
   return (
-    <Link href={href} className="flex group items-center" target="_blank">
+    <Link href={href} className="flex group items-center" target="_blank" prefetch={prefetch}>
       <span className={clsx("text-xs text-font font-semibold hover:text-font-blueDark hover:underline cursor-pointer", className)}>{text}</span>
       {hasIcon && (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-1 w-3.5 h-3.5 shrink-0">

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from "next/font/google";
+
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 
@@ -39,7 +40,8 @@ export default function RootLayout({ children }: {
 
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="tracking-normal font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font">
+      <body className="tracking-normal font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font"
+            suppressHydrationWarning={true}>
         <main className="max-w-full mx-auto relative text-font">
           <NavBar/>
           <div className="min-h-[70vh] pt-10">

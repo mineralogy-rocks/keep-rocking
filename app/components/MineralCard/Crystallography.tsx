@@ -2,8 +2,7 @@ import { useState } from 'react';
 import useSWR from 'swr';
 
 import { From, CrystalSystem } from '@/lib/interfaces';
-import { clientFetcher } from '@/helpers/fetcher.helpers';
-import { abortableMiddleware } from '@/middleware/abortable-swr';
+import { getExplore } from "@/actions";
 
 import Button from './Button';
 import RelationChip from '@/components/RelationChip';
@@ -22,7 +21,7 @@ function ButtonWithRelation(props) {
   )
 }
 
-export default function CrystallographySnippet({ isGrouping, slug, data, from = null } : { isGrouping: boolean, slug: string, data: CrystalSystem[], from: From }) {
+export default function CrystallographySnippet({ isGrouping, slug, data, from = null } : { isGrouping: boolean, slug: string, data: CrystalSystem[], from: From | null }) {
 
   const [selectedId, setSelectedId] = useState('');
   const handleSelection = (newSelectionId) => {
@@ -30,10 +29,9 @@ export default function CrystallographySnippet({ isGrouping, slug, data, from = 
   };
 
   const { data: _data, error, isLoading } = useSWR(
-    selectedId ? '/mineral/' + slug + '/grouping-members/?status=1&crystal_system=' + selectedId : null,
-    clientFetcher,
+    selectedId ? slug + '/grouping-members/?status=1&crystal_system=' + selectedId : null,
+    (url) => getExplore(url),
     {
-      use: [ abortableMiddleware ],
       keepPreviousData: false,
       revalidateIfStale: false,
       revalidateOnFocus: false,

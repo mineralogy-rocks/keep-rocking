@@ -20,7 +20,8 @@ const defaultProps = {
 };
 
 
-const BarcodeChart = ({ items, labelX, labelY, domainY }: Props & typeof defaultProps) => {
+const BarcodeChart = (props: Props & typeof defaultProps) => {
+  const { items, labelX, labelY, domainY} = props;
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -62,5 +63,4 @@ const BarcodeChart = ({ items, labelX, labelY, domainY }: Props & typeof default
 }
 
 
-BarcodeChart.defaultProps = defaultProps;
 export default BarcodeChart;
