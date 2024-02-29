@@ -21,7 +21,7 @@ const defaultProps = {
 
 
 const BarcodeChart = (props: Props & typeof defaultProps) => {
-  const { items, labelX, labelY, domainY} = props;
+  const { items, labelX, labelY, domainY } = props;
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const BarcodeChart = (props: Props & typeof defaultProps) => {
         ),
       ],
     });
-    containerRef.current.appendChild(plot);
+    if (containerRef.current) containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);
 
@@ -61,6 +61,5 @@ const BarcodeChart = (props: Props & typeof defaultProps) => {
     <div ref={containerRef}></div>
   )
 }
-
 
 export default BarcodeChart;
