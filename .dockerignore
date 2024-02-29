@@ -1,7 +1,5 @@
-dev.Dockerfile
-.dockerignore
-node_modules
-yarn-error.log
-README.md
-.next
-.git
+/dev.Dockerfile
+/yarn-error.log
+/README.md
+/.next
+/.git

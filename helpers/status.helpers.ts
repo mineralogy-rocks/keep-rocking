@@ -9,10 +9,10 @@ export const getUniqueStatusGroups = (statuses: Status[]) => {
 };
 
 export const reduceStatusGroups = (statusGroups: StatusGroup[]): any => {
-  let groups = [];
+  let groups: any[] = [];
   Object.values(COMPLEMENTING_STATUS_GROUPS).forEach((group, index) => {
-    let _groups = statusGroups.filter((statusGroup) => group.includes(statusGroup.group?.id));
-    if (_groups.length > 0) groups.push(_groups.map(item => { return { group: item.group} }));
+    let _groups = statusGroups.filter(statusGroup => group.includes(statusGroup.group?.id));
+    if (!!_groups.length) groups.push(_groups.map(item => { return { group: item.group} }));
   });
   return groups;
 };
@@ -27,7 +27,7 @@ export const getStatusGroupColor = (statuses: Status[]): string => {
   return 'bg-gray-600/70';
 };
 
-export const getStatusColor = (statuses: [number]): string => {
+export const getStatusColor = (statuses: number[]): string => {
   for (let status of statuses.sort()) {
     let _status = Math.floor(status);
     if (_status === 0) return 'bg-green-700/70';

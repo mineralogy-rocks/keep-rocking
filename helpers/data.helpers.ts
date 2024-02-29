@@ -1,22 +1,16 @@
-import clone from 'just-clone';
 import groupBy from 'just-group-by';
 
-import { Formula } from '@/lib/interfaces';
-import { mineralDetailApiResponse } from '@/lib/types';
-import { HISTORY_DATA_MAP, DATA_CONTEXT_STRUCTURE } from '@/lib/constants';
+import { Formula, Inheritance, KeyVal } from '@/lib/interfaces';
+import {
+  HISTORY_DATA_MAP,
+  PHYSICAL_DATA_CONTEXT_NAME,
+  PHYSICAL_DATA_CONTEXT_ID
+} from '@/lib/constants';
 
 import { capitalize, compareColors, getRange, getNumeric, concatStrings } from "@utils";
 
 
-export const getMindatIds = (data: mineralDetailApiResponse) => {
-  if (!data) return [];
-  const { mindat_id } = data;
-  const inheritedIds = data.inheritance_chain?.map((item) => item.mindat_id) || [];
-  return [mindat_id, ...inheritedIds].filter((item) => item !== null && item !== undefined);
-};
-
-
-export const mergeFormulas = (formulas: Formula[], inheritanceChain=[]) => {
+export const mergeFormulas = (formulas: Formula[], inheritanceChain: Inheritance[] = []) => {
   let data = [...formulas];
 
   for (const item of inheritanceChain) {
@@ -26,7 +20,6 @@ export const mergeFormulas = (formulas: Formula[], inheritanceChain=[]) => {
         name: item.name,
         slug: item.slug,
         statuses: item.statuses,
-        depth: item.depth,
       };
     });
     data = [...data, ...item.formulas];
@@ -39,7 +32,8 @@ export const mergeFormulas = (formulas: Formula[], inheritanceChain=[]) => {
 
 export const prepareHistory = (data: any) => {
   if (!data) return [];
-  let _data = []
+
+  const _data: KeyVal[] = [];
   data.map((item) => {
       Object.keys(item).forEach((key) => {
         if (key in HISTORY_DATA_MAP && item[key]) {
@@ -96,7 +90,7 @@ export const parsePhysicalProperties = (data) => {
 
 
 const _createEmptyContext = () => ({
-  'Physical properties': {
+  [PHYSICAL_DATA_CONTEXT_NAME]: {
     minerals: [],
     items: {}
   },
@@ -168,14 +162,15 @@ export const getConclusiveContext = (data) => {
   const conclusiveData = _createEmptyContext();
   const props = [
     {
-      key: 'Physical properties',
+      id: PHYSICAL_DATA_CONTEXT_ID,
+      key: PHYSICAL_DATA_CONTEXT_NAME,
       callback: parsePhysicalProperties,
     },
     // Add more properties as needed
   ];
 
   props.forEach((prop) => {
-    data.forEach((item) => {
+    data[prop.id].forEach((item) => {
       const props = prop.callback(item.data);
       if (props) {
         const { items, minerals } = _addMineralToContext(conclusiveData, prop.key, item.mineral);

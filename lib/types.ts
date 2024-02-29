@@ -20,11 +20,12 @@ export type exploreApiResponse = {
   seen: number;
   updated_at: Date;
   formulas: Formula[];
-  crystal_systems: CrystalSystem[];
+  crystallography: CrystalSystem[];
   statuses: Status[];
   relations: Relation[];
   discovery_countries: Discovery[];
   history: History;
+  inheritance_chain: Inheritance[];
   links: Link[];
 }
 

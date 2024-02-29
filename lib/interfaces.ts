@@ -3,7 +3,14 @@ export interface BaseIdName {
   name: string;
 }
 
+export interface KeyVal {
+  key: string;
+  value: string | number;
+}
+
 export interface From {
+  id: string;
+  mindat_id?: number;
   slug: string;
   name: string;
   statuses: [number];
@@ -55,13 +62,14 @@ export interface GroupingMember extends BaseIdName {
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
-  from?: From;
+  // from?: From;
 }
 
 export interface StatusGroup {
   group: {
     id: number;
     name: string;
+    slug: string;
   }
 }
 
@@ -112,8 +120,8 @@ export interface Inheritance {
   id: string;
   name: string;
   slug: string;
+  prop: number,
   statuses: [number];
-  depth: number;
   formulas: Formula[];
   crystallography: Crystallography|null;
   contexts: any[];
@@ -129,3 +137,14 @@ export interface colorTuple {
   backgroundColor: string;
 }
 
+export interface initialSearchQuery {
+  cursor: string;
+}
+
+export interface initialQuery extends initialSearchQuery {
+  ima_only: boolean;
+}
+
+export interface ExploreQuery extends initialQuery {
+  q: string;
+}
