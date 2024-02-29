@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 
 import { motion } from 'framer-motion';
 import filter from 'just-filter-object';
 
 import { exploreApiRequest } from '@/lib/types';
-import { initialSearchQuery, initialQuery, ExploreQuery } from '@/lib/interfaces';
+import { initialSearchQuery, initialQuery } from '@/lib/interfaces';
 import useDebounce from '@/hooks/use-debounce.hook';
 
 import SearchInput from '@/components/SearchInput';
@@ -31,14 +31,13 @@ const initialQueryParams: initialQuery = {
   ima_only: false
 };
 
-export default function Search({
-  data,
-                               }: {
+export default function Search({ data = null }: {
   data?: any,
 }) {
 
   const error = null;
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isMounted, setIsMounted] = useState(false);
   const [queryParams, setQueryParams] = useState({ ...initialQueryParams });
@@ -52,9 +51,9 @@ export default function Search({
 
   const debouncedQueryParams = useDebounce(queryParams, 200);
   const debouncedSearch = useDebounce(searchTerm, 600);
-  const _persistantQueryParams = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
+  const _persistantQueryParams: exploreApiRequest = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
   // remove cursor= and other stale filters from query params
-  const _cleanQueryParams = filter(debouncedQueryParams, (key, val) => val !== '' && val !== undefined);
+  const _cleanQueryParams: exploreApiRequest = filter(debouncedQueryParams, (key, val) => val !== '' && val !== undefined);
 
   useEffect(() => {
     setIsMounted(true);
@@ -121,14 +120,14 @@ export default function Search({
     if (isMounted) {
       if (debouncedSearch) {
         if (!isDeferred && 'cursor' in _cleanQueryParams) {
-          router.push('explore?' + new URLSearchParams({ ..._cleanQueryParams, q: debouncedSearch }).toString());
+          router.push(pathname + '?' + new URLSearchParams({ ..._cleanQueryParams, q: debouncedSearch }).toString());
           setIsDeferred(false);
           return;
         }
-        let _queryParams = isDeferred ? filter(debouncedQueryParams, (key, val) => !additionalParams.includes(key)) : _cleanQueryParams;
-        router.push('explore?' + new URLSearchParams({ ..._queryParams, q: debouncedSearch }).toString());
+        let _queryParams: exploreApiRequest = isDeferred ? filter(debouncedQueryParams, (key, val) => !additionalParams.includes(key)) : _cleanQueryParams;
+        router.push(pathname + '?' + new URLSearchParams({ ..._queryParams, q: debouncedSearch }).toString());
       } else {
-        router.push('explore?' + new URLSearchParams({ ..._persistantQueryParams }).toString());
+        router.push(pathname + '?' + new URLSearchParams({ ..._persistantQueryParams } as Record<string, string>).toString());
       }
       setIsDeferred(false);
     }
@@ -141,7 +140,7 @@ export default function Search({
       if (searchTerm) {
         _query.q = searchTerm;
       }
-      router.push('explore?' + new URLSearchParams(_query).toString());
+      router.push(pathname + '?' + new URLSearchParams(_query).toString());
     }
     return;
   }, [debouncedQueryParams]);

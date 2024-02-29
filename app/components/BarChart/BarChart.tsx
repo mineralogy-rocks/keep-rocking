@@ -4,15 +4,16 @@ import { motion, useInView, Variants } from 'framer-motion';
 import cx from 'clsx';
 
 
+interface Item {
+  id: number,
+  value: number,
+  label: string|number,
+  subLabel: string|number,
+}
 
 interface Props {
   isAnimated?: boolean,
-  items?: Array<{
-    id: number,
-    value: number,
-    label: string|number,
-    subLabel: string|number,
-  }>,
+  items?: Item[],
   className?: string,
   color?: string,
   highlightThreshold?: number,
@@ -27,7 +28,9 @@ const defaultProps = {
 };
 
 
-const BarChart = ({ isAnimated, items, className, color, highlightThreshold }: Props & typeof defaultProps) => {
+const BarChart: React.FC<Props> = (props) => {
+  const { isAnimated, items, className, color, highlightThreshold } = { ...defaultProps, ...props};
+
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const variants: Variants = {
@@ -82,5 +85,4 @@ const BarChart = ({ isAnimated, items, className, color, highlightThreshold }: P
 }
 
 
-BarChart.defaultProps = defaultProps;
 export default BarChart;

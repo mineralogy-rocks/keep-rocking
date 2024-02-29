@@ -3,7 +3,7 @@
 
 interface Props {
     size?: "small" | "medium" | "large",
-    color: string,
+    color?: string,
     isHovered?: boolean,
     className?: string,
 };
@@ -15,7 +15,9 @@ const defaultProps = {
     className: "",
 };
 
-const Dot = ({ size, color, isHovered, className, ...props }: Props & typeof defaultProps) => {
+const Dot: React.FC<Props> = (props) => {
+    const { size, color, isHovered, className } = { ...defaultProps, ...props };
+
     let sizeClass = "w-2 h-2";
     let marginClass = "-ml-1"
     if (size === "small") {
@@ -31,5 +33,4 @@ const Dot = ({ size, color, isHovered, className, ...props }: Props & typeof def
   )
 }
 
-Dot.defaultProps = defaultProps
 export default Dot

@@ -2,26 +2,27 @@ import { useRef, useEffect } from 'react';
 
 import * as Plot from "@observablehq/plot";
 
+import { KeyVal } from "@/lib/interfaces";
+
 
 
 interface Props {
-  items?: Array<{
-    key: string,
-    value: number,
-  }>,
-  domainY?: any[],
+  items?: KeyVal[],
+  labelX?: string | null;
+  labelY?: string | null;
+  domainY?: string[] | undefined;
 };
 
 const defaultProps = {
   items: [],
   labelX: null,
   labelY: null,
-  domainY: null,
+  domainY: undefined,
 };
 
 
-const BarcodeChart = (props: Props & typeof defaultProps) => {
-  const { items, labelX, labelY, domainY } = props;
+const BarcodeChart: React.FC<Props> = (props) => {
+  const { items, labelX, labelY, domainY } = { ...defaultProps, ...props};
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

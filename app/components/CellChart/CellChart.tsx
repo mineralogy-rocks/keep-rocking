@@ -2,13 +2,18 @@ import { useRef, useEffect } from 'react';
 
 import * as Plot from "@observablehq/plot";
 
+import { KeyVal } from "@/lib/interfaces";
+
 
 interface Props {
-  items?: Array<{
-    key: string,
-    value: number,
-  }>,
+  items?: KeyVal[],
   colorScheme?: string,
+
+  labelX?: string | null;
+  labelY?: string | null;
+
+  domainX: string|number[] | undefined;
+  domainY: string[] | undefined;
 };
 
 const defaultProps = {
@@ -27,7 +32,9 @@ const makeTransparent = (svg: SVGElement) => {
 }
 
 
-const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Props & typeof defaultProps) => {
+const CellChart:  React.FC<Props> = (props) => {
+  const { colorScheme, items, labelX, labelY, domainX, domainY } = { ...defaultProps, ...props};
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +65,7 @@ const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Pro
       if (svg instanceof SVGElement) makeTransparent(svg);
     }
 
-    containerRef.current.appendChild(plot);
+    if (containerRef.current) containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);
 
@@ -69,5 +76,4 @@ const CellChart = ({ colorScheme, items, labelX, labelY, domainX, domainY }: Pro
 }
 
 
-CellChart.defaultProps = defaultProps;
 export default CellChart;

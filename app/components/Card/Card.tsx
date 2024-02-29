@@ -20,7 +20,8 @@ const defaultProps = {
 };
 
 
-const Card = ({ className, isHoverable, isHovered, onClick, children, offset }: Props & typeof defaultProps) => {
+const Card: React.FC<Props> = (props) => {
+    const { className, isHoverable, isHovered, onClick, children, offset } = { ...defaultProps, ...props};
 
     const clickHandler = (event: React.MouseEvent) => {
         onClick && onClick(event);
@@ -74,5 +75,4 @@ const Card = ({ className, isHoverable, isHovered, onClick, children, offset }: 
     );
 };
 
-Card.defaultProps = defaultProps;
 export default Card;

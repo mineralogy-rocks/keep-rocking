@@ -26,7 +26,8 @@ const colorEntitiesDefaultProps = {
   hoverClass: "",
 }
 
-const ColorEntities = ({ items, minerals, selected, hoverClass } : colorEntitiesProps & typeof colorEntitiesDefaultProps) => {
+const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
+  const { items, minerals, selected, hoverClass } = { ...colorEntitiesDefaultProps, ...props};
 
   const _isHovered = (ids: string | string[]) => {
     if (!Array.isArray(ids)) ids = [ids];
@@ -85,7 +86,8 @@ const groupedColorEntitiesDefaultProps = {
   items: [],
 }
 
-const GroupedColorEntities = ({ items } : groupedColorEntitiesProps & typeof groupedColorEntitiesDefaultProps) => {
+const GroupedColorEntities: React.FC<groupedColorEntitiesProps> = (props) => {
+  const { items } = { ...groupedColorEntitiesDefaultProps, ...props};
 
   return (
     <div className="col-span-3 flex flex-col flex-wrap divide-slate-300 divide-y">
@@ -133,7 +135,9 @@ const mineralContextDefaultProps = {
   items: {},
 }
 
-const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProps & typeof mineralContextDefaultProps) => {
+const MineralDataContext: React.FC<mineralContextProps> = (props) => {
+  const { contextKey, minerals, items } = { ...mineralContextDefaultProps, ...props};
+
   // TODO: make it work with multiple contexts and use SECTION_FIELDS
   const [selected, handleSelection] = useSelection(minerals.map(item_ => item_.id));
   const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
@@ -143,7 +147,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
     <div className="prop flex flex-col md:gap-2 sm:grid grid-cols-8">
       <div className="flex flex-col md:grid grid-cols-4 col-span-8 md:col-span-5 md:gap-2 mt-2 md:mt-0">
         {SECTION_FIELDS[contextKey].map((key, index) => {
-          if (FIELDS.hasOwnProperty(key) === false || !items[key]) return null;
+          if (!FIELDS.hasOwnProperty(key) || !items[key]) return null;
           let field = FIELDS[key];
 
           let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
@@ -154,7 +158,7 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
           if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(false);
           else _isCollapsed = field.isCollapsed;
 
-          let component = null;
+          let component: React.ReactNode = null;
           if (key === 'color' || key === 'streak') component = (
             <div className="ml-2 md:ml-1 col-span-3 p-2">
               <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />
@@ -207,10 +211,10 @@ const MineralDataContext = ({ contextKey, minerals, items } : mineralContextProp
                             className="flex-none"
                             hasArrow={false}
                             hasClose={isInteractive && isHighlighted && isHighlighted.clicked}
-                            onMouseEnter={isInteractive ? () => { handleSelection(item.id, true) } : null}
-                            onMouseLeave={isInteractive ? () => { handleSelection(item.id, false) } : null}
-                            onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : null}
-                            onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : null}
+                            onMouseEnter={isInteractive ? () => { handleSelection(item.id, true) } : undefined}
+                            onMouseLeave={isInteractive ? () => { handleSelection(item.id, false) } : undefined}
+                            onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : undefined}
+                            onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : undefined}
                             type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
             </div>)
         })}
@@ -232,7 +236,8 @@ const fieldDefaultProps = {
   onCollapse: (isCollapsed) => {},
 }
 
-const Field = ({ field, isCollapsable, onCollapse, children } : fieldProps & typeof fieldDefaultProps) => {
+const Field: React.FC<fieldProps> = (props) => {
+  const { field, isCollapsable, onCollapse, children } = { ...fieldDefaultProps, ...props};
   const [isCollapsed, setIsCollapsed] = useState(isCollapsable);
 
   const handleCollapse = (_isCollapsed) => {
@@ -267,10 +272,10 @@ const GroupedDataContext = ({ contextKey, data }) => {
     ...data.hardness.max.map(item => { return { key: 'max', value: item }})
   ] : [];
 
-  const initialFieldsState = [];
+  const initialFieldsState: any[] = [];
   SECTION_FIELDS[contextKey].map((key, index) => {
     initialFieldsState.push({});
-    if (FIELDS.hasOwnProperty(key) === false || !data[key]) return;
+    if (!FIELDS.hasOwnProperty(key) || !data[key]) return;
     let field = FIELDS[key];
     let _state = {
       isCollapsed: false,
@@ -294,13 +299,13 @@ const GroupedDataContext = ({ contextKey, data }) => {
     <div className="prop grid grid-cols-8">
       <div className="col-span-8 flex flex-col md:grid grid-cols-5 gap-1 md:gap-2">
         {SECTION_FIELDS[contextKey].map((key, index) => {
-          if (FIELDS.hasOwnProperty(key) === false || !data[key]) return null;
+          if (!FIELDS.hasOwnProperty(key) || !data[key]) return null;
           let field = FIELDS[key];
 
-          let component = null;
+          let component: React.ReactNode = null;
           if (key === 'color' || key === 'streak') component = <GroupedColorEntities items={data[key]} />;
           else if (key === 'hardness') {
-            let _domainX = [];
+            let _domainX: string|number[] = [];
             for (let i = 0; i <= 10; i += 0.5) _domainX.push(i);
             component = <CellChart items={hardness} labelX="Hardness" domainX={_domainX} domainY={["max", "min"]} />
           }
@@ -346,7 +351,4 @@ const ContextController = ({ isGrouping = false, context }) => {
   return <MineralDataContext {...context} />;
 };
 
-ColorEntities.defaultProps = colorEntitiesDefaultProps;
-GroupedColorEntities.defaultProps = groupedColorEntitiesDefaultProps;
-MineralDataContext.defaultProps = mineralContextDefaultProps;
 export { ContextController };

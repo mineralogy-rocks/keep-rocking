@@ -31,7 +31,7 @@ export default function TableOfContents({ items, activeItems, selectorId }: { it
               className="flex items-center group text-blue-700 hover:text-blue-900"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector(`#${selectorId}-${index}`).scrollIntoView({
+                document.querySelector(`#${selectorId}-${index}`)?.scrollIntoView({
                   behavior: "smooth"
                 });
               }}>

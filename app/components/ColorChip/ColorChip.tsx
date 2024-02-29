@@ -16,7 +16,9 @@ const defaultProps = {
   hasPadding: true,
 };
 
-const Chip = ({ type, className = "", hasPadding = true, children, ...props} : Props & typeof defaultProps) => {
+// const Chip = ({ type, className = "", hasPadding = true, children, ...props} : Props & typeof defaultProps) => {
+const Chip: React.FC<Props> = (props) => {
+  const { type, className = "", hasPadding = true, children , ...rest} = { ...defaultProps, ...props};
 
   const { textColor, backgroundColor, borderColor } = getStyles(type);
 
@@ -26,7 +28,7 @@ const Chip = ({ type, className = "", hasPadding = true, children, ...props} : P
                       backgroundColor,
                       borderColor,
                       className)}
-         {...props}>
+         {...rest}>
       <div className={cx("flex items-center text-xs font-medium", textColor)}>
         {children}
       </div>
@@ -34,5 +36,4 @@ const Chip = ({ type, className = "", hasPadding = true, children, ...props} : P
   )
 }
 
-Chip.defaultProps = defaultProps
-export default Chip
+export default Chip;

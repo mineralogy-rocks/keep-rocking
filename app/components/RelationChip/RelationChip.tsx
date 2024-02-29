@@ -13,14 +13,14 @@ export default function RelationChip(
     className = "",
     hasArrow = true,
     hasClose = false,
-    onClick = null,
-    onMouseEnter = null,
-    onMouseLeave = null,
-    onClose = null,
+    onClick = undefined,
+    onMouseEnter = undefined,
+    onMouseLeave = undefined,
+    onClose = undefined,
     type = null,
   } : {
     name: string,
-    statuses: [number],
+    statuses: number[],
     className?: string,
     hasArrow?: boolean,
     hasClose?: boolean,
@@ -28,7 +28,7 @@ export default function RelationChip(
     onMouseEnter?: (event: React.MouseEvent) => void,
     onMouseLeave?: (event: React.MouseEvent) => void,
     onClose?: (event: React.MouseEvent) => void,
-    type?: string,
+    type?: string | null
 }) {
 
   const { textColor, backgroundColor, borderColor } = getStyles(type ?? 'default');

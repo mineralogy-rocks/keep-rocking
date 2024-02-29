@@ -5,8 +5,10 @@ import Head from 'next/head';
 
 import clone from 'just-clone';
 import groupBy from 'just-group-by';
-import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES, PHYSICAL_DATA_CONTEXT_ID } from '@/lib/constants';
+import get from 'just-safe-get';
+import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
+import { KeyVal } from '@/lib/interfaces';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
 import Card from '@/components/Card';
@@ -25,7 +27,10 @@ const Section = ({ title, children }) => (
   </section>
 );
 
-const CrystallographyNode = ({ item = null, isInherited = true, ...props }) => (
+const CrystallographyNode = ({ item = null, isInherited = true, ...props }: {
+  item: { name: string, statuses: number[] } | null,
+  isInherited?: boolean,
+}) => (
   <Card className="flex flex-col text-xs" isHoverable={false}>
     {item && (
       <div className="flex justify-start items-center">
@@ -33,19 +38,19 @@ const CrystallographyNode = ({ item = null, isInherited = true, ...props }) => (
       </div>)
     }
     <div className="flex flex-col px-2 mt-2 gap-1">
-      {props.crystal_system && (
+      {props['crystal_system'] && (
         <span className="font-medium">Crystal System{' '}
-          <span className="font-normal">{props.crystal_system.name}</span>
+          <span className="font-normal">{get(props, 'crystal_system.name')}</span>
         </span>
       )}
-      {props.crystal_class && (
+      {props['crystal_class'] && (
         <span className="font-medium">Crystal Class{' '}
-          <span className="font-normal">{props.crystal_class.name}</span>
+          <span className="font-normal">{get(props, 'crystal_class.name')}</span>
         </span>
       )}
-      {props.space_group && (
+      {props['space_group'] && (
         <span className="font-medium">Space Group{' '}
-          <span className="font-normal">{props.space_group.name}</span>
+          <span className="font-normal">{get(props, 'space_group.name')}</span>
         </span>
       )}
     </div>
@@ -138,13 +143,13 @@ export default function MineralPage({ data }) {
     structures,
     elements,
     members,
-    inheritance_chain,
+    inheritance_chain: inheritanceChain,
     contexts: _contexts,
   } : mineralDetailApiResponse = data;
 
-  if (inheritance_chain) {
-    let inheritedContexts = [];
-     inheritance_chain.map(item => {
+  if (inheritanceChain) {
+    let inheritedContexts : any[] = [];
+     inheritanceChain.map(item => {
         item.contexts.map(i => {
           inheritedContexts.push({
             ...i,
@@ -169,8 +174,8 @@ export default function MineralPage({ data }) {
   }
 
   const contextGroups = _contexts ? groupBy(_contexts, item => item.context) : {};
-  let contexts = null;
-  let conclusiveHistory = [];
+  let contexts: any;
+  let conclusiveHistory: KeyVal[];
 
   if (isGrouping) {
     conclusiveHistory = prepareHistory(
@@ -186,26 +191,25 @@ export default function MineralPage({ data }) {
     if (
         !!structures.length &&
         !structures.find(item => item.crystal_system === null) &&
-        members.find(item => item.crystal_system === null)
+        members?.find(item => item.crystal_system === null)
     ) {
       structures.push({ crystal_system: null, count: 0 })
     }
   } else {
     conclusiveHistory = history ? prepareHistory([history]) : [];
-    contexts = getConclusiveContext(contextGroups[DATA_CONTEXT_TYPES[PHYSICAL_DATA_CONTEXT_ID]]);
+    contexts = getConclusiveContext(contextGroups);
   }
 
-  const hasCrystallography = crystallography || inheritance_chain?.some(item => item.crystallography) || !!structures.length;
+  const hasCrystallography = crystallography || inheritanceChain?.some(item => item.crystallography) || !!structures.length;
   const conclusiveFormulas: any[] = mergeFormulas(formulas.map((item) => {
     return { ...item, mineral: {
                         id: data.id,
                         name: data.name,
                         slug: data.slug,
                         statuses: data.statuses.map((i) => i.status_id),
-                        depth: 0
                       }
     }
-  }), inheritance_chain);
+  }), inheritanceChain);
 
   const nrMinerals = groupBy(conclusiveFormulas, item => item.mineral.id);
 
@@ -237,7 +241,7 @@ export default function MineralPage({ data }) {
                                          {...crystallography} />
                     )
                   }
-                  {inheritance_chain.map((item, index) => {
+                  {inheritanceChain?.map((item, index) => {
                     if (item.crystallography) return (
                       <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
                     )}

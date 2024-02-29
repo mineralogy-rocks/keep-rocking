@@ -14,7 +14,7 @@ export default function Tooltip({ className, isShown=false, children, button } :
   }) {
 
     const popperRef = useRef(null);
-    const [referenceElement, setReferenceElement] = useState(null);
+    const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
     const [popperElement, setPopperElement] = useState(null);
     const { styles, attributes } = usePopper(referenceElement, popperElement, {
       placement: 'bottom',

@@ -46,7 +46,7 @@ export default function ClassificationSnippet({ data }) {
     ima_statuses: any
   } = data;
   const groups = groupBy(statuses, item => item.group.name);
-  let _groups = [];
+  let _groups: any[] = [];
 
   Object.keys(groups).map(group => {
     let _group = groups[group][0].group;

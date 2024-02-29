@@ -15,6 +15,7 @@ export default function Checkbox({ label, name, value, onChange, checked = true,
       <input type="checkbox"
              name={name}
              value={value}
+             id={name}
              onChange={onChange}
              checked={checked}
              disabled={disabled}

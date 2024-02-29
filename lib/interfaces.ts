@@ -3,6 +3,11 @@ export interface BaseIdName {
   name: string;
 }
 
+export interface KeyVal {
+  key: string;
+  value: string | number;
+}
+
 export interface From {
   id: string;
   mindat_id?: number;
@@ -64,6 +69,7 @@ export interface StatusGroup {
   group: {
     id: number;
     name: string;
+    slug: string;
   }
 }
 
