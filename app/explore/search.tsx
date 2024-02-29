@@ -120,12 +120,11 @@ export default function Search({ data = null }: {
     if (isMounted) {
       if (debouncedSearch) {
         if (!isDeferred && 'cursor' in _cleanQueryParams) {
-          router.push(pathname + '?' + new URLSearchParams({ ..._cleanQueryParams, q: debouncedSearch }).toString());
-          setIsDeferred(false);
+          router.push(pathname + '?' + new URLSearchParams({ ..._cleanQueryParams, q: debouncedSearch } as Record<any, any>).toString());
           return;
         }
         let _queryParams: exploreApiRequest = isDeferred ? filter(debouncedQueryParams, (key, val) => !additionalParams.includes(key)) : _cleanQueryParams;
-        router.push(pathname + '?' + new URLSearchParams({ ..._queryParams, q: debouncedSearch }).toString());
+        router.push(pathname + '?' + new URLSearchParams({ ..._queryParams, q: debouncedSearch } as Record<any, any>).toString());
       } else {
         router.push(pathname + '?' + new URLSearchParams({ ..._persistantQueryParams } as Record<string, string>).toString());
       }
