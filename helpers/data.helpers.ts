@@ -169,8 +169,10 @@ export const getConclusiveContext = (data) => {
     // Add more properties as needed
   ];
 
+  if (!props.every((prop) => data[prop.id])) return null;
+
   props.forEach((prop) => {
-    data[prop.id].forEach((item) => {
+    data[prop.id]?.forEach((item) => {
       const props = prop.callback(item.data);
       if (props) {
         const { items, minerals } = _addMineralToContext(conclusiveData, prop.key, item.mineral);
