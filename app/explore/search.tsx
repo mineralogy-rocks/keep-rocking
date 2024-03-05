@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-
+import { unstable_noStore as noStore } from 'next/cache';
 
 import { motion } from 'framer-motion';
 import filter from 'just-filter-object';
@@ -35,6 +35,7 @@ export default function Search({ data = null }: {
   data?: any,
 }) {
 
+  noStore();
   const error = null;
   const router = useRouter();
   const pathname = usePathname();

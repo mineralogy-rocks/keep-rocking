@@ -138,10 +138,6 @@ export default function Home() {
 
   return (
   <>
-    <Head>
-      <title>mineralogy.rocks</title>
-    </Head>
-
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="relative flex items-center mt-24 text-center justify-center">

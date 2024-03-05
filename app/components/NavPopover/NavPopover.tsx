@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import Link from 'next/link';
 import { useRouter, usePathname } from "next/navigation";
 import { Dialog } from '@headlessui/react';
@@ -24,20 +26,17 @@ function NavItem({href, text}) {
 
 export default function NavPopover({ className, display = "md:hidden" }: { className?: string, display?: string }) {
 
-  const router = useRouter();
+  const pathname = usePathname();
+  const ref = useRef(pathname);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
-    const handleRouteChange = (url: string) => {
+    if (ref.current !== pathname) {
+      ref.current = pathname;
       setIsOpen(false);
-    };
-
-    router.events.on('routeChangeStart', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
     }
-  });
+  }, [pathname]);
 
 
   return (
