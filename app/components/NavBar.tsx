@@ -43,13 +43,16 @@ export default function Navbar() {
         <NavPopover className="text-black" display="md:hidden" />
         <ul className="hidden md:flex space-x-2 sm:space-x-6 md:space-x-10">
           <li>
-            <NavItem href="/explore" text="Explore" />
+            <NavItem href="/explore" text="Explore"/>
           </li>
           <li>
-            <NavItem href="/about" text="About" />
-            </li>
+            <NavItem href="/blog" text="Blog"/>
+          </li>
           <li>
-            <NavItem href="/contact" text="Contact" />
+            <NavItem href="/about" text="About"/>
+          </li>
+          <li>
+            <NavItem href="/contact" text="Contact"/>
           </li>
         </ul>
       </nav>

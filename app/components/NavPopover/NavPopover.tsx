@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Router, useRouter } from 'next/router';
+import { useRouter, usePathname } from "next/navigation";
 import { Dialog } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
@@ -7,8 +7,8 @@ import clsx from 'clsx';
 import mobileStyles from '@/styles/mobile-menu.module.scss';
 
 function NavItem({href, text}) {
-  const router = useRouter();
-  const isActive = router.pathname === href;
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
       <Link href={href} className="flex items-center">
@@ -24,6 +24,7 @@ function NavItem({href, text}) {
 
 export default function NavPopover({ className, display = "md:hidden" }: { className?: string, display?: string }) {
 
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -32,9 +33,9 @@ export default function NavPopover({ className, display = "md:hidden" }: { class
       setIsOpen(false);
     };
 
-    Router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on('routeChangeStart', handleRouteChange);
     return () => {
-      Router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off('routeChangeStart', handleRouteChange);
     }
   });
 
@@ -61,6 +62,7 @@ export default function NavPopover({ className, display = "md:hidden" }: { class
             <div className="flex flex-col space-y-4">
               <NavItem href="/" text="Home" />
               <NavItem href="/explore" text="Explore" />
+              <NavItem href="/blog" text="Blog" />
               <NavItem href="/about" text="About" />
               <NavItem href="/contact" text="Contact" />
             </div>

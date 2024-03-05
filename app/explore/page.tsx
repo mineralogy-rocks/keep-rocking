@@ -16,8 +16,6 @@ export default async function Explore({ searchParams }: { searchParams: exploreA
 
 
   return (
-    <Suspense fallback={<div></div>}>
-      <Search data={data}/>
-    </Suspense>
+    <Search data={data}/>
   );
 }
