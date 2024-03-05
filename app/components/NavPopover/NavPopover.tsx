@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Router, useRouter } from 'next/router';
+import { Router } from 'next/router';
+import { usePathname } from "next/navigation";
 import { Dialog } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
@@ -7,8 +8,8 @@ import clsx from 'clsx';
 import mobileStyles from '@/styles/mobile-menu.module.scss';
 
 function NavItem({href, text}) {
-  const router = useRouter();
-  const isActive = router.pathname === href;
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
       <Link href={href} className="flex items-center">
