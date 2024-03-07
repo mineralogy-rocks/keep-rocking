@@ -1,5 +1,5 @@
 export interface BaseIdName {
-  id: string;
+  id: string | number;
   name: string;
 }
 
@@ -29,10 +29,6 @@ export interface Formula {
   from?: From;
 }
 
-export interface FormulaGroupBySource {
-  [key: string]: Formula[];
-}
-
 export interface Crystallography {
   id: number;
   mineral?: string;
@@ -40,16 +36,6 @@ export interface Crystallography {
   crystal_class?: BaseIdName;
   space_group?: BaseIdName;
 }
-
-export interface CrystallographyGrouped extends BaseIdName{
-  count: number;
-  minerals: {
-    id: string;
-    name: string;
-    slug: string;
-    statuses: [number];
-  }[];
-};
 
 export interface GroupingMember extends BaseIdName {
   slug : string;
@@ -62,7 +48,6 @@ export interface GroupingMember extends BaseIdName {
 
 export interface CrystalSystem extends BaseIdName {
   count?: number;
-  // from?: From;
 }
 
 export interface StatusGroup {
@@ -79,15 +64,6 @@ export interface Status {
   description_short: string;
   description_long: string;
 }
-
-export interface StatusWithRelation extends Status {
-  mineral: {
-    id: string;
-    name: string;
-    slug: string;
-    mindat_id?: number;
-  }
-};
 
 export interface Relation {
   id: string;
@@ -148,3 +124,6 @@ export interface initialQuery extends initialSearchQuery {
 export interface ExploreQuery extends initialQuery {
   q: string;
 }
+
+export interface PostTag extends BaseIdName {};
+export interface PostCategory extends BaseIdName {};

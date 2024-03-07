@@ -12,6 +12,6 @@ export default async function ExplorePage({ searchParams }: { searchParams: expl
   if ('q' in cleanQuery) data = await getExplore('?' + new URLSearchParams(cleanQuery as Record<string, string>).toString());
 
   return (
-    <Search data={data}/>
+    <Search data={data} />
   );
 }

@@ -13,3 +13,7 @@ export async function getMineralDetail(slug: string) {
 export async function getPostList(query: string) {
   return await clientFetcher('/blog/post/' + query);
 }
+
+export async function getBlogCategories() {
+  return await clientFetcher('/blog/category');
+}

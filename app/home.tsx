@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from "react";
 
 import Link from 'next/link';
-import Head from 'next/head';
 import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
 import cx from 'clsx';
