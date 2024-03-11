@@ -27,7 +27,7 @@ export default async function BlogPage({ searchParams }) {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-6 gap-2 relative mt-20">
       <Suspense fallback={<div>Loading...</div>}>
         <div className="space-y-10 col-span-4">
-          {posts.results.map(({ slug, name, description, published_at: publishedAt, views, likes, tags, category }) => (
+          {posts && posts.results?.map(({ slug, name, description, published_at: publishedAt, views, likes, tags, category }) => (
             <article className="relative flex flex-col group p-2 space-y-2" key={slug}>
               <h1 className="text-xl font-bold text-font">{name}</h1>
               <div className="flex justify-between text-xs font-normal mt-2">
