@@ -20,8 +20,8 @@ const defaultProps = {
 
 const BlogCategory: React.FC<Props> = (props) => {
   const { categories } = { ...defaultProps, ...props};
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [hoveredId, setHoveredId] = useState<number | string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | string | null>(null);
 
   const router = useRouter();
   const pathname = usePathname()
@@ -34,9 +34,14 @@ const BlogCategory: React.FC<Props> = (props) => {
   }, [searchParams]);
 
   const setSelectedCategory = useCallback((id: string | number) => {
-    setSelectedId(id);
-    router.push(pathname + '?category=' + id);
-  }, [setSelectedId]);
+    if (id === selectedId) {
+      setSelectedId(null);
+      router.push(pathname);
+    } else {
+      setSelectedId(id);
+      router.push(pathname + '?category=' + id);
+    }
+  }, [selectedId]);
 
   return (
     <div className="sticky float-right top-20">
@@ -53,7 +58,7 @@ const BlogCategory: React.FC<Props> = (props) => {
                       )}
                       initial={{ scale: 1, opacity: selectedId === id ? 1 : 0.5 }}
                       animate={{ scale: hoveredId === id ? 1.07 : 1, opacity: selectedId === id ? 1 : 0.5 }}
-                      transition={{ type: "spring", bounce: 0.5, stiffness: 600, damping: 60 }}>
+                      transition={{ type: "spring", bounce: 0.3, stiffness: 900, damping: 50 }}>
             </motion.a>
             <span className="w-full h-full text-font-blueDark font-medium">{name}</span>
           </div>
