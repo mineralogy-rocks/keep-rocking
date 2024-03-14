@@ -6,11 +6,11 @@ import cx from "clsx";
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-import { BaseIdName } from "@/lib/interfaces";
+import { BaseIdNameSlug } from "@/lib/interfaces";
 
 
 interface Props {
-    categories: BaseIdName[],
+    categories: BaseIdNameSlug[],
 };
 
 const defaultProps = {
@@ -20,8 +20,8 @@ const defaultProps = {
 
 const BlogCategory: React.FC<Props> = (props) => {
   const { categories } = { ...defaultProps, ...props};
-  const [hoveredId, setHoveredId] = useState<number | string | null>(null);
-  const [selectedId, setSelectedId] = useState<number | string | null>(null);
+  const [hovered, setHovered] = useState<string>('');
+  const [selected, setSelected] = useState<string>('');
 
   const router = useRouter();
   const pathname = usePathname()
@@ -29,36 +29,36 @@ const BlogCategory: React.FC<Props> = (props) => {
 
   useEffect(() => {
     let chosenCategory = searchParams.get('category');
-    if (chosenCategory) setSelectedId(parseInt(chosenCategory));
-    else setSelectedId(null);
+    if (!!chosenCategory) setSelected(chosenCategory);
+    else setSelected('');
   }, [searchParams]);
 
-  const setSelectedCategory = useCallback((id: string | number) => {
-    if (id === selectedId) {
-      setSelectedId(null);
+  const setSelectedCategory = useCallback((slug: string) => {
+    if (slug === selected) {
+      setSelected('');
       router.push(pathname);
     } else {
-      setSelectedId(id);
-      router.push(pathname + '?category=' + id);
+      setSelected(slug);
+      router.push(pathname + '?category=' + slug);
     }
-  }, [selectedId]);
+  }, [selected]);
 
   return (
     <div className="sticky float-right top-20">
       <div className="flex gap-1.5">
-        {categories.map(({ id, name }, index) => (
+        {categories.map(({ id, name , slug}, index) => (
           <div key={index}
                className="relative py-1 px-2 text-xs cursor-pointer inline-block"
-               onMouseEnter={() => setHoveredId(id)}
-               onMouseLeave={() => setHoveredId(null)}
-               onClick={() => setSelectedCategory(id)}>
+               onMouseEnter={() => setHovered(slug)}
+               onMouseLeave={() => setHovered('')}
+               onClick={() => setSelectedCategory(slug)}>
             <motion.a className={cx(
                 "absolute bg-blue-200 w-full h-full -z-[1] origin-center inset-0 rounded",
-                        selectedId === id ? "opacity-100" : "opacity-60"
+                        selected === slug ? "opacity-100" : "opacity-60"
                       )}
-                      initial={{ scale: 1, opacity: selectedId === id ? 1 : 0.5 }}
-                      animate={{ scale: hoveredId === id ? 1.07 : 1, opacity: selectedId === id ? 1 : 0.5 }}
-                      transition={{ type: "spring", bounce: 0.3, stiffness: 900, damping: 50 }}>
+                      initial={{ scale: 1, opacity: selected === slug ? 1 : 0.5 }}
+                      animate={{ scale: hovered === slug ? 1.07 : 1, opacity: selected === slug ? 1 : 0.5 }}
+                      transition={{ type: "spring", bounce: 0.9, stiffness: 400, damping: 30 }}>
             </motion.a>
             <span className="w-full h-full text-font-blueDark font-medium">{name}</span>
           </div>

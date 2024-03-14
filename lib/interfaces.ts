@@ -3,6 +3,10 @@ export interface BaseIdName {
   name: string;
 }
 
+export interface BaseIdNameSlug extends BaseIdName {
+  slug: string;
+}
+
 export interface KeyVal {
   key: string;
   value: string | number;
@@ -126,4 +130,4 @@ export interface ExploreQuery extends initialQuery {
 }
 
 export interface PostTag extends BaseIdName {};
-export interface PostCategory extends BaseIdName {};
+export interface PostCategory extends BaseIdNameSlug {};
