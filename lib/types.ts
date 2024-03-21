@@ -85,3 +85,18 @@ export type postListApiResponse = paginatedApiResponse & {
     category: PostCategory;
   }[];
 }
+
+export type postDetailApiResponse = {
+  id: number
+  name: string;
+  slug: string;
+  description: string;
+  content: string;
+  views: number;
+  likes: number;
+  tags: PostTag[];
+  category: PostCategory;
+  created_at: Date;
+  published_at: string;
+  updated_at: Date;
+};
