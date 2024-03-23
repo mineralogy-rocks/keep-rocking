@@ -28,7 +28,7 @@ function createHeading(level) {
 
     return React.createElement(
       `h${level}`,
-      { id: crypto.randomUUID() },
+      { id: slug },
       [
         React.createElement('a', {
           href: `#${slug}`,

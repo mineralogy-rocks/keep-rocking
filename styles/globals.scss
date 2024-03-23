@@ -4,6 +4,18 @@
 
 @import "./utils.module.scss";
 
+:root {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #354150;
+  --sh-property: #0550ae;
+  --sh-entity: #2d5e9d;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #2d9a4e;
+  --sh-keyword: #d73a49;
+  --sh-comment: #a19595;
+}
+
 
 body {
   min-height: 100vh;
@@ -27,5 +39,15 @@ body {
     hsl(274deg 70% 96%) 97%,
     hsl(300deg 67% 96%) 100%
   );
+
+  @apply dark:bg-gray-900 dark:bg-none;
+}
+
+.prose pre {
+  @apply dark:bg-gray-800;
+}
+
+:is(.dark .dark\:prose) :where(pre) {
+    box-shadow: inset 0 0 0 1px #ffffff1a;
 }
 

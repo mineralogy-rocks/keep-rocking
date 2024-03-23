@@ -21,3 +21,11 @@ export async function getBlogCategories() {
 export async function getBLogPost(slug: string) {
   return await clientFetcher('/blog/post/' + slug);
 }
+
+export async function incrementViews(slug: string) {
+  return await clientFetcher('/blog/post/' + slug + '/increment-views/', { method: 'POST' });
+}
+
+export async function getViews(slug: string) {
+  return await clientFetcher('/blog/post/' + slug + '/views/');
+}
