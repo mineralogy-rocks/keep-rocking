@@ -1,14 +1,12 @@
-const { fontFamily } = require('tailwindcss/defaultTheme')
+const { fontFamily } = require('tailwindcss/defaultTheme');
+const themeSwapper = require('tailwindcss-theme-swapper');
+const colors = require('tailwindcss/colors')
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./helpers/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
+const themes = [
+  {
+    name: 'base',
+    selectors: [':root'],
+    theme: {
       colors: {
         lilac: {
           DEFAULT: '#F500AB',
@@ -26,6 +24,104 @@ module.exports = {
           DEFAULT: '#f1f1f1',
         }
       },
+    }
+  },
+  {
+    name: 'dark',
+		selectors: ['.dark'],
+    mediaQuery: '@media (prefers-color-scheme: dark)',
+    theme: {
+      colors: {
+        lilac: {
+          DEFAULT: '#F500AB',
+        },
+        font: {
+          DEFAULT: colors.slate[200],
+          primary: '#f1f1f1',
+          secondary: '#4d5c72',
+          ternary: '#9ca3af',
+          blue: colors.blue[400],
+          blueDark: colors.sky[400],
+          orange: '#f3ece9',
+        },
+        gray: {
+          DEFAULT: '#f1f1f1',
+        }
+      },
+    }
+  }
+];
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./helpers/*.{js,ts,jsx,tsx}",
+  ],
+  // TODO: remove this after testing dark styles
+  darkMode: 'selector',
+  theme: {
+    extend: {
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            maxWidth: 'none',
+            color: theme('colors.font.primary'),
+            pre: {
+              backgroundColor: theme('colors.neutral.50'),
+              padding: theme('padding.5'),
+              boxShadow: `0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
+                          0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
+                          0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);`,
+              display: 'flex',
+              marginTop: `${20 / 14}em`,
+              marginBottom: `${32 / 14}em`,
+            },
+            a: {
+              fontWeight: theme('fontWeight.semibold'),
+              textDecoration: 'none',
+              borderBottom: `1px solid ${theme('colors.indigo.400')}`,
+            },
+            'a:hover': {
+              borderBottomWidth: '2px',
+            },
+            'code span': {
+              fontWeight: theme('fontWeight.semibold'),
+            },
+            'pre code': {
+              flex: 'none',
+              minWidth: '100%',
+              lineHeight: theme('lineHeight.tight'),
+            },
+          }
+        },
+        dark: {
+          css: {
+            color: theme('colors.font.primary'),
+            pre: {
+              backgroundColor: theme('colors.slate.50'),
+              borderRadius: theme('borderRadius.sm'),
+              padding: theme('padding.5'),
+              boxShadow: `0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
+                          0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
+                          0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);`,
+              display: 'flex',
+              marginTop: `${20 / 14}em`,
+              marginBottom: `${32 / 14}em`,
+            },
+            a: {
+              fontWeight: theme('fontWeight.semibold'),
+              textDecoration: 'none',
+              borderBottom: `1px solid ${theme('colors.indigo.300')}`,
+            },
+            'a:hover': {
+              borderBottomWidth: '2px',
+            },
+          }
+        },
+      }),
+
       maxWidth: {
         '8xl': '88rem',
       },
@@ -119,7 +215,9 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/line-clamp'),
     require('@tailwindcss/typography'),
+    themeSwapper({
+			themes: themes
+		})
   ],
 }

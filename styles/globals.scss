@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 @import "./utils.module.scss";
 
@@ -40,14 +39,10 @@ body {
     hsl(300deg 67% 96%) 100%
   );
 
-  @apply dark:bg-gray-900 dark:bg-none;
 }
 
-.prose pre {
-  @apply dark:bg-gray-800;
+:is(.dark) :where(body) {
+  @apply bg-slate-900 bg-none;
 }
 
-:is(.dark .dark\:prose) :where(pre) {
-    box-shadow: inset 0 0 0 1px #ffffff1a;
-}
-
+@import "./utils.module.scss";

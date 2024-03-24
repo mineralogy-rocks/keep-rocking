@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import clsx from 'clsx';
 
-import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
 export const metadata: Metadata = {
@@ -27,8 +26,8 @@ export default function Terms() {
           <div className="col-span-3 lg:col-span-2">
             <p className={typographyStyles.Paragraph}>
               The following terms of use (“Terms”) govern your access to and use of the websites{' '}
-              <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noreferrer">api.mineralogy.rocks</a> and{' '}
-              <a className={utilsStyles.linkExternal} href="https://mineralogy.rocks" target="_blank" rel="noreferrer">mineralogy.rocks</a> (collectively, the “Websites”),
+              <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noreferrer">api.mineralogy.rocks</a> and{' '}
+              <a className="link external" href="https://mineralogy.rocks" target="_blank" rel="noreferrer">mineralogy.rocks</a> (collectively, the “Websites”),
               operated and owned by mineralogy.rocks (collectively, “mineralogy.rocks”, “we”, “us” or “our”).
             </p>
 
@@ -139,7 +138,7 @@ export default function Terms() {
 
               <h3 className={clsx(typographyStyles.Header3)}>3. Privacy.</h3>
               <p className={typographyStyles.Paragraph}>
-                Please refer to our <Link href="/privacy-policy" className={utilsStyles.link}>Privacy Policy</Link> for information regarding our collection, use,
+                Please refer to our <Link href="/privacy-policy" className="link">Privacy Policy</Link> for information regarding our collection, use,
                 and disclosure of your personal information.
               </p>
 
@@ -263,7 +262,7 @@ export default function Terms() {
               <h3 className={clsx(typographyStyles.Header3)}>12. Contact Us.</h3>
               <p className={typographyStyles.Paragraph}>
                 If you have any questions about these Terms, please contact us by email at{' '}
-                <a className={utilsStyles.linkExternal} href="mailto:admin@mineralogy.rocks" target="_blank" rel="noreferrer">admin@mineralogy.rocks</a>
+                <a className="link external" href="mailto:admin@mineralogy.rocks" target="_blank" rel="noreferrer">admin@mineralogy.rocks</a>
               </p>
             </div>
           </div>

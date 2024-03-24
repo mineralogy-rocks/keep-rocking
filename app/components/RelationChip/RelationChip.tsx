@@ -93,7 +93,7 @@ export default function RelationChip(
                   onMouseLeave={onMouseLeaveHandler}>
         <div className={cx("flex items-center space-x-0.5 text-xs font-light", textColor)}>
           <span className={cx("flex shrink-0 w-1.5 h-1.5 rounded mr-1", getStatusColor(statuses))}></span>
-          <span className={cx(utilsStyles.linkSmall, "cursor-default")}>{name}</span>
+          <span className="link font-medium cursor-default">{name}</span>
         </div>
 
 

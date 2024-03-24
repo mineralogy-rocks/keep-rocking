@@ -70,7 +70,7 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
   return (
       <div ref={intersectionRef}
            id={'mineralCard-' + index}
-           className="relative scroll-mt-16 bg-white shadow-surface-low sm:rounded p-4 mx-auto h-auto transition-all duration-200">
+           className="relative scroll-mt-16 bg-white dark:bg-slate-800 shadow-surface-low sm:rounded p-4 mx-auto h-auto transition-all duration-200">
         <div className="grid grid-cols-3 gap-2">
           <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
             <span className="italic text-base">{mineral.ima_symbol}</span>

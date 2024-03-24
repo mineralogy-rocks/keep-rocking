@@ -8,7 +8,6 @@ import { motion, useInView } from "framer-motion";
 import cx from 'clsx';
 
 import Terminal from '@/components/Content/Terminal';
-import utilsStyles from '@/styles/utils.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
 import SAVLogo from 'public/assets/SAV_logo.jpg';
@@ -184,7 +183,7 @@ export default function Home() {
         <div className="relative mx-auto px-6 sm:px-8 mt-20 md:mt-28">
           <div className="flex justify-center">
             <Link href="/explore">
-                <span className={cx(utilsStyles.link, 'group flex items-center font-bold text-base md:text-lg')}>Start Exploring
+                <span className='group link flex items-center font-bold text-base md:text-lg'>Start Exploring
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                 </svg>
@@ -212,7 +211,7 @@ export default function Home() {
             <div className="md:col-span-6 flex flex-col">
                 <h4 className={typographyStyles.Subtitle}>Researchers</h4>
                 <p className="text-base md:text-lg text-font-secondary leading-normal text-left mt-5">
-                    Check out our filtering system at <Link href="/explore" className={utilsStyles.link}>mineralogy.rocks/explore</Link>.
+                    Check out our filtering system at <Link href="/explore" className="link">mineralogy.rocks/explore</Link>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
                 </p>
             </div>
@@ -254,7 +253,7 @@ export default function Home() {
           <div className="md:col-span-6 flex flex-col">
             <h3 className={typographyStyles.Subtitle}>Developers</h3>
             <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
+              The data is accessible via <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
               through your favourite <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-secondary">http client</code>.
               Reach out to us if you need an API key.
             </p>
@@ -364,8 +363,8 @@ export default function Home() {
               <h4 className={typographyStyles.Subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
             <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              Join our computing community <a className={utilsStyles.linkExternal} href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
-              <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
+              Join our computing community <a className="link external" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
+              <a className="link external" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
             </p>
           </div>
           <div className="md:col-span-6">
@@ -373,9 +372,9 @@ export default function Home() {
               <h4 className={typographyStyles.Subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
             <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className={utilsStyles.linkExternal} href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
-              <a className={utilsStyles.linkExternal} href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
-              and <a className={utilsStyles.linkExternal} href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
+              The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className="link external" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
+              <a className="link external" href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
+              and <a className="link external" href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
             </p>
           </div>
         </div>

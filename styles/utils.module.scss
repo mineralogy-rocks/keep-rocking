@@ -1,22 +1,11 @@
-.underlineAnimation {
-  @apply relative after:absolute after:bg-gray-400 after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300;
-}
-
-.NavBarLink {
-  @apply text-lg font-medium text-font-primary hover:text-slate-600/80 cursor-pointer;
-}
+@tailwind utilities;
 
 .link {
-  @apply text-font-blue hover:text-font-blueDark cursor-pointer;
-}
+  @apply text-sky-500 hover:text-sky-700 cursor-pointer;
 
-.linkSmall {
-  @apply font-medium text-font-blue hover:text-font-blueDark cursor-pointer;
-}
-
-.linkExternal {
-  @extend .link;
-  @apply visited:text-purple-800;
+  &.external {
+    @apply visited:text-purple-800;
+  }
 }
 
 .subtleLink {
