@@ -1,8 +1,6 @@
 @tailwind base;
 @tailwind components;
 
-@import "./utils.module.scss";
-
 :root {
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
@@ -45,4 +43,4 @@ body {
   @apply bg-slate-900 bg-none;
 }
 
-@import "./utils.module.scss";
+@import "./utils.scss";

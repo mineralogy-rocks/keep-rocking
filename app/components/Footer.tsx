@@ -1,17 +1,14 @@
 import Link from 'next/link';
 
-import cx from 'clsx';
-
 import { LogoCube } from '@/components/Logo';
-import utilsStyles from '@/styles/utils.module.scss';
 
 
 const ExternalLink = ({ href, children }) => (
-  <a className={utilsStyles.subtleLink} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+  <a className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 )
 
 const InternalLink = ({ href, children }) => (
-  <Link href={href} className={utilsStyles.subtleLink}>{children}</Link>
+  <Link href={href} className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out">{children}</Link>
 );
 
 export default function Footer() {
@@ -68,7 +65,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="https://ko-fi.com/I2I43R998" target="_blank" rel="noreferrer" className="flex items-center">
-                    <span className={cx(utilsStyles.subtleLink, 'mr-2')}>Buy us a Coffee</span>
+                    <span className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out mr-2">Buy us a Coffee</span>
                   </a>
                 </li>
               </ul>

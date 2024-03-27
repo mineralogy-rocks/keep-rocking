@@ -36,9 +36,9 @@ const themes = [
           DEFAULT: '#F500AB',
         },
         font: {
-          DEFAULT: colors.slate[200],
+          DEFAULT: colors.slate[400],
           primary: '#f1f1f1',
-          secondary: '#4d5c72',
+          secondary: '#959b9f',
           ternary: '#9ca3af',
           blue: colors.blue[400],
           blueDark: colors.sky[400],
@@ -194,23 +194,11 @@ module.exports = {
         }
       },
       boxShadow: ({ theme }) => ({
-        "surface-low": `
+        "gray-surface": `
           0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
           0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
           0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);
         `,
-        "surface-medium": `
-          0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.19),
-          0.9px 1.8px 2.5px -0.5px hsl(210deg 12% 67% / 0.24),
-          2px 4px 5.6px -1.1px hsl(210deg 12% 67% / 0.29),
-          4.6px 9.1px 12.8px -1.6px hsl(210deg 12% 67% / 0.35);
-        `,
-        "pink": `
-          0.1px 0.4px 0.5px hsl(285deg 40% 52% / 0.25),
-          0.4px 1.2px 1.5px -0.6px hsl(285deg 40% 52% / 0.27),
-          0.9px 2.8px 3.6px -1.3px hsl(285deg 40% 52% / 0.31),
-          2.1px 6.6px 8.4px -1.9px hsl(285deg 40% 52% / 0.34);
-        `
       })
     },
   },

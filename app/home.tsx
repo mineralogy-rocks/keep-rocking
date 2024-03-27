@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
 import cx from 'clsx';
 
+import useSessionState from "@/hooks/use-session-state.hook";
 import Terminal from '@/components/Content/Terminal';
 import typographyStyles from '@/styles/typography.module.scss';
 
@@ -56,7 +57,7 @@ export default function Home() {
   }, [htmlTypedCode]);
 
 
-  const [magicEnabled, setMagicEnabled] = useState(true);
+  const [magicEnabled, setMagicEnabled] = useSessionState(true, 'magicEnabled');
   const variants = {
     enabled: (degrees) => ({
       rotate: degrees,
@@ -73,12 +74,6 @@ export default function Home() {
       rotate: degrees,
     }),
   };
-
-  useEffect(() => {
-    const magic = sessionStorage.getItem('magicEnabled');
-    if (magic === 'false') setMagicEnabled(false);
-    return;
-  }, []);
 
   useEffect(() => {
 
@@ -126,7 +121,6 @@ export default function Home() {
       if (isInView) {
         typeCode(0, code[0]);
         setMagicEnabled(false);
-        sessionStorage.setItem('magicEnabled', 'false');
       }
     } else {
       setTypedCode(code.join('\n'));
@@ -139,7 +133,7 @@ export default function Home() {
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="relative flex items-center mt-24 text-center justify-center">
-          <h1 className="max-w-md font-black text-6xl sm:text-7xl md:text-8xl mx-auto">
+          <h1 className="max-w-md font-black text-font-primary sm:text-7xl md:text-8xl mx-auto">
             Explore.
             Extract.
             Research.
@@ -183,7 +177,7 @@ export default function Home() {
         <div className="relative mx-auto px-6 sm:px-8 mt-20 md:mt-28">
           <div className="flex justify-center">
             <Link href="/explore">
-                <span className='group link flex items-center font-bold text-base md:text-lg'>Start Exploring
+                <span className='group link flex items-center !font-bold text-base md:text-lg'>Start Exploring
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                 </svg>
@@ -191,7 +185,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-left mt-7">
+          <p className="text-base md:text-lg font-medium leading-normal text-left mt-7">
             <strong>Mineralogy.rocks</strong> provide seamless and simple way to access and filter mineralogical and related data.
             Our platform is designed both for researchers and developers.
           </p>
@@ -201,8 +195,8 @@ export default function Home() {
 
     <section>
       <div className={cx(typographyStyles.Section, "")}>
-        <h3 className="text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-start mt-7">
+        <h3 className="text-font-primary text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
+        <p className="text-base md:text-lg font-medium leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
             Find the proper data subset and explore the relations between minerals.
         </p>
@@ -210,18 +204,18 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start">
             <div className="md:col-span-6 flex flex-col">
                 <h4 className={typographyStyles.Subtitle}>Researchers</h4>
-                <p className="text-base md:text-lg text-font-secondary leading-normal text-left mt-5">
+                <p className="text-base md:text-lg leading-normal text-left mt-5">
                     Check out our filtering system at <Link href="/explore" className="link">mineralogy.rocks/explore</Link>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
                 </p>
             </div>
 
             <div className="md:col-span-6 flex flex-col">
-              <div className="flex flex-col gap-2 text-left text-base md:text-lg font-normal text-font-secondary leading-normal">
+              <div className="flex flex-col gap-2 text-left text-base md:text-lg font-normal leading-normal">
                 <div className="flex flex-wrap items-center">
                   <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">1</span>
-                  <p className="flex-1 text-font-secondary">
-                    <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-secondary">WHERE</code> discovery year <b>between</b> 1999 and 2001
+                  <p className="flex-1">
+                    <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-primary">WHERE</code> discovery year <b>between</b> 1999 and 2001
                   </p>
                 </div>
                 <div className="flex flex-row">
@@ -229,8 +223,8 @@ export default function Home() {
                 </div>
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">2</span>
-                    <p className="flex-1 text-font-secondary">
-                      <code className="bg-slate-100 px-1 py-0.5 rounded text-font-secondary">AND</code> discovery country <b>in</b> EU
+                    <p className="flex-1">
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-primary">AND</code> discovery country <b>in</b> EU
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -238,8 +232,8 @@ export default function Home() {
                 </div>
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">3</span>
-                    <p className="text-base md:text-lg leading-normal text-font-secondary">
-                      <code className="bg-slate-100 px-1 py-0.5 rounded text-font-secondary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
+                    <p className="text-base md:text-lg leading-normal">
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-primary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -252,9 +246,9 @@ export default function Home() {
         <div className="relative md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start md:min-h-[200px]">
           <div className="md:col-span-6 flex flex-col">
             <h3 className={typographyStyles.Subtitle}>Developers</h3>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+            <p className="text-base md:text-lg leading-normal mt-5">
               The data is accessible via <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
-              through your favourite <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-secondary">http client</code>.
+              through your favourite <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-primary">http client</code>.
               Reach out to us if you need an API key.
             </p>
           </div>
@@ -263,7 +257,7 @@ export default function Home() {
           <div className="relative md:col-span-6" ref={terminalRef}>
             <div className="md:absolute w-full h-full">
               <Terminal>
-                <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
+                <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold flex ligatures-none overflow-auto">
                   <code className="flex-none min-w-full p-5">
                     <span className="flex">
                       <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
@@ -298,8 +292,8 @@ export default function Home() {
 
     <section>
       <div className={typographyStyles.Section}>
-        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-left mt-5">
+        <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
+        <p className="text-base md:text-lg font-medium leading-normal text-left mt-5">
           The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
         </p>
@@ -307,18 +301,18 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
           <div className="md:col-span-6">
             <Terminal>
-              <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
+              <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold flex ligatures-none overflow-auto">
                 <code className="flex-none min-w-full p-5">
                   <span className="flex">
                     <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
                       <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                     </svg>
                     <span className="flex-auto">
-                      <span className="text-indigo-600"><span className="text-violet-800">let</span> queryParams</span> = &#123;{'\n'}
-                      <span className="text-rose-700">   color</span>: &quot;blue&quot;,{'\n'}
-                      <span className="text-rose-700">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
-                      <span className="text-rose-700">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
-                      <span className="text-rose-700">   discovery_year_max</span>: 1998,{'\n'}
+                      <span className="text-indigo-600 dark:text-indigo-400"><span className="text-violet-800 dark:text-violet-200">let</span> queryParams</span> = &#123;{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   color</span>: &quot;blue&quot;,{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   discovery_year_max</span>: 1998,{'\n'}
                       <span>   ...</span>{'\n'}
                       <span>&#125;</span>
                     </span>
@@ -332,7 +326,7 @@ export default function Home() {
           <div className="md:col-span-6 flex flex-col space-y-6 md:space-y-2">
             <div className="flex flex-col">
               <h4 className={typographyStyles.Subtitle}>Flexible data fetching</h4>
-              <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+              <p className="text-base md:text-lg leading-normal mt-5">
                 Export the data in a preferred format or connect your application directly to our <b>API</b>.
                 We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
               </p>
@@ -340,7 +334,7 @@ export default function Home() {
 
             <div className="flex flex-col">
               <h4 className={typographyStyles.Subtitle}>Share the query</h4>
-              <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+              <p className="text-base md:text-lg leading-normal mt-5">
                 All filtering systems are connected to the query params of the <b>URL string</b> - you’ll <em>never</em> loose your results once you obtained them.
               </p>
             </div>
@@ -351,8 +345,8 @@ export default function Home() {
 
     <section>
       <div className={typographyStyles.Section}>
-        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4 text">Do research</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal mt-7">
+        <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Do research</h3>
+        <p className="text-base md:text-lg font-medium leading-normal mt-7">
           We will gladly assist you in finding the right data in a right format.
           We believe in open science and open source—things that make our lives better.
         </p>
@@ -362,7 +356,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className={typographyStyles.Subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+            <p className="text-base md:text-lg leading-normal mt-5">
               Join our computing community <a className="link external" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
               <a className="link external" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
             </p>
@@ -371,7 +365,7 @@ export default function Home() {
             <div className="flex items-center">
               <h4 className={typographyStyles.Subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+            <p className="text-base md:text-lg leading-normal mt-5">
               The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className="link external" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
               <a className="link external" href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
               and <a className="link external" href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
@@ -383,10 +377,10 @@ export default function Home() {
 
     <section className="px-6 sm:px-8 mt-40 mx-auto max-w-6xl">
       <div className="flex flex-col">
-        <h2 className="font-black text-xl sm:text-4xl md:text-4xl text-start mt-4 text">Funding and Sponsors</h2>
+        <h2 className="text-font-primary font-black text-xl sm:text-4xl md:text-4xl text-start mt-4">Funding and Sponsors</h2>
 
          <div className="flex flex-col md:flex-row justify-between items-center mt-7 gap-10 md:gap-5">
-           <div className="max-w-md md:max-w-lg text-base md:text-lg text-font-secondary leading-normal">
+           <div className="max-w-md md:max-w-lg text-base md:text-lg leading-normal">
              <p className="">
                <strong>mineralogy.rocks</strong> is a non-profit outreach research project funded by academia since 2021. We always seek sponsors and donations to help us improve and evolve.
              </p>
@@ -667,7 +661,7 @@ export default function Home() {
             <Image src={MSCALogo} alt="MSCA" className="w-14 h-auto" />
           </a>
         </div>
-        <p className="mt-10 text-font-secondary leading-normal">
+        <p className="mt-10 leading-normal">
           This project&apos;s identification number is 3007/01/01 and it is funded from the European Union&apos;s Horizon 2020 research and innovation programme
           under the Marie Skłodowska-Curie grant agreement No 945478.
         </p>

@@ -1,22 +1,5 @@
 @tailwind utilities;
 
-.link {
-  @apply text-sky-500 hover:text-sky-700 cursor-pointer;
-
-  &.external {
-    @apply visited:text-purple-800;
-  }
-}
-
-.subtleLink {
-  @apply hover:text-slate-600/80 transition-all duration-100 ease-in-out;
-
-}
-
-.secondaryText {
-  @apply text-font-secondary;
-}
-
 // TODO: move to separate file
 .prop {
   @apply text-font-primary px-1 sm:px-2;

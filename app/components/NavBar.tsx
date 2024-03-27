@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { usePathname } from "next/navigation";
 import Link from 'next/link';
-import clsx from 'clsx';
+import cx from 'clsx';
 
 import NavPopover from '@/components/NavPopover';
 import { LogoCube } from '@/components/Logo';
@@ -15,7 +15,7 @@ function NavItem({href, text}) {
 
   return (
       <Link href={href}>
-        <span className={clsx({ "text-slate-600/80": isActive }, "text-lg font-medium text-font-primary hover:text-slate-600/80 cursor-pointer transition-all duration-300 ease-in-out")}>{text}</span>
+        <span className={cx({ "text-slate-600/80 dark:text-slate-300": isActive }, "text-lg font-medium dark:hover:text-slate-300 hover:text-slate-600/80 cursor-pointer transition-all duration-300 ease-in-out")}>{text}</span>
       </Link>
   );
 }
@@ -34,7 +34,7 @@ export default function Navbar() {
                 <div className="mr-0.5">
                   <LogoCube isHovered={isHovered} />
                 </div>
-                <span className="text-lg font-medium text-font-primary cursor-pointer hover:text-slate-600/80 transition-all duration-300 ease-in-out">ineralogy.rocks</span>
+                <span className="text-lg font-medium cursor-pointer dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-300 ease-in-out">ineralogy.rocks</span>
               </div>
             </Link>
           </li>
