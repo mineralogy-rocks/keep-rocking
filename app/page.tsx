@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import Home from './home';
+import Home from './index';
 
 
 export const metadata: Metadata = {
