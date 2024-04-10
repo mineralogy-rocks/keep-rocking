@@ -39,8 +39,4 @@ body {
 
 }
 
-:is(.dark) :where(body) {
-  @apply bg-slate-900 bg-none;
-}
-
 @import "./utils.scss";

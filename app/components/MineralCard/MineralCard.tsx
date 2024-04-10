@@ -2,9 +2,8 @@ import { exploreApiResponse } from '@/lib/types';
 
 import { useRef, useEffect } from 'react';
 import { useIntersection } from 'react-use';
-import clsx from 'clsx';
+import cx from 'clsx';
 
-import utilsStyles  from '@/styles/utils.module.scss';
 import NoData from './NoData';
 import RelationChip from '@/components/RelationChip';
 import ClassificationSnippet from './Classification';
@@ -18,7 +17,7 @@ import { INHERITANCE_PROP_CHOICES } from "@/lib/constants";
 
 
 function LinksSnippet({ data }) {
-  if (data.length > 0) {
+  if (!!data.length) {
     return (
       <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
@@ -32,15 +31,17 @@ function LinksSnippet({ data }) {
   return <NoData />;
 };
 
+
 export function SnippetWrapper({ className="", title, subtitle="", children }) {
   return (
-    <div className={clsx("flex flex-col", className)}>
-      <h3 className="text-sm lg:text-base font-medium text-start mb-2">{title}</h3>
+    <div className={cx("flex flex-col", className)}>
+      <h3 className="text-sm lg:text-base font-medium text-start mb-2 text-font-primary">{title}</h3>
       {subtitle && (<h4>{subtitle}</h4>)}
       <div className="p-0.5">{children}</div>
     </div>
   )
 };
+
 
 export default function MineralCard({ index, mineral, isVisible } : { index: number, mineral: exploreApiResponse, isVisible: (boolean) => void }) {
 
@@ -49,12 +50,12 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
     rootMargin: '-56px 0px 0px 0px',
     threshold: 0.5
   });
-  const [_formulasFrom, _formulas] = getSelfOrInheritedProp(
+  const [formulasFrom, formulas] = getSelfOrInheritedProp(
     mineral.formulas,
     mineral.inheritance_chain.filter(_item => _item.prop === INHERITANCE_PROP_CHOICES['formula']),
     'formulas'
   );
-  const [_crystallographyFrom, _crystallography] = getSelfOrInheritedProp(
+  const [crystallographyFrom, crystallography] = getSelfOrInheritedProp(
     mineral.crystallography,
     mineral.inheritance_chain.filter(_item => _item.prop ===  INHERITANCE_PROP_CHOICES['crystallography']),
     'crystallography'
@@ -70,13 +71,13 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
   return (
       <div ref={intersectionRef}
            id={'mineralCard-' + index}
-           className="relative scroll-mt-16 bg-white dark:bg-slate-800 shadow-gray-surface sm:rounded p-4 mx-auto h-auto transition-all duration-200">
+           className="relative scroll-mt-16 bg-white dark:bg-slate-800 shadow-gray-surface dark:shadow-none sm:rounded p-4 mx-auto h-auto transition-all duration-200">
         <div className="grid grid-cols-3 gap-2">
           <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
             <span className="italic text-base">{mineral.ima_symbol}</span>
             <div className="ml-5 space-y-1">
               <div className="flex">
-                <div className={clsx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
+                <div className={cx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
                 <InternalLink className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words"
                               href={`/explore/${mineral.slug}`}
                               text={mineral.name}
@@ -84,12 +85,12 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
                               prefetch={true} />
               </div>
               <div className="flex flex-wrap items-center gap-1">
-                {!!_formulas.length && (
-                  <h2 className="break-words max-w-full" dangerouslySetInnerHTML={{ __html: getRelevantFormula(_formulas).formula }}></h2>
+                {!!formulas.length && (
+                  <h2 className="break-words max-w-full text-font-primary" dangerouslySetInnerHTML={{ __html: getRelevantFormula(formulas).formula }}></h2>
                 )}
-                {_formulasFrom && (
+                {formulasFrom && (
                   <div className="flex flex-row items-center gap-x-1">
-                    <RelationChip {...{ name: _formulasFrom.name, statuses: _formulasFrom.statuses}} />
+                    <RelationChip {...{ name: formulasFrom.name, statuses: formulasFrom.statuses}} />
                   </div>
                 )}
               </div>
@@ -112,8 +113,8 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <SnippetWrapper title="Crystallography" subtitle="">
               <CrystallographySnippet isGrouping={mineral.is_grouping}
                                       slug={mineral.slug}
-                                      data={_crystallography}
-                                      from={_crystallographyFrom} />
+                                      data={crystallography}
+                                      from={crystallographyFrom} />
             </SnippetWrapper>
 
             <SnippetWrapper title="Discovery">
@@ -135,7 +136,7 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
         </div>
 
         <div className="flex justify-between mt-1">
-          <span className="flex italic font-light text-xxs">Last updated in {mineral.updated_at.toString()}</span>
+          <span className="flex italic font-light text-font-secondary text-xxs">Last updated in {mineral.updated_at.toString()}</span>
           <div className="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
               <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />

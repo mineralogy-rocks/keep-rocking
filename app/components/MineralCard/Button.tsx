@@ -1,11 +1,14 @@
-import clsx from 'clsx';
+import React from 'react';
+
+import cx from 'clsx';
 
 import Chip from '@/components/Chip';
 
+
 const PingComponent = (color = "bg-sky-500", animated = true) => (
     <span className="absolute top-[1px] right-[1px] -mt-1 -mr-1 flex h-2 w-2">
-      {animated && (<span className={clsx("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", color)}></span>)}
-      <span className={clsx("relative inline-flex rounded-full h-2 w-2 border border-gray-400", color)}></span>
+      {animated && (<span className={cx("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", color)}></span>)}
+      <span className={cx("relative inline-flex rounded-full h-2 w-2 border border-slate-400 dark:border-slate-600", color)}></span>
     </span>
 )
 
@@ -23,7 +26,7 @@ export default function Button ({ item, isLoading, error, isShown, isClickable =
       {isLoading && PingComponent()}
       {isShown && PingComponent("bg-emerald-400", false)}
       {error && PingComponent("bg-red-500", false)}
-      <Chip type="default" className={clsx(isShown && "bg-indigo-300/90", isClickable ? "cursor-pointer" : "cursor-default")} {...{isLoading, onClick}}>
+      <Chip type="default" className={cx(isShown && "bg-indigo-300/90 dark:bg-indigo-400", isClickable ? "cursor-pointer" : "cursor-default")} {...{ isLoading, onClick }}>
         <span className="font-medium flex-1 text-start text-indigo-700">{item.key}</span>
         {item.value && (
           <>

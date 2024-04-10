@@ -6,11 +6,11 @@ import { LogoCube } from '@/components/Logo';
 
 
 const ExternalLink = ({ href, children }) => (
-  <a className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+  <a className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 )
 
 const InternalLink = ({ href, children }) => (
-  <Link href={href} className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out">{children}</Link>
+  <Link href={href} className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out">{children}</Link>
 );
 
 export default function Footer() {
@@ -34,12 +34,12 @@ export default function Footer() {
               @media (prefers-color-scheme: dark) {
                 path:first-child {
                   fill: #2cedff;
-                  fill-opacity: 0.15;
+                  fill-opacity: 0.16;
                 }
 
                 path:last-child {
                   fill: #f633c3;
-                  fill-opacity: 0.15;
+                  fill-opacity: 0.16;
                 }
               }
             `}</style>
@@ -90,7 +90,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="https://ko-fi.com/I2I43R998" target="_blank" rel="noreferrer" className="flex items-center">
-                    <span className="dark:hover:text-slate-300 hover:text-slate-600/80 transition-all duration-100 ease-in-out mr-2">Buy us a Coffee</span>
+                    <span className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out mr-2">Buy us a Coffee</span>
                   </a>
                 </li>
               </ul>

@@ -65,10 +65,10 @@ export default function Tooltip({ className, isShown=false, children, button } :
                           afterLeave={() => setPopperElement(null)}>
                 <Popover.Panel as="div"
                                static
-                               className={clsx("w-screen max-w-xs md:max-w-sm bg-zinc-100 shadow-lg shadow-gray-200 border-[0.5px] border-gray-200 rounded-md p-1", className)}>
+                               className={clsx("w-screen max-w-xs md:max-w-sm bg-slate-100 dark:bg-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 border border-slate-200 dark:border-slate-800 rounded-md p-1 text-font-secondary", className)}>
                   <>
-                    <button type="button" onClick={(e) => { e.preventDefault(); close() }} className="absolute top-1 right-1 z-10">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 stroke-gray-100">
+                    <button type="button" onClick={(e) => { e.preventDefault(); close() }} className="absolute top-1 right-1 z-10 text-font-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                       </svg>
                     </button>

@@ -206,7 +206,7 @@ export default function Home() {
 
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start">
             <div className="md:col-span-6 flex flex-col">
-                <h4 className={typographyStyles.Subtitle}>Researchers</h4>
+                <h4 className={typographyStyles.subtitle}>Researchers</h4>
                 <p className="text-base md:text-lg leading-normal text-left mt-5">
                     Check out our filtering system at <Link href="/explore" className="link">mineralogy.rocks/explore</Link>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
@@ -218,7 +218,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center">
                   <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">1</span>
                   <p className="flex-1">
-                    <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-primary">WHERE</code> discovery year <b>between</b> 1999 and 2001
+                    <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">WHERE</code> discovery year <b>between</b> 1999 and 2001
                   </p>
                 </div>
                 <div className="flex flex-row">
@@ -227,7 +227,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">2</span>
                     <p className="flex-1">
-                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-primary">AND</code> discovery country <b>in</b> EU
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">AND</code> discovery country <b>in</b> EU
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -236,7 +236,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">3</span>
                     <p className="text-base md:text-lg leading-normal">
-                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-primary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -248,10 +248,10 @@ export default function Home() {
 
         <div className="relative md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start md:min-h-[200px]">
           <div className="md:col-span-6 flex flex-col">
-            <h3 className={typographyStyles.Subtitle}>Developers</h3>
+            <h3 className={typographyStyles.subtitle}>Developers</h3>
             <p className="text-base md:text-lg leading-normal mt-5">
               The data is accessible via <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
-              through your favourite <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-primary">http client</code>.
+              through your favourite <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">http client</code>.
               Reach out to us if you need an API key.
             </p>
           </div>
@@ -328,7 +328,7 @@ export default function Home() {
 
           <div className="md:col-span-6 flex flex-col space-y-6 md:space-y-2">
             <div className="flex flex-col">
-              <h4 className={typographyStyles.Subtitle}>Flexible data fetching</h4>
+              <h4 className={typographyStyles.subtitle}>Flexible data fetching</h4>
               <p className="text-base md:text-lg leading-normal mt-5">
                 Export the data in a preferred format or connect your application directly to our <b>API</b>.
                 We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
@@ -336,7 +336,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <h4 className={typographyStyles.Subtitle}>Share the query</h4>
+              <h4 className={typographyStyles.subtitle}>Share the query</h4>
               <p className="text-base md:text-lg leading-normal mt-5">
                 All filtering systems are connected to the query params of the <b>URL string</b> - you’ll <em>never</em> loose your results once you obtained them.
               </p>
@@ -357,7 +357,7 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-0 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14">
           <div className="md:col-span-6">
             <div className="flex items-center">
-              <h4 className={typographyStyles.Subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
+              <h4 className={typographyStyles.subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
             <p className="text-base md:text-lg leading-normal mt-5">
               Join our computing community <a className="link external" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
@@ -366,7 +366,7 @@ export default function Home() {
           </div>
           <div className="md:col-span-6">
             <div className="flex items-center">
-              <h4 className={typographyStyles.Subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
+              <h4 className={typographyStyles.subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
             <p className="text-base md:text-lg leading-normal mt-5">
               The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className="link external" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,

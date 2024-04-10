@@ -10,7 +10,7 @@ import Tooltip from './Tooltip';
 import NoData from './NoData';
 
 
-function ButtonWithRelation(props) {
+function ButtonWithRelation(props: any) {
   return (
     <div className="flex flex-wrap items-center gap-1 text-start cursor-default">
       <Button {...props} />
@@ -66,7 +66,7 @@ export default function CrystallographySnippet({ isGrouping, slug, data, from = 
                     <p className="font-semibold pb-2 mr-5">Minerals with {item.name} crystal system</p>
                   </div>
                   <div className="w-auto max-h-[20vh] overflow-auto">
-                    <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-gray-500 marker:font-normal">
+                    <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
                       {_data.map((item_, i) => {
                         return (
                         <li key={i} className="flex-wrap">

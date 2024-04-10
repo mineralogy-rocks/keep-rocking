@@ -8,16 +8,13 @@ const themes = [
     selectors: [':root'],
     theme: {
       colors: {
-        lilac: {
-          DEFAULT: '#F500AB',
-        },
         font: {
-          DEFAULT: '#1e293b',
+          DEFAULT: colors.slate[600],
           primary: '#0f172a',
           secondary: '#4d5c72',
           ternary: '#9ca3af',
-          blue: '#1d4ed8',
-          blueDark: '#1e3a8a',
+          blue: colors.sky[500],
+          blueDark: colors.sky[600],// '#1e3a8a',
           orange: '#f3ece9',
         },
         gray: {
@@ -32,16 +29,13 @@ const themes = [
     mediaQuery: '@media (prefers-color-scheme: dark)',
     theme: {
       colors: {
-        lilac: {
-          DEFAULT: '#F500AB',
-        },
         font: {
           DEFAULT: colors.slate[400],
           primary: '#f1f1f1',
-          secondary: '#959b9f',
+          secondary: colors.slate[300],
           ternary: '#9ca3af',
-          blue: colors.blue[400],
-          blueDark: colors.sky[400],
+          blue: colors.sky[400],
+          blueDark: colors.blue[400],
           orange: '#f3ece9',
         },
         gray: {
@@ -60,7 +54,7 @@ module.exports = {
     "./helpers/*.{js,ts,jsx,tsx}",
   ],
   // TODO: remove this after testing dark styles
-  darkMode: 'selector',
+  // darkMode: 'selector',
   theme: {
     extend: {
       typography: (theme) => ({
@@ -122,6 +116,11 @@ module.exports = {
         },
       }),
 
+      colors: {
+        lilac: {
+          DEFAULT: '#F500AB',
+        },
+      },
       maxWidth: {
         '8xl': '88rem',
       },

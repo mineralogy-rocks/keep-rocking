@@ -7,16 +7,16 @@ export type Styles = {
 export const getStyles= (type = "default"): Styles => {
 
   let defaultStyles = {
-    textColor: 'text-gray-800',
-    backgroundColor: 'bg-red-50/60',
-    borderColor: 'border border-gray-200 hover:border-gray-300'
+    textColor: 'text-font-primary',
+    backgroundColor: 'bg-red-50/60 dark:bg-sky-400/30',
+    borderColor: 'border border-slate-200 dark:border-slate-400/50 hover:border-slate-300 dark:hover:border-slate-400/80'
   };
 
   const colors = {
     default: defaultStyles,
     highlighted: {
       ...defaultStyles,
-      borderColor: 'border border-gray-400'
+      borderColor: 'border border-slate-400'
     }
   };
   return colors[type];

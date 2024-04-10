@@ -20,7 +20,7 @@ export default function Checkbox({ label, name, value, onChange, checked = true,
              checked={checked}
              disabled={disabled}
              className="form-checkbox h-3 w-3 text-gray-600" />
-      <label htmlFor={name} className="ml-2 text-sm text-gray-700">{label}</label>
+      <label htmlFor={name} className="ml-2 text-sm text-slate-700 dark:text-slate-300">{label}</label>
     </div>
   )
 };

@@ -17,7 +17,7 @@ import NoData from './NoData';
 const buttonComponent = (isLoading, error, isShown, onClick) => {
   if (isLoading) return (<LoadingIcon className="stroke-cyan-900 animate-spin" />);
   if(error) return (<ErrorIcon className="stroke-red-500" />);
-  else return (<QuestionIcon className={isShown ? "stroke-cyan-900 transition-colors duration-1000" : "stroke-gray-400"} onClick={onClick} />)
+  else return (<QuestionIcon className={isShown ? "stroke-cyan-900 transition-colors duration-1000" : "stroke-slate-400"} onClick={onClick} />)
 };
 
 
@@ -95,17 +95,17 @@ export default function ClassificationSnippet({ data }) {
               return group.minerals ? (
                 <li key={id} className="flex flex-wrap items-center gap-1">
                   <span className="w-1 h-1 bg-blue-700 rounded-full"></span>
-                  <span className="text-xs font-medium text-gray-600">{group.name} of</span>
+                  <span className="text-xs font-medium text-font-secondary">{group.name} of</span>
                   {group.minerals.map((mineral, id) => {
                     return (
-                      <RelationChip key={id} name={mineral.name} statuses={mineral.statuses} hasArrow={false} />
+                      <RelationChip key={id} hasArrow={false} {...{ name: mineral.name, statuses: mineral.statuses }} />
                     )
                   })}
                 </li>
               ) : (
                 <li key={id} className="flex flex-wrap items-center gap-1">
                   <span className="w-1 h-1 bg-blue-700 rounded-full"></span>
-                  <span className="text-xs font-medium text-gray-600">{group.name}</span>
+                  <span className="text-xs font-medium text-font-secondary">{group.name}</span>
                 </li>
               )
             })}
