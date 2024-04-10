@@ -1,6 +1,7 @@
 import { useState, Fragment, useRef } from 'react';
 
-import clsx from 'clsx';
+import cx from 'clsx';
+
 import { usePopper } from 'react-popper';
 import { Popover, Transition } from '@headlessui/react';
 
@@ -65,7 +66,7 @@ export default function Tooltip({ className, isShown=false, children, button } :
                           afterLeave={() => setPopperElement(null)}>
                 <Popover.Panel as="div"
                                static
-                               className={clsx("w-screen max-w-xs md:max-w-sm bg-slate-100 dark:bg-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 border border-slate-200 dark:border-slate-800 rounded-md p-1 text-font-secondary", className)}>
+                               className={cx("w-screen max-w-xs md:max-w-sm bg-slate-100 dark:bg-slate-700 shadow-md shadow-slate-200 dark:shadow-slate-800 border border-slate-200 dark:border-slate-800 rounded-md p-1 text-font-secondary", className)}>
                   <>
                     <button type="button" onClick={(e) => { e.preventDefault(); close() }} className="absolute top-1 right-1 z-10 text-font-primary">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">

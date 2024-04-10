@@ -13,7 +13,7 @@ const themes = [
           primary: '#0f172a',
           secondary: '#4d5c72',
           ternary: '#9ca3af',
-          blue: colors.sky[500],
+          blue: colors.sky[600],
           blueDark: colors.sky[600],// '#1e3a8a',
           orange: '#f3ece9',
         },

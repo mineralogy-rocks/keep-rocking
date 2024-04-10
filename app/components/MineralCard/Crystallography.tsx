@@ -23,9 +23,9 @@ function ButtonWithRelation(props: any) {
 
 export default function CrystallographySnippet({ isGrouping, slug, data, from = null } : { isGrouping: boolean, slug: string, data: CrystalSystem[], from: From | null }) {
 
-  const [selectedId, setSelectedId] = useState('');
-  const handleSelection = (newSelectionId) => {
-    setSelectedId(newSelectionId);
+  const [selectedId, setSelectedId] = useState<number | null | string>(null);
+  const handleSelection = (id) => {
+    setSelectedId(id);
   };
 
   const { data: _data, error, isLoading } = useSWR(
@@ -39,7 +39,7 @@ export default function CrystallographySnippet({ isGrouping, slug, data, from = 
     }
   );
 
-  if (data.length > 0) {
+  if (!!data.length) {
     return (
       <div className="flex flex-wrap gap-1 text-xs">
         {data.map((item, id) => {

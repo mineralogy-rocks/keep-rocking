@@ -1,6 +1,6 @@
 'use client';
 
-import {useMemo, useState} from 'react';
+import { useMemo, useState } from 'react';
 import Head from 'next/head';
 
 import clone from 'just-clone';
@@ -20,7 +20,7 @@ import BarcodeChart from '@/components/BarcodeChart';
 
 const Section = ({ title, children }) => (
   <section className="mt-10 px-1 sm:px-2">
-    <h2 className="text-xl font-semibold text-font-blueDark">{title}</h2>
+    <h2 className="text-xl font-semibold text-font-blue">{title}</h2>
     <div className="sm:ml-2 mt-5">
       {children}
     </div>
@@ -31,7 +31,7 @@ const CrystallographyNode = ({ item = null, isInherited = true, ...props }: {
   item: { name: string, statuses: number[] } | null,
   isInherited?: boolean,
 }) => (
-  <Card className="flex flex-col text-xs" isHoverable={false}>
+  <Card className="flex flex-col text-xs text-font-primary" isHoverable={false}>
     {item && (
       <div className="flex justify-start items-center">
         <RelationChip className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
@@ -92,8 +92,8 @@ const CrystallographyCards = ({ structures, members }) => {
                   offset={structure._offset}>
               <div className="relative flex flex-col gap-2">
                 <div className="flex">
-                  <Chip type="default" className="mt-1 bg-indigo-300/90">
-                    <span className="font-semibold flex-1 text-start text-indigo-700">{structure._crystalSystem}</span>
+                  <Chip type="default" className="mt-1 bg-indigo-300/90 dark:bg-sky-500/90">
+                    <span className="font-semibold flex-1 text-start text-indigo-700 dark:text-sky-600">{structure._crystalSystem}</span>
                   </Chip>
                 </div>
                 <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
@@ -220,12 +220,12 @@ export default function MineralPage({ data }) {
       </Head>
 
       <div className="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mt-10 px-5">
-        <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blueDark">{name}</h1>
-        <div className="mt-10 px-2 text-sm font-normal break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
+        <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blue">{name}</h1>
+        <div className="mt-10 px-2 text-sm font-normal text-font-secondary break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
 
         {!!conclusiveHistory.length && (
           <Section title="History">
-            <h3 className="text-sm font-medium text-font-blueDark">Activities related to discovery and approval of the group members</h3>
+            <h3 className="text-sm font-medium text-font-blue">Activities related to discovery and approval of the group members</h3>
             <BarcodeChart items={conclusiveHistory} labelX="Year" domainY={Object.values(HISTORY_DATA_MAP)} />
           </Section>
         )}
@@ -255,7 +255,7 @@ export default function MineralPage({ data }) {
         {!!conclusiveFormulas.length && (
           <Section title="Chemical context">
             <div className="flex flex-col flex-wrap gap-5 px-2">
-              <h3 className="text-sm font-medium text-font-blueDark">Stoichiometric formulas</h3>
+              <h3 className="text-sm font-medium text-font-blue">Stoichiometric formulas</h3>
               <div className="flex gap-1">
                 {Object.keys(nrMinerals).map((key, index) => {
                   let items = nrMinerals[key];
@@ -281,7 +281,7 @@ export default function MineralPage({ data }) {
                                 <li key={index__} className="relative pb-2">
                                   <div className="flex flex-col ml-3">
                                     <span className="text-font-secondary font-normal text-xs">{item__.created_at}</span>
-                                    <span className="font-medium mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
+                                    <span className="font-medium text-font-primary mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
                                     {item__.note && (<span className="font-normal mt-2 text-xs" dangerouslySetInnerHTML={{ __html: item__.note }}></span>)}
                                   </div>
                                   <style jsx>{`
@@ -317,7 +317,7 @@ export default function MineralPage({ data }) {
 
             {!!elements.length && (
                 <div className="mt-7">
-                  <h3 className="text-sm font-medium text-font-blueDark">Elements recorded on EPMA</h3>
+                  <h3 className="text-sm font-medium text-font-blue">Elements recorded on EPMA</h3>
                   <div className="flex flex-col mt-5">
                     <BarChart className="h-16"
                               isAnimated={true}

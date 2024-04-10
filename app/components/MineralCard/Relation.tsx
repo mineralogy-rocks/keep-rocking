@@ -13,8 +13,7 @@ import { getRelationEndpoint, pluralizeGroupName } from './MineralCard.helpers';
 export default function RelationSnippet({ isGrouping, slug, data } : { isGrouping: boolean, slug: string, data: Relation[] }) {
   const [relation, setRelation] = useState('');
   const handleRelationUpdate = (newRelationId) => {
-    let newRelation = getRelationEndpoint(newRelationId);
-    setRelation(newRelation);
+    setRelation(getRelationEndpoint(newRelationId));
   };
 
   const { data: relationData, error, isLoading } = useSWR(
@@ -28,7 +27,7 @@ export default function RelationSnippet({ isGrouping, slug, data } : { isGroupin
     }
   );
 
-  if (data.length > 0) {
+  if (!!data.length) {
     return (
       <div className="flex flex-wrap gap-1 text-xs">
         {data.map((item, id) => {
@@ -51,7 +50,7 @@ export default function RelationSnippet({ isGrouping, slug, data } : { isGroupin
                     <p className="font-semibold pb-2 mr-5">Related {groupName}</p>
                   </div>
                   <div className="w-auto max-h-[20vh] overflow-auto">
-                    <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-gray-500 marker:font-normal">
+                    <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
                       {relationData.map((item_, i) => {
                         return (
                           <li key={i} className="flex-wrap">

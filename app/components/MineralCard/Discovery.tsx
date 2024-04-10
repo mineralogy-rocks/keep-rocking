@@ -31,10 +31,10 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
   const _fields = ['ima_year', 'approval_year', 'discovery_year', 'publication_year'];
 
 
-  if (discoveryCountries.length > 0 || (history && _fields.some(key => Object.keys(history).includes(key)) && _fields.some(key => history[key]))) {
+  if (!!discoveryCountries.length || (history && _fields.some(key => Object.keys(history).includes(key)) && _fields.some(key => history[key]))) {
     return (
       <>
-      {discoveryCountries.length > 0 && (
+      {!!discoveryCountries.length && (
         <div className="flex flex-wrap gap-1 text-xs">
           {discoveryCountries.map((item, id) => {
              const isCurrent = country === item.id;
@@ -56,7 +56,7 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
                        <p className="font-semibold pb-2 mr-5">Discovered in {item.name}</p>
                      </div>
                      <div className="w-auto max-h-[20vh] overflow-auto">
-                       <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-gray-500 marker:font-normal">
+                       <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
                          {countryData.map((item_, i) => {
                            return (
                              <li key={i} className="flex-wrap">
@@ -75,7 +75,7 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
         </div>
       )}
       {(history?.discovery_year || history?.publication_year) && (
-        <div className={clsx("text-xs", discoveryCountries.length > 0 ? 'mt-1': '')}>
+        <div className={clsx("text-xs text-font-secondary", !!discoveryCountries.length ? 'mt-1': '')}>
           {history?.discovery_year && (<p>Discovered in <span className="font-medium">{history.discovery_year}</span></p>)}
           {history?.publication_year && (<p>Published in <span className="font-medium">{history.publication_year}</span></p>)}
         </div>

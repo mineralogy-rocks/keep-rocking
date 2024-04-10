@@ -39,6 +39,7 @@ const BarcodeChart: React.FC<Props> = (props) => {
       style: {
         backgroundColor: "transparent",
       },
+      className: 'barcode-chart',
       marks: [
         Plot.axisY({
           tickFormat: (d) => {
@@ -49,11 +50,16 @@ const BarcodeChart: React.FC<Props> = (props) => {
           items,
           {
             x: "value",
-            y: "key", strokeOpacity: 0.7
+            y: "key",
+            strokeOpacity: 0.7
           },
         ),
       ],
     });
+    // add styles to all text elements of the svg
+    let svg = plot;
+    console.log(svg)
+
     if (containerRef.current) containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);

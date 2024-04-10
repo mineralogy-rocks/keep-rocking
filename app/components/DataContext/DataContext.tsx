@@ -1,5 +1,5 @@
-import { useState } from "react";
 import React from "react";
+import { useState } from "react";
 
 import Dot from "@/components/Dot";
 import Collapse from "@/components/Collapse";
@@ -10,6 +10,8 @@ import { SECTION_FIELDS, FIELDS } from "@/lib/constants";
 import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
 import CellChart from "@/components/CellChart";
+
+import styles from "./DataContext.module.scss";
 
 
 interface colorEntitiesProps {
@@ -144,7 +146,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
   const isInteractive = minerals.length > 1;
 
   return (
-    <div className="prop flex flex-col md:gap-2 sm:grid grid-cols-8">
+    <div className={cx(styles.prop, "flex flex-col md:gap-2 sm:grid grid-cols-8")}>
       <div className="flex flex-col md:grid grid-cols-4 col-span-8 md:col-span-5 md:gap-2 mt-2 md:mt-0">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (!FIELDS.hasOwnProperty(key) || !items[key]) return null;
@@ -167,9 +169,9 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
 
           return (
             <Fragment key={index}>
-              <div className="prop-header">
-                <span className={cx("prop-title", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
-                {field.subtitle && (<span className={cx("prop-subtitle", hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
+              <div className={styles.propHeader}>
+                <span className={cx(styles.propTitle, hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
+                {field.subtitle && (<span className={cx(styles.propSubtitle, hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
               </div>
               {component || (
                   <div className="ml-2 sm:ml-1 col-span-3 p-2 flex flex-col">
@@ -188,10 +190,10 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
                                 )}
                               )}
                             </div>
-                            <span className={cx('prop-item', hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                            <span className={cx(styles.propItem, hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                           </div>
                         )
-                      }) : (<span className="prop-item">{items[key]}</span>)}
+                      }) : (<span className={styles.propItem}>{items[key]}</span>)}
                   </div>)
               }
             </Fragment>
@@ -247,9 +249,9 @@ const Field: React.FC<fieldProps> = (props) => {
 
   return (
     <Fragment>
-      <div className="prop-header">
-        <span className="prop-title">{field.title}</span>
-        {field.subtitle && (<span className="prop-subtitle">{field.subtitle}</span>)}
+      <div className={styles.propHeader}>
+        <span className={styles.propTitle}>{field.title}</span>
+        {field.subtitle && (<span className={styles.propSubtitle}>{field.subtitle}</span>)}
       </div>
       <div className="col-span-4 p-2 h-auto">
         {children}
@@ -296,7 +298,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
 
 
   return (
-    <div className="prop grid grid-cols-8">
+    <div className={cx(styles.prop, "grid grid-cols-8")}>
       <div className="col-span-8 flex flex-col md:grid grid-cols-5 gap-1 md:gap-2">
         {SECTION_FIELDS[contextKey].map((key, index) => {
           if (!FIELDS.hasOwnProperty(key) || !data[key]) return null;
@@ -333,7 +335,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
                           )}
                         )}
                       </ul>
-                    ) : (<span className="prop-item">{data[key]}</span>)}
+                    ) : (<span className={styles.propItem}>{data[key]}</span>)}
                   </div>)
                 )}
               </div>

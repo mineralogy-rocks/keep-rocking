@@ -73,8 +73,8 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
            id={'mineralCard-' + index}
            className="relative scroll-mt-16 bg-white dark:bg-slate-800 shadow-gray-surface dark:shadow-none sm:rounded p-4 mx-auto h-auto transition-all duration-200">
         <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-gray-200">
-            <span className="italic text-base">{mineral.ima_symbol}</span>
+          <div className="col-span-3 md:col-span-1 pr-2 md:border-r border-slate-200 dark:border-slate-400">
+            <span className="italic text-base text-font-secondary">{mineral.ima_symbol}</span>
             <div className="ml-5 space-y-1">
               <div className="flex">
                 <div className={cx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>

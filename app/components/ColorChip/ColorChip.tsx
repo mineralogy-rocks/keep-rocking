@@ -16,7 +16,7 @@ const defaultProps = {
   hasPadding: true,
 };
 
-// const Chip = ({ type, className = "", hasPadding = true, children, ...props} : Props & typeof defaultProps) => {
+
 const Chip: React.FC<Props> = (props) => {
   const { type, className = "", hasPadding = true, children , ...rest} = { ...defaultProps, ...props};
 
