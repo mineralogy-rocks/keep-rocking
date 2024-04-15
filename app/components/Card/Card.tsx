@@ -30,7 +30,7 @@ const Card: React.FC<Props> = (props) => {
 
     return (
         <div className={cx(className, isHoverable ? "cursor-pointer transition" : "bg-white dark:bg-slate-800", "relative w-56 rounded-sm p-3 ring-1 ring-slate-300/40 dark:ring-slate-700/50",
-                           isHoverable && (isHovered ? "ring-slate-600/[0.04] bg-white dark:bg-slate-800 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50"))}
+                           isHoverable && (isHovered ? "ring-slate-600/[0.04] bg-white dark:bg-slate-800 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)]" : "hover:bg-slate-50 dark:hover:bg-slate-800"))}
                    onClick={clickHandler}>
             {children}
             <svg viewBox="0 0 384 12" fill="none" aria-hidden="true" className="absolute right-0 top-full w-[384px] max-w-[120%] transition">

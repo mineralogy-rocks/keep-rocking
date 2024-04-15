@@ -92,7 +92,7 @@ const GroupedColorEntities: React.FC<groupedColorEntitiesProps> = (props) => {
   const { items } = { ...groupedColorEntitiesDefaultProps, ...props};
 
   return (
-    <div className="col-span-3 flex flex-col flex-wrap divide-slate-300 divide-y">
+    <div className="col-span-3 flex flex-col flex-wrap divide-slate-300 dark:divide-slate-400 divide-y">
       {items.map((item, index) => {
           return (
             <div key={index} className="flex items-center py-2">
@@ -103,11 +103,11 @@ const GroupedColorEntities: React.FC<groupedColorEntitiesProps> = (props) => {
                   </ColorChip>
                 </div>
               </div>
-              <ul className="flex flex-wrap relative gap-1 ml-2 list-none text-xs text-font-blueDark font-medium">
+              <ul className="flex flex-wrap relative gap-1 ml-2 list-none text-xs text-font-blueDark dark:text-font-primary font-medium">
                 {item.entities.map((entity, index) => {
                   return (
                     <li key={index} className="flex items-center relative">
-                      <span className="bg-white border border-slate-200 px-1 py-0.5 rounded">{entity}</span>
+                      <span className="bg-white dark:bg-slate-700 px-1 py-0.5 rounded">{entity}</span>
                     </li>
                   )}
                 )}
@@ -320,11 +320,11 @@ const GroupedDataContext = ({ contextKey, data }) => {
                 {component || (
                   (<div className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
                     {Array.isArray(data[key]) ? (
-                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-blueDark font-medium">
+                      <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-blueDark dark:text-font-primary font-medium">
                         {data[key].map((item, index) => {
                           return (
                             <li key={index} className="flex items-center relative">
-                              <span className="flex items-center bg-white border px-1 py-0.5 rounded">
+                              <span className="flex items-center bg-white dark:bg-slate-700 p-1 rounded">
                                 {item.key}
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
                                   <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
