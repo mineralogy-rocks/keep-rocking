@@ -53,14 +53,14 @@ const BlogCategory: React.FC<Props> = (props) => {
                onMouseLeave={() => setHovered('')}
                onClick={() => setSelectedCategory(slug)}>
             <motion.a className={cx(
-                "absolute bg-blue-200 w-full h-full -z-[1] origin-center inset-0 rounded",
+                "absolute bg-sky-200 dark:bg-sky-600 w-full h-full -z-[1] origin-center inset-0 rounded",
                         selected === slug ? "opacity-100" : "opacity-60"
                       )}
                       initial={{ scale: 1, opacity: selected === slug ? 1 : 0.5 }}
                       animate={{ scale: hovered === slug ? 1.07 : 1, opacity: selected === slug ? 1 : 0.5 }}
                       transition={{ type: "spring", bounce: 0.9, stiffness: 400, damping: 30 }}>
             </motion.a>
-            <span className="w-full h-full text-font-blueDark font-medium">{name}</span>
+            <span className="w-full h-full text-font-blueDark dark:text-font-primary font-medium">{name}</span>
           </div>
         ))}
       </div>

@@ -288,7 +288,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
     if (typeof field.isCollapsed === 'function') _isCollapsed = field.isCollapsed(true);
     else _isCollapsed = field.isCollapsed;
 
-    if (_isCollapsed && data[key].split(' ').length > 30) {
+    if (_isCollapsed && data[key].split(' ').length > 50) {
       _state.isCollapsed = true;
       _state.isCollapsable = true;
     }
@@ -316,9 +316,9 @@ const GroupedDataContext = ({ contextKey, data }) => {
             <Field key={index}
                    onCollapse={(isCollapsed) => {setFieldsState({...fieldsState, [index]: { ...fieldsState[index], isCollapsed: isCollapsed } })  }}
                    {...{ field, isCollapsable: fieldsState[index].isCollapsable }}>
-              <div className="ml-2 sm:ml-1 ">
+              <div className="ml-2 sm:ml-1">
                 {component || (
-                  (<div className={cx("flex flex-col space-y-2 leading-3", fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>
+                  (<div className="flex flex-col space-y-2 leading-3">
                     {Array.isArray(data[key]) ? (
                       <ul className="flex flex-col flex-wrap relative gap-1 list-none text-xs text-font-blueDark dark:text-font-primary font-medium">
                         {data[key].map((item, index) => {
@@ -335,7 +335,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
                           )}
                         )}
                       </ul>
-                    ) : (<span className={styles.propItem}>{data[key]}</span>)}
+                    ) : (<span className={cx(styles.propItem, fieldsState[index].isCollapsable && (fieldsState[index].isCollapsed ? "line-clamp-3" : "line-clamp-none"))}>{data[key]}</span>)}
                   </div>)
                 )}
               </div>

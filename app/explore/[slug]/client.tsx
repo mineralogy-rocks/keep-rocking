@@ -93,7 +93,7 @@ const CrystallographyCards = ({ structures, members }) => {
               <div className="relative flex flex-col gap-2">
                 <div className="flex">
                   <Chip type="default" className="mt-1 bg-indigo-300/90 dark:bg-sky-400/30">
-                    <span className="font-semibold flex-1 text-start text-indigo-700 dark:text-sky-200">{structure._crystalSystem}</span>
+                    <span className="font-semibold flex-1 text-start text-sky-700 dark:text-sky-200">{structure._crystalSystem}</span>
                   </Chip>
                 </div>
                 <div className="flex flex-col mt-2 font-normal text-xs text-font-secondary">
@@ -148,6 +148,8 @@ export default function MineralPage({ data }) {
   } : mineralDetailApiResponse = data;
 
   if (inheritanceChain) {
+    // TODO: improve this backend-wise
+    inheritanceChain = inheritanceChain.filter((item, index, self) => self.findIndex(t => t.id === item.id) === index);
     let inheritedContexts : any[] = [];
      inheritanceChain.map(item => {
         item.contexts.map(i => {

@@ -54,7 +54,7 @@ export default async function Blog({ params }) {
           }),
         }}
       />
-      <h1 className="text-pretty font-semibold text-2xl">
+      <h1 className="text-font-primary text-pretty font-semibold text-3xl">
         {post.name}
       </h1>
 
@@ -66,7 +66,7 @@ export default async function Blog({ params }) {
           <Views slug={slug} />
         </Suspense>
       </div>
-      <article className="prose prose-slate prose-sm lg:prose-base dark:prose-dark">
+      <article className="prose prose-slate prose-sm lg:prose-base dark:prose-invert">
         <CustomMDX source={post.content} />
       </article>
     </section>

@@ -1,12 +1,8 @@
-import { Suspense } from "react";
-import cx from "clsx";
-
 import { Metadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
 import Link from 'next/link';
 
 import { getPostList, getBlogCategories } from '@/actions';
-import utilsStyles from "@/styles/utils.module.scss";
 import { postListApiResponse } from "@/lib/types";
 import BlogCategory from "@/components/BlogCategory";
 
@@ -21,7 +17,7 @@ export const metadata: Metadata = {
 const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
   <article className="relative flex flex-col p-2 rounded-sm">
     <Link href={`/blog/${slug}`} prefetch={true}>
-      <h1 className="text-xl font-bold text-font text-pretty">{name}</h1>
+      <h1 className="text-font-primary text-xl font-bold text-pretty">{name}</h1>
     </Link>
 
     <div className="p-2 mt-3">
