@@ -48,7 +48,6 @@ const CellChart:  React.FC<Props> = (props) => {
       style: {
         backgroundColor: "transparent",
       },
-      className: "cell-chart",
       marks: [
         Plot.cell(
           items,
@@ -70,8 +69,7 @@ const CellChart:  React.FC<Props> = (props) => {
   }, [items]);
 
   return (
-    <div ref={containerRef}>
-    </div>
+    <div ref={containerRef}></div>
   )
 }
 

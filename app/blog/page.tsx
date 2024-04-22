@@ -17,22 +17,22 @@ export const metadata: Metadata = {
 const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
   <article className="relative flex flex-col p-2 rounded-sm">
     <Link href={`/blog/${slug}`} prefetch={true}>
-      <h1 className="text-font-primary text-xl font-bold text-pretty">{name}</h1>
+      <h1 className="text-font-primary text-lg font-bold text-pretty">{name}</h1>
     </Link>
 
-    <div className="p-2 mt-3">
-      <div className="flex gap-2">
-        {tags.map((tag, index) => (
-          <span key={index} className="text-xs font-medium text-font-secondary">#{tag.name}</span>
-        ))}
-      </div>
-      <div className="flex space-x-1 text-xs font-normal text-font-secondary mt-3">
+    <p className="text-font-secondary text-sm mt-5 text-pretty">{description}</p>
+
+    <div className="flex justify-between items-center mt-3">
+      <div className="flex space-x-1 text-xs font-normal text-font-ternary">
         <span className="slashed-zero tabular-nums">{publishedAt}</span>
         <span>&#183;</span>
         <span className="slashed-zero tabular-nums">{views} views</span>
-
       </div>
-      <p className="text-font-secondary text-sm mt-5 text-pretty">{description}</p>
+      <div className="flex gap-2">
+        {tags.map((tag, index) => (
+          <span key={index} className="text-xs font-medium text-font-ternary">#{tag.name}</span>
+        ))}
+      </div>
     </div>
   </article>
 );
