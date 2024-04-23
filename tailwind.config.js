@@ -48,6 +48,9 @@ const themes = [
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -73,9 +76,9 @@ module.exports = {
               marginBottom: `${32 / 14}em`,
             },
             a: {
-              fontWeight: theme('fontWeight.semibold'),
+              fontWeight: theme('fontWeight.medium'),
               textDecoration: 'none',
-              borderBottom: `1px solid ${theme('colors.indigo.400')}`,
+              borderBottom: `1px solid ${theme('colors.indigo.500')}`,
             },
             'a:hover': {
               borderBottomWidth: '2px',
@@ -94,7 +97,7 @@ module.exports = {
           css: {
             color: theme('colors.font.primary'),
             pre: {
-              backgroundColor: theme('colors.slate.50'),
+              backgroundColor: theme('colors.slate.800'),
               borderRadius: theme('borderRadius.sm'),
               padding: theme('padding.5'),
               boxShadow: `0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),

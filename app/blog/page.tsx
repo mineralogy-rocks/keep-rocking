@@ -37,10 +37,10 @@ const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
   </article>
 );
 
-export default async function BlogPage({searchParams}) {
+export default async function BlogPage({ searchParams }) {
   noStore();
-  const posts: postListApiResponse = await getPostList(new URLSearchParams(searchParams).toString());
   const categories = await getBlogCategories();
+  const posts: postListApiResponse = await getPostList(new URLSearchParams(searchParams).toString());
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:grid md:grid-cols-6 gap-2 relative mt-20">
