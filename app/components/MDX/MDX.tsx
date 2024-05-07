@@ -13,7 +13,7 @@ function Code({ children, ...props }) {
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 }
 
-function slugify(str) {
+function slugify(str: string) {
   return str
     .toString()
     .toLowerCase()
@@ -25,12 +25,13 @@ function slugify(str) {
 }
 
 function createHeading(level) {
-  return ({ children }) => {
+  const element = ({children}) => {
     let href = slugify(children);
     return (
       <Heading level={level} href={href}>{children}</Heading>
     );
   };
+  return element;
 }
 
 function Callout(props) {
