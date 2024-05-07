@@ -1,5 +1,5 @@
 .paragraph {
-  @apply text-base md:text-lg leading-snug text-left;
+  @apply text-sm md:text-base leading-snug text-left;
 }
 
 .list {
@@ -7,7 +7,7 @@
 }
 
 .listItem {
-  @apply pl-2 text-base md:text-lg;
+  @apply pl-2 text-sm md:text-base;
 }
 
 .title {

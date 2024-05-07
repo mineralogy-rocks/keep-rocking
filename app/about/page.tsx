@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import cx from 'clsx';
 
+import { ExternalLink } from "@/components/Link";
 import styles from '@/styles/typography.module.scss';
 
 
@@ -25,7 +26,7 @@ export default function Home() {
         <div className="col-span-3 lg:col-span-2">
           <p className={styles.paragraph}>
             More than <em>100</em> new minerals are discovered yearly, with over <em>5,700</em> minerals approved by the{' '}
-            <a className="link external" href="https://mineralogy-ima.org/" target="_blank" rel="noopener noreferrer">International Mineralogical Association</a> (IMA).
+            <ExternalLink href="https://mineralogy-ima.org/" isIcon={false}>International Mineralogical Association</ExternalLink> (IMA).
             This number can expand to over <em>10,000</em> mineral names, along with numerous synonyms and varieties.
             Thus, the flow of information in mineralogy is increasing enormously every year, while the possibility of finding the right, interlayered, and free data source is only decreasing.
           </p>
@@ -44,9 +45,9 @@ export default function Home() {
           </p>
 
           <p className={cx(styles.paragraph, "mt-10")}>
-            Built with <a className="link external" href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">Next.js</a>,{' '}
-            <a className="link external" href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">Tailwind</a>, and{' '}
-            <a className="link external" href="https://vercel.com/" target="_blank" rel="noopener noreferrer">Vercel</a>.
+            Built with <ExternalLink href="https://nextjs.org/" isIcon={false}>Next.js</ExternalLink>,{' '}
+            <ExternalLink href="https://tailwindcss.com/" isIcon={false}>Tailwind</ExternalLink>, and{' '}
+            <ExternalLink href="https://vercel.com/" isIcon={false}>Vercel</ExternalLink>.
           </p>
         </div>
       </div>

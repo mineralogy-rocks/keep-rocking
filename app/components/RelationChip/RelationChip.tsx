@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { getStyles } from './styles';
 import { getStatusColor } from '@/helpers/status.helpers';
+import styles from '@/components/Link/Link.module.scss';
 
 
 export default function RelationChip(
@@ -92,7 +93,7 @@ export default function RelationChip(
                   onMouseLeave={onMouseLeaveHandler}>
         <div className={cx("flex items-center space-x-0.5 text-xs font-light", textColor)}>
           <span className={cx("flex shrink-0 w-1.5 h-1.5 rounded mr-1", getStatusColor(statuses))}></span>
-          <span className="link font-medium cursor-default">{name}</span>
+          <span className={cx(styles.link, "font-medium cursor-default")}>{name}</span>
         </div>
 
 

@@ -39,7 +39,7 @@ export default function Navbar() {
             </Link>
           </li>
         </ul>
-        <NavPopover className="text-black" display="md:hidden" />
+        <NavPopover display="md:hidden" />
         <ul className="hidden md:flex space-x-2 sm:space-x-6 md:space-x-10">
           <li>
             <NavItem href="/explore" text="Explore"/>

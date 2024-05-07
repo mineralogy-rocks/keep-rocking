@@ -1,14 +1,14 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+
 
 export default function useSessionState(defaultValue, key) {
-  const [value, setValue] = React.useState(() => {
-    const stickyValue = window.sessionStorage.getItem(key);
-    return stickyValue !== null
-      ? JSON.parse(stickyValue)
-      : defaultValue;
+
+  const [value, setValue] = useState(() => {
+    const stickyValue = typeof(window) !== "undefined" ? window.sessionStorage.getItem(key) : null;
+    return stickyValue ? JSON.parse(stickyValue) : defaultValue;
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.sessionStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
 

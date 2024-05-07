@@ -1,10 +1,9 @@
-import { useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Link from 'next/link';
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Dialog } from '@headlessui/react';
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import cx from 'clsx';
 
 import mobileStyles from '@/styles/mobile-menu.module.scss';
 
@@ -19,7 +18,7 @@ function NavItem({href, text}) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
           </svg>
         )}
-        <span className={clsx(mobileStyles)}>{text}</span>
+        <span className={mobileStyles.Link}>{text}</span>
       </Link>
   );
 }
@@ -40,7 +39,7 @@ export default function NavPopover({ className, display = "md:hidden" }: { class
 
 
   return (
-    <div className={clsx(className, display)}>
+    <div className={cx(display, "text-font-primary")}>
       <button type="button" onClick={() => setIsOpen(true)}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -51,9 +50,9 @@ export default function NavPopover({ className, display = "md:hidden" }: { class
               className="fixed inset-0 z-50"
               open={isOpen}
               onClose={setIsOpen}>
-        <Dialog.Overlay className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-          <div className="fixed top-4 right-4 w-full max-w-xs bg-white rounded shadow-md p-4">
-            <button type="button" className="absolute top-3 right-2" onClick={() => setIsOpen(false)}>
+        <Dialog.Overlay className="fixed inset-0 bg-black/30 dark:bg-black/10 backdrop-blur-sm" />
+          <div className="fixed top-4 right-4 w-full max-w-xs bg-white dark:bg-slate-800 rounded shadow-md p-4">
+            <button type="button" className="absolute top-3 right-2 text-font-primary" onClick={() => setIsOpen(false)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>

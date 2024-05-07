@@ -1,0 +1,8 @@
+.link {
+  @apply text-font-blue hover:text-sky-500 dark:hover:text-sky-100 cursor-pointer font-medium;
+
+  &.external {
+    @apply visited:text-purple-800;
+  }
+}
+

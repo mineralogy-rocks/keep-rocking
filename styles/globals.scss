@@ -1,8 +1,9 @@
 @tailwind base;
 @tailwind components;
+@tailwind utilities;
 
 :root {
-  --sh-class: #2d5e9d;
+  --sh-class: #006442;
   --sh-identifier: #354150;
   --sh-sign: #354150;
   --sh-property: #0550ae;
@@ -26,7 +27,7 @@
 }
 
 .prose pre {
-  @apply bg-slate-50 dark:bg-slate-800 rounded overflow-x-auto border border-slate-200 dark:border-slate-700 shadow-none;
+  @apply bg-slate-50 dark:bg-slate-800 rounded overflow-x-auto border border-slate-200 dark:border-slate-700 shadow-none p-4;
 }
 
 .prose pre code {
@@ -68,4 +69,4 @@ body {
 
 }
 
-@import "./utils.scss";
+//@import "./utils.scss";

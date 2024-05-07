@@ -22,7 +22,7 @@ function LinksSnippet({ data }) {
       <div className="flex flex-wrap gap-1">
         {data.map((item, id) => {
           return (
-            <ExternalLink key={id} href={item.link} text={item.display_name} />
+            <ExternalLink key={id} className="text-xs" href={item.link}>{item.display_name}</ExternalLink>
           )})
         }
       </div>
@@ -78,11 +78,12 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
             <div className="ml-5 space-y-1">
               <div className="flex">
                 <div className={cx(getStatusGroupColor(mineral.statuses), "flex shrink-0 w-1 h-auto rounded")}></div>
-                <InternalLink className="text-xl sm:text-2xl font-semibold sm:font-bold ml-2 break-words"
+                <InternalLink className="block text-xl sm:text-2xl font-semibold md:!font-bold ml-2"
                               href={`/explore/${mineral.slug}`}
-                              text={mineral.name}
                               hasIcon={false}
-                              prefetch={true} />
+                              {...{ prefetch: true, target: '_blank' }}>
+                  {mineral.name}
+                </InternalLink>
               </div>
               <div className="flex flex-wrap items-center gap-1">
                 {!!formulas.length && (

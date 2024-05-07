@@ -1,16 +1,19 @@
 'use client';
 
-import { useRef, useEffect, useState } from "react";
+import {useRef, useEffect, useState} from "react";
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
+import styled from "styled-components";
 import cx from 'clsx';
 
-import useSessionState from "@/hooks/use-session-state.hook";
+import { isMagicEnabled, toggleMagic } from '@/lib/store/layoutSlice';
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import Terminal from '@/components/Content/Terminal';
 import styles from './index.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
+
+import { InternalLink } from "@/components/Link";
 
 import SAVLogo from 'public/assets/SAV_logo-light.jpg';
 import UKLogo from 'public/assets/UK_logo.png';
@@ -20,11 +23,32 @@ import FNSLogoDark from 'public/assets/UK_FNS_logo-dark.png';
 import MSCALogo from 'public/assets/MSCA.png';
 
 
+const StyledPath = styled(motion.path)<{ $rotate?: number }>`
+  transform-origin: center;
+  rotate: ${props => props.$rotate || 0}deg;
+`;
+
 export default function Home() {
 
   const terminalRef = useRef(null);
   const terminalCodeRef = useRef(null);
   const isInView = useInView(terminalRef, { once: true, amount: 0.1 });
+  const magicEnabled = useAppSelector(isMagicEnabled);
+  const dispatch = useAppDispatch();
+
+  const variants = {
+    enabled: (degrees) => ({
+      rotate: degrees,
+      transition: {
+        type: "spring",
+        bounce: 0.3,
+        damping: 10,
+        mass: 4,
+        stiffness: 20,
+        delay: 0.5,
+      },
+    }),
+  };
 
   const code = [
     'curl -X GET \\',
@@ -59,27 +83,7 @@ export default function Home() {
     return;
   }, [htmlTypedCode]);
 
-
-  const [magicEnabled, setMagicEnabled] = useSessionState(true, 'magicEnabled');
-  const variants = {
-    enabled: (degrees) => ({
-      rotate: degrees,
-      transition: {
-        type: "spring",
-        bounce: 0.3,
-        damping: 10,
-        mass: 4,
-        stiffness: 20,
-        delay: 0.5,
-      }
-    }),
-    disabled: (degrees) => ({
-      rotate: degrees,
-    }),
-  };
-
   useEffect(() => {
-
     const typeCode = (index, line) => {
       if (index === code.length) {
         return;
@@ -121,9 +125,9 @@ export default function Home() {
     };
 
     if (magicEnabled) {
+      dispatch(toggleMagic());
       if (isInView) {
         typeCode(0, code[0]);
-        setMagicEnabled(false);
       }
     } else {
       setTypedCode(code.join('\n'));
@@ -145,18 +149,18 @@ export default function Home() {
             <svg style={{ width: '100%', height: 640 }} viewBox="0 0 650 640" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
               <g className={styles.wrapper} clipPath="url(#a)">
-                <motion.path custom={28}
-                             variants={variants}
-                             animate={magicEnabled ? 'enabled' : ''}
-                             initial={magicEnabled ? '' : 'disabled'}
-                             d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
-                             fill="url(#b)"/>
-                <motion.path custom={13}
-                             variants={variants}
-                             animate={magicEnabled ? 'enabled' : ''}
-                             initial={magicEnabled ? '' : 'disabled'}
-                             d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
-                             fill="url(#c)"/>
+                <StyledPath custom={28}
+                            variants={variants}
+                            $rotate={magicEnabled ? 0 : 28}
+                            animate={magicEnabled ? 'enabled' : ''}
+                            d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
+                            fill="url(#b)" />
+                <StyledPath custom={13}
+                            variants={variants}
+                            $rotate={magicEnabled ? 0 : 13}
+                            animate={magicEnabled ? 'enabled' : ''}
+                            d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
+                            fill="url(#c)" />
               </g>
               <defs>
                 <linearGradient id="b" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026" gradientUnits="userSpaceOnUse">
@@ -178,17 +182,17 @@ export default function Home() {
 
         <div className="relative mx-auto px-6 sm:px-8 mt-20 md:mt-28">
           <div className="flex justify-center">
-            <Link href="/explore">
-                <span className='group link flex items-center !font-bold text-base md:text-lg'>Start Exploring
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2}
-                     stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
-                </svg>
-                </span>
-            </Link>
+            <InternalLink hasIcon={false} href="/explore" {...{ prefetch: true }}>
+              <span className='group link flex items-center text-base md:text-lg font-semibold'>Start Exploring
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2}
+                 stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
+              </svg>
+              </span>
+            </InternalLink>
           </div>
 
-          <p className="text-base md:text-lg font-medium leading-normal text-left mt-7">
+          <p className="text-base md:text-lg leading-normal text-left mt-7">
             <strong>Mineralogy.rocks</strong> provide seamless and simple way to access and filter mineralogical and related data.
             Our platform is designed both for researchers and developers.
           </p>
@@ -197,9 +201,9 @@ export default function Home() {
     </header>
 
     <section>
-      <div className={cx(typographyStyles.Section, "")}>
+      <div className={typographyStyles.Section}>
         <h3 className="text-font-primary text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
-        <p className="text-base md:text-lg font-medium leading-normal text-start mt-7">
+        <p className="text-base md:text-lg leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
             Find the proper data subset and explore the relations between minerals.
         </p>
@@ -208,7 +212,7 @@ export default function Home() {
             <div className="md:col-span-6 flex flex-col">
                 <h4 className={typographyStyles.subtitle}>Researchers</h4>
                 <p className="text-base md:text-lg leading-normal text-left mt-5">
-                    Check out our filtering system at <Link href="/explore" className="link">mineralogy.rocks/explore</Link>.
+                    Check out our filtering system at <InternalLink href="/explore" hasIcon={false}>mineralogy.rocks/explore</InternalLink>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
                 </p>
             </div>
@@ -296,7 +300,7 @@ export default function Home() {
     <section>
       <div className={typographyStyles.Section}>
         <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
-        <p className="text-base md:text-lg font-medium leading-normal text-left mt-5">
+        <p className="text-base md:text-lg leading-normal text-left mt-5">
           The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
         </p>
@@ -349,7 +353,7 @@ export default function Home() {
     <section>
       <div className={typographyStyles.Section}>
         <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Do research</h3>
-        <p className="text-base md:text-lg font-medium leading-normal mt-7">
+        <p className="text-base md:text-lg leading-normal mt-7">
           We will gladly assist you in finding the right data in a right format.
           We believe in open science and open source—things that make our lives better.
         </p>
@@ -651,8 +655,7 @@ export default function Home() {
           </a>
         </div>
 
-        <div
-          className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-5 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly py-5 md:py-10">
+        <div className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-5 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly py-5 md:py-10">
           <a href="https://www.sav.sk/" target="_blank" rel="noreferrer">
             <Image src={SAVLogo} alt="Slovak Academy of Sciences" className="w-24 h-auto"/>
           </a>

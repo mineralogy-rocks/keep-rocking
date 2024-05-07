@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 
 import cx from 'clsx';
 
+import { ExternalLink } from "@/components/Link";
 import styles from '@/styles/typography.module.scss';
 
 
@@ -31,8 +32,8 @@ export default function PrivacyPolicy({}) {
               and the types of personal information that we may hold about you.
               This Privacy Policy applies whenever you interact with us, including when you visit one of our websites on which this
               Privacy Policy is posted (the “Sites”), including{' '}
-              <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noreferrer">api.mineralogy.rocks</a> and{' '}
-              <a className="link external" href="https://mineralogy.rocks" target="_blank" rel="noreferrer">mineralogy.rocks</a>.
+              <ExternalLink href="https://api.mineralogy.rocks" isIcon={false}>api.mineralogy.rocks</ExternalLink> and{' '}
+              <ExternalLink href="https://mineralogy.rocks" isIcon={false}>mineralogy.rocks</ExternalLink>.
             </p>
 
             <div className="mt-10">
@@ -120,7 +121,7 @@ export default function PrivacyPolicy({}) {
 
               <p className={cx(styles.paragraph, "!mt-2")}>
                 You may access, update, or delete your personal information at any time by contacting us at{' '}
-                <a className="link external" href="mailto:admin@mineralogy.rocks" target="_blank" rel="noreferrer">admin@mineralogy.rocks</a>
+                <ExternalLink href="mailto:admin@mineralogy.rocks" isIcon={false}>admin@mineralogy.rocks</ExternalLink>
               </p>
 
               <h3 className={styles.header}>6. Scope and Application.

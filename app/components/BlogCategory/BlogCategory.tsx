@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import cx from "clsx";
 
@@ -21,27 +21,25 @@ const defaultProps = {
 const BlogCategory: React.FC<Props> = (props) => {
   const { categories } = { ...defaultProps, ...props};
   const [hovered, setHovered] = useState<string>('');
-  const [selected, setSelected] = useState<string>('');
 
   const router = useRouter();
   const pathname = usePathname()
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    let chosenCategory = searchParams.get('category');
-    if (!!chosenCategory) setSelected(chosenCategory);
-    else setSelected('');
-  }, [searchParams]);
-
+  const isSelected = (slug: string) => searchParams.get('category') === slug;
   const setSelectedCategory = useCallback((slug: string) => {
-    if (slug === selected) {
-      setSelected('');
-      router.push(pathname);
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+
+    if (isSelected(slug)) {
+      current.delete("category");
     } else {
-      setSelected(slug);
-      router.push(pathname + '?category=' + slug);
+      current.set("category", slug);
     }
-  }, [selected]);
+
+    const search = current.toString();
+    const query = search ? `?${search}` : '';
+    router.push(`${pathname}${query}`);
+  }, [searchParams]);
 
   return (
     <div className="sticky float-right top-20">
@@ -53,11 +51,11 @@ const BlogCategory: React.FC<Props> = (props) => {
                onMouseLeave={() => setHovered('')}
                onClick={() => setSelectedCategory(slug)}>
             <motion.a className={cx(
-                "absolute bg-sky-200 dark:bg-sky-600 w-full h-full -z-[1] origin-center inset-0 rounded",
-                        selected === slug ? "opacity-100" : "opacity-60"
+                "absolute bg-sky-300/60 dark:bg-sky-600 w-full h-full -z-[1] origin-center inset-0 rounded",
+                        isSelected(slug) ? "opacity-100" : "opacity-60"
                       )}
-                      initial={{ scale: 1, opacity: selected === slug ? 1 : 0.5 }}
-                      animate={{ scale: hovered === slug ? 1.07 : 1, opacity: selected === slug ? 1 : 0.5 }}
+                      initial={{ scale: 1, opacity: isSelected(slug) ? 1 : 0.5 }}
+                      animate={{ scale: hovered === slug ? 1.07 : 1, opacity: isSelected(slug) ? 1 : 0.5 }}
                       transition={{ type: "spring", bounce: 0.9, stiffness: 400, damping: 30 }}>
             </motion.a>
             <span className="w-full h-full text-font-blueDark dark:text-font-primary font-medium">{name}</span>

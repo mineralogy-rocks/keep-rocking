@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import cx from 'clsx';
 
 import { getStatusGroupColor, getUniqueStatusGroups, reduceStatusGroups } from '@/helpers/status.helpers';
+import styles from '@/components/Link/Link.module.scss';
 
 
 export default function TableOfContents({ items, activeItems, selectorId }: { items: any[], activeItems: number[], selectorId: string }) {
@@ -26,7 +27,7 @@ export default function TableOfContents({ items, activeItems, selectorId }: { it
         <Fragment key={index}>
           <li key={item.id} className="flex items-center justify-between">
             <a href={`#${item.id}`}
-               className="flex items-center group link"
+               className={cx(styles.link, "flex items-center group")}
                onClick={(e) => {
                e.preventDefault();
                 document.querySelector(`#${selectorId}-${index}`)?.scrollIntoView({

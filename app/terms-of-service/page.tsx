@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
 
 import cx from 'clsx';
 import styles from '@/styles/typography.module.scss';
-import typographyStyles from "@/styles/typography.module.scss";
+
+import { InternalLink, ExternalLink } from "@/components/Link";
 
 export const metadata: Metadata = {
   title: 'terms',
@@ -16,7 +16,7 @@ export default function Terms() {
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <header>
           <div className="flex flex-col mt-10 text-start justify-start">
-            <h1 className={typographyStyles.title}>
+            <h1 className={styles.title}>
               Terms of Service and Conditions
             </h1>
           </div>
@@ -26,8 +26,8 @@ export default function Terms() {
           <div className="col-span-3 lg:col-span-2">
             <p className={styles.paragraph}>
               The following terms of use (“Terms”) govern your access to and use of the websites{' '}
-              <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noreferrer">api.mineralogy.rocks</a> and{' '}
-              <a className="link external" href="https://mineralogy.rocks" target="_blank" rel="noreferrer">mineralogy.rocks</a> (collectively, the “Websites”),
+              <ExternalLink href="https://api.mineralogy.rocks" isIcon={false}>api.mineralogy.rocks</ExternalLink> and{' '}
+              <ExternalLink href="https://mineralogy.rocks" isIcon={false}>mineralogy.rocks</ExternalLink> (collectively, the “Websites”),
               operated and owned by mineralogy.rocks (collectively, “mineralogy.rocks”, “we”, “us” or “our”).
             </p>
 
@@ -35,7 +35,7 @@ export default function Terms() {
               The Websites provide educational and scientific content and resources for research and reference only.
             </p>
 
-            <p className="mt-2">
+            <p className={cx(styles.paragraph, "mt-2")}>
               By accessing or using the Websites, you agree to be bound by these Terms. If you do not agree to these Terms, you should not use or access the Websites or Services.
               The Policies apply to all users, including visitors and Registered Users who use the Services (collectively, “users” or “you”). The Services are not intended for
               children under the age of 13. If you are under 13 years of age, you may not use the Services.
@@ -45,7 +45,7 @@ export default function Terms() {
               <h3 className={styles.header}>1. Your Use of the Websites and Services.
               </h3>
               <h4 className={styles.header}>License</h4>
-              <p>
+              <p className={styles.paragraph}>
                 Subject to your compliance with these Terms, <em>mineralogy.rocks</em> grants you a limited, non-exclusive, non-transferable, non-sublicensable, revocable license to access
                 and use the Websites and Services for your personal, research, and non-commercial use. You may not use the Websites or Services for any other purpose, including any commercial
                 purpose, without our prior written consent. You may not use the Websites or Services in any manner that could damage, disable, overburden, or impair them or interfere
@@ -54,7 +54,7 @@ export default function Terms() {
               </p>
 
               <h4 className={cx(styles.header, "!mt-5")}>Representations and Warranties</h4>
-              <p className="!indent-0">
+              <p className={cx(styles.paragraph, "!indent-0")}>
                 You represent and warrant that:
               </p>
               <ol className={styles.list}>
@@ -73,7 +73,7 @@ export default function Terms() {
               </ol>
 
               <h4 className={cx(styles.header, "!mt-5")}>Restrictions</h4>
-              <p>
+              <p className={styles.paragraph}>
                 You agree not to, and you will not permit others to:
               </p>
               <ol className={styles.list}>
@@ -130,15 +130,15 @@ export default function Terms() {
               </ol>
 
               <h3 className={styles.header}>2. Void Where Prohibited by Law.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 The Websites and Services are controlled and offered by <em>mineralogy.rocks</em> from its facilities in the EU. <em>mineralogy.rocks</em> makes no
                 representations that the Websites or Services are appropriate or available for use in other locations. Those who access or use the Websites or Services
                 from other jurisdictions do so at their own volition and are responsible for compliance with local law.
               </p>
 
               <h3 className={styles.header}>3. Privacy.</h3>
-              <p>
-                Please refer to our <Link href="/privacy-policy" className="link">Privacy Policy</Link> for information regarding our collection, use,
+              <p className={styles.paragraph}>
+                Please refer to our <InternalLink href="/privacy-policy">Privacy Policy</InternalLink> for information regarding our collection, use,
                 and disclosure of your personal information.
               </p>
 
@@ -170,7 +170,7 @@ export default function Terms() {
               </ol>
 
               <h3 className={styles.header}>5. Links to Other Websites.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 The Websites or Services may contain links to third-party websites or services that are not owned or controlled by <em>mineralogy.rocks</em>.
                 We have no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third-party websites or services.
                 You further acknowledge and agree that <em>mineralogy.rocks</em> shall not be responsible or liable, directly or indirectly, for any damage or loss caused
@@ -179,7 +179,7 @@ export default function Terms() {
               </p>
 
               <h3 className={styles.header}>6. Termination.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 We may terminate or suspend your access to the Websites or Services immediately, without prior notice or liability, for any reason whatsoever,
                 including without limitation if you breach the Terms. Upon termination, your right to use the Websites or Services will immediately cease.
                 All provisions of the Terms which by their nature should survive
@@ -187,7 +187,7 @@ export default function Terms() {
               </p>
 
               <h3 className={styles.header}>7. Indemnification.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 You agree to defend, indemnify, and hold harmless <em>mineralogy.rocks</em> and its licensee and licensors, and their employees, contractors, agents, officers, and directors,
                 from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney’s fees),
                 resulting from or arising out of a) your use and access of the Websites or Services, by you or any person using your account and password,
@@ -195,7 +195,7 @@ export default function Terms() {
               </p>
 
               <h3 className={styles.header}>8. Limitation of Liability.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 In no event shall <em>mineralogy.rocks</em>, nor its team members, employees, partners, agents, suppliers, or affiliates, be liable for any indirect,
                 incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses,
                 resulting from:
@@ -219,12 +219,12 @@ export default function Terms() {
               </ol>
 
               <h3 className={styles.header}>9. Disclaimer.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 Your use of the Websites or Services is at your sole risk. The Websites and Services are provided on an “AS IS” and “AS AVAILABLE” basis.
                 The Websites and Services are provided without warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability,
                 fitness for a particular purpose, non-infringement or course of performance.
               </p>
-              <p className="mt-2">
+              <p className={cx(styles.paragraph, "mt-2")}>
                 <em>Mineralogy.rocks</em> its subsidiaries, affiliates, and its licensors do not warrant that:
               </p>
 
@@ -244,7 +244,7 @@ export default function Terms() {
               </ol>
 
               <h3 className={styles.header}>10. Governing Law.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 These Terms shall be governed and construed in accordance with the laws of Slovakia, without regard to its conflict of law provisions.
                 Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court,
                 the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service,
@@ -252,16 +252,16 @@ export default function Terms() {
               </p>
 
               <h3 className={styles.header}>11. Changes to the Terms.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 We reserve the right, at our sole discretion, to modify or replace these Terms at any time.
                 If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect.
                 What constitutes a material change will be determined at our sole discretion.
               </p>
 
               <h3 className={styles.header}>12. Contact Us.</h3>
-              <p>
+              <p className={styles.paragraph}>
                 If you have any questions about these Terms, please contact us by email at{' '}
-                <a className="link external" href="mailto:admin@mineralogy.rocks" target="_blank" rel="noreferrer">admin@mineralogy.rocks</a>
+                <ExternalLink href="mailto:admin@mineralogy.rocks" isIcon={false}>admin@mineralogy.rocks</ExternalLink>
               </p>
             </div>
           </div>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Blog',
   description: 'The blog of mineralogy.rocks',
   keywords: 'mineralogy, mineral computing, mineral informatics',
-}
+};
 
 
 const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
@@ -20,15 +20,15 @@ const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
       <h1 className="text-font-primary text-lg font-bold text-pretty">{name}</h1>
     </Link>
 
-    <p className="text-font-secondary text-sm mt-5 text-pretty">{description}</p>
+    <p className="font-medium text-sm mt-5 text-pretty">{description}</p>
 
-    <div className="flex justify-between items-center mt-3">
+    <div className="flex flex-col md:flex-row justify-between gap-1 mt-3">
       <div className="flex space-x-1 text-xs font-normal text-font-ternary">
         <span className="slashed-zero tabular-nums">{publishedAt}</span>
         <span>&#183;</span>
         <span className="slashed-zero tabular-nums">{views} views</span>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <span key={index} className="text-xs font-medium text-font-ternary">#{tag.name}</span>
         ))}
@@ -44,7 +44,6 @@ export default async function BlogPage({ searchParams }) {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:grid md:grid-cols-6 gap-2 relative mt-20">
-
       <div className="order-2 md:order-1 space-y-5 md:col-start-1 md:col-end-5">
         {posts && posts.results?.map(({
                                         id,

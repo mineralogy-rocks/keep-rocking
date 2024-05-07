@@ -1,15 +1,15 @@
-import { Suspense, cache } from 'react';
+import { Suspense } from 'react';
 
 import type { Metadata } from 'next';
-import { unstable_noStore as noStore } from 'next/cache';
 import { notFound } from 'next/navigation';
 
-import { getBLogPost, getViews, incrementViews as increment } from '@/actions';
-import { postDetailApiResponse } from '@/lib/types';
+import {getBLogPost, getPostList} from '@/actions';
+import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
+
+import PostMetrics from '@/components/PostMetrics';
+import LoadingDots from "@/components/LoadingDots";
 import CustomMDX from '@/components/MDX';
 
-
-const incrementViews = cache(increment);
 
 export async function generateMetadata({ params }): Promise<Metadata | undefined> {
   const { slug } = params;
@@ -22,12 +22,13 @@ export async function generateMetadata({ params }): Promise<Metadata | undefined
   };
 }
 
-const Views = async ({ slug }) => {
-  noStore();
-  await incrementViews(slug);
-  let views = await getViews(slug);
-  return (<p className="text-sm text-slate-600 dark:text-slate-400 slashed-zero tabular-nums">{views?.count.toLocaleString()} views</p>);
-}
+export async function generateStaticParams() {
+  const posts: postListApiResponse = await getPostList();
+
+  return posts.results.map(({ slug }) => ({
+    params: { slug }
+  }));
+};
 
 export default async function Blog({ params }) {
   const { slug } = params;
@@ -54,16 +55,16 @@ export default async function Blog({ params }) {
                   },
                 }),
               }} />
-      <h1 className="text-font-primary text-pretty font-semibold text-3xl">
+      <h1 className="text-font-primary text-pretty font-semibold text-lg md:text-3xl">
         {post.name}
       </h1>
 
-      <div className="flex justify-between items-center mt-3 text-sm w-full">
-        <p className="text-sm text-slate-600 dark:text-slate-400 slashed-zero tabular-nums">
+      <div className="flex justify-between items-center mt-5 text-sm w-full">
+        <p className="text-xs md:text-sm text-font-secondary slashed-zero tabular-nums">
           {post.published_at}
         </p>
-        <Suspense fallback={<p className="h-5"/>}>
-          <Views slug={slug} />
+        <Suspense fallback={<LoadingDots isSmall={true} />}>
+          <PostMetrics slug={slug} />
         </Suspense>
       </div>
 
