@@ -42,7 +42,7 @@ const BlogCategory: React.FC<Props> = (props) => {
   }, [searchParams]);
 
   return (
-    <div className="sticky float-right top-20">
+    <div className="sticky float-left md:float-right top-20">
       <div className="flex gap-1.5">
         {categories.map(({ id, name , slug}, index) => (
           <div key={index}

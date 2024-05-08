@@ -46,9 +46,8 @@ export default function RootLayout({ children }: {
 
           <link rel="icon" href="/favicon.ico"/>
         </head>
-        <body
-          className="tracking-normal overscroll-y-none font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font dark:bg-slate-900 dark:bg-none"
-          suppressHydrationWarning={true}>
+        <body className="tracking-normal overscroll-y-none font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font dark:bg-slate-900 dark:bg-none"
+              suppressHydrationWarning={true}>
         <main className="max-w-full mx-auto relative text-font">
           <NavBar/>
           <div className="min-h-[70vh] pt-10">

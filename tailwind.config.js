@@ -78,7 +78,7 @@ module.exports = {
             a: {
               fontWeight: theme('fontWeight.medium'),
               textDecoration: 'none',
-              borderBottom: `1px solid ${theme('colors.indigo.500')}`,
+              borderBottom: `1px solid ${theme('colors.sky.500')}`,
             },
             'a:hover': {
               borderBottomWidth: '2px',
@@ -91,6 +91,9 @@ module.exports = {
               minWidth: '100%',
               lineHeight: theme('lineHeight.tight'),
             },
+            p: {
+              lineHeight: theme('lineHeight.normal'),
+            }
           }
         },
         dark: {
@@ -206,7 +209,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
     themeSwapper({
 			themes: themes
 		})

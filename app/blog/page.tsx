@@ -20,7 +20,7 @@ const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
       <h1 className="text-font-primary text-lg font-bold text-pretty">{name}</h1>
     </Link>
 
-    <p className="font-medium text-sm mt-5 text-pretty">{description}</p>
+    <p className="text-sm md:text-base mt-5 text-pretty">{description}</p>
 
     <div className="flex flex-col md:flex-row justify-between gap-1 mt-3">
       <div className="flex space-x-1 text-xs font-normal text-font-ternary">

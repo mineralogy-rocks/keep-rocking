@@ -7,6 +7,7 @@ import {getBLogPost, getPostList} from '@/actions';
 import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
 
 import PostMetrics from '@/components/PostMetrics';
+import PostTableOfContents from "@/components/PostTableOfContents";
 import LoadingDots from "@/components/LoadingDots";
 import CustomMDX from '@/components/MDX';
 
@@ -35,8 +36,18 @@ export default async function Blog({ params }) {
   let post: postDetailApiResponse = await getBLogPost(slug);
   if (!post) notFound();
 
+  const headings = post.content.match(/#{2,3} .+/g)?.map((heading) => {
+    const matches = heading.match(/(#{2,3}) (.+)/);
+    if (!matches) return;
+    return {
+      slug: matches[2].toLowerCase().replace(/ /g, '-'),
+      text: matches[2],
+      heading: matches[1].length,
+    };
+  });
+
   return (
-    <section className="max-w-xs sm:max-w-md md:max-w-3xl mx-auto mt-10 lg:mt-20">
+    <section className="max-w-sm sm:max-w-md md:max-w-3xl p-2 mx-auto mt-10 lg:mt-20">
       <script type="application/ld+json"
               suppressHydrationWarning
               dangerouslySetInnerHTML={{
@@ -55,7 +66,7 @@ export default async function Blog({ params }) {
                   },
                 }),
               }} />
-      <h1 className="text-font-primary text-pretty font-semibold text-lg md:text-3xl">
+      <h1 className="text-font-primary text-pretty font-bold text-lg md:text-3xl">
         {post.name}
       </h1>
 
@@ -67,6 +78,8 @@ export default async function Blog({ params }) {
           <PostMetrics slug={slug} />
         </Suspense>
       </div>
+
+      {!!headings && <PostTableOfContents headings={headings} />}
 
       <article className="mt-10 prose prose-slate prose-sm lg:prose-base dark:prose-invert">
         <CustomMDX source={post.content} />
