@@ -46,6 +46,19 @@ export const slugify = (str: string): string => {
     .replace(/\-\-+/g, '-'); // Replace multiple - with single -
 };
 
+export const getHeadings = (content: string): any => {
+    return content.match(/#{2,3} .+/g)?.map((heading) => {
+        const matches = heading.match(/(#{2,3}) (.+)/);
+        if (matches) {
+            return {
+                slug: slugify(matches[2]),
+                text: matches[2],
+                heading: matches[1].length,
+            };
+        }
+    });
+};
+
 export const compareColors = [
 	{
 		base: '#2563eb',

@@ -20,10 +20,6 @@ const PostTableOfContents: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <div className="mb-2.5 text-xs uppercase text-font-primary">
-        Contents
-      </div>
-
       <ul className="space-y-2.5 text-sm">
         {headings.map((heading) => {
           return (

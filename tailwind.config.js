@@ -1,6 +1,6 @@
 const { fontFamily } = require('tailwindcss/defaultTheme');
 const themeSwapper = require('tailwindcss-theme-swapper');
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 const themes = [
   {
@@ -211,6 +211,6 @@ module.exports = {
     require('@tailwindcss/typography'),
     themeSwapper({
 			themes: themes
-		})
+		}),
   ],
 }

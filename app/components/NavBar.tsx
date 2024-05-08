@@ -44,9 +44,9 @@ export default function Navbar() {
           <li>
             <NavItem href="/explore" text="Explore"/>
           </li>
-          <li>
-            <NavItem href="/blog" text="Blog"/>
-          </li>
+          {/*<li>*/}
+          {/*  <NavItem href="/blog" text="Blog"/>*/}
+          {/*</li>*/}
           <li>
             <NavItem href="/about" text="About"/>
           </li>

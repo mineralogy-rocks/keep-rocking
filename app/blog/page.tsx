@@ -15,25 +15,24 @@ export const metadata: Metadata = {
 
 
 const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
-  <article className="relative flex flex-col p-2 rounded-sm">
-    <Link href={`/blog/${slug}`} prefetch={true}>
-      <h1 className="text-font-primary text-lg font-bold text-pretty">{name}</h1>
+  <article className="relative flex flex-col rounded hover:bg-slate-50 dark:hover:bg-slate-800">
+    <Link href={`/blog/${slug}`} prefetch={true} className="p-4">
+      <h1 className="text-font-primary text-lg font-semibold text-pretty">{name}</h1>
+      <p className="text-sm mt-5 text-pretty">{description}</p>
+
+      <div className="flex flex-col md:flex-row justify-between gap-1 mt-3">
+        <div className="flex space-x-1 text-xs font-normal text-font-ternary">
+          <span className="slashed-zero tabular-nums">{publishedAt}</span>
+          <span>&#183;</span>
+          <span className="slashed-zero tabular-nums">{views} views</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <span key={index} className="text-xs font-medium text-font-ternary">#{tag.name}</span>
+          ))}
+        </div>
+      </div>
     </Link>
-
-    <p className="text-sm md:text-base mt-5 text-pretty">{description}</p>
-
-    <div className="flex flex-col md:flex-row justify-between gap-1 mt-3">
-      <div className="flex space-x-1 text-xs font-normal text-font-ternary">
-        <span className="slashed-zero tabular-nums">{publishedAt}</span>
-        <span>&#183;</span>
-        <span className="slashed-zero tabular-nums">{views} views</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <span key={index} className="text-xs font-medium text-font-ternary">#{tag.name}</span>
-        ))}
-      </div>
-    </div>
   </article>
 );
 
