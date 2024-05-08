@@ -1,4 +1,17 @@
-import { Formula, Crystallography, CrystalSystem, Status, Relation, Discovery, History, Link, Inheritance, GroupingMember } from './interfaces';
+import {
+  Formula,
+  Crystallography,
+  CrystalSystem,
+  Status,
+  Relation,
+  Discovery,
+  History,
+  Link,
+  Inheritance,
+  GroupingMember,
+  PostTag,
+  PostCategory
+} from './interfaces';
 
 
 export type paginatedApiResponse = {
@@ -59,17 +72,31 @@ export type exploreApiRequest = {
   ima_only?: boolean;
 };
 
-export type mindatDataNode = {
-  items: {
-    [key: string]: {
-      value: any;
-      ids: [number];
-    }[];
-  };
-  minerals: {
-    id: number;
+export type postListApiResponse = paginatedApiResponse & {
+  results: {
+    id: number
     name: string;
-    color: string;
-    statuses: [number];
+    slug: string;
+    url: string;
+    description: string;
+    views: number;
+    likes: number;
+    tags: PostTag[];
+    category: PostCategory;
   }[];
+}
+
+export type postDetailApiResponse = {
+  id: number
+  name: string;
+  slug: string;
+  description: string;
+  content: string;
+  views: number;
+  likes: number;
+  tags: PostTag[];
+  category: PostCategory;
+  created_at: Date;
+  published_at: string;
+  updated_at: Date;
 };

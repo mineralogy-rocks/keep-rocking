@@ -7,15 +7,15 @@ export type Styles = {
 export const getStyles= (type = "default"): Styles => {
 
   let defaultDarkStyles = {
-    textColor: 'text-font-primary',
+    textColor: 'text-font-primary dark:text-slate-800',
     backgroundColor: 'bg-red-50/60',
-    borderColor: 'border border-font-secondary'
+    borderColor: 'border border-font-secondary dark:border-slate-600'
   };
 
   let defaultLightStyles = {
     textColor: 'text-font-orange',
     backgroundColor: 'bg-red-500',
-    borderColor: 'border border-font-secondary'
+    borderColor: 'border border-font-secondary dark:border-slate-600'
   };
 
   const colors = {

@@ -1,0 +1,16 @@
+.prop {
+  @apply text-font-primary px-1 sm:px-2;
+  .propHeader {
+    @apply flex flex-col p-2 h-auto;
+    .propTitle {
+      @apply text-sm font-semibold sm:font-medium break-normal;
+    }
+    .propSubtitle {
+      @apply ml-1 mt-1 text-xs sm:text-xs font-medium leading-normal break-words text-font-secondary;
+    }
+  }
+  .propItem {
+    @apply text-xs sm:text-sm font-normal text-font-secondary;
+  }
+}
+

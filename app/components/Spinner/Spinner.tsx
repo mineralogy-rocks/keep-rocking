@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 const getSpans = () => {
   return [...new Array(12)].map((_, index) => (
-    <span key={`spinner-${index}`}>
+    <span key={index}>
       <style jsx>{`
         span {
           background-color: black;
@@ -13,8 +13,13 @@ const getSpans = () => {
           width: 24%;
           height: 8%;
           left: -10%;
-          border-radius: 10;
+          border-radius: 10px;
           animation: spinner 1.2s linear 0s infinite normal none running;
+        }
+        @media (prefers-color-scheme: dark) {
+          span {
+            background-color: white;
+          }
         }
         span:nth-child(1) {
           animation-delay: -1.2s;

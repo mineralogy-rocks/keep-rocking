@@ -1,28 +1,57 @@
 'use client';
 
-import { useRef, useEffect, useState } from "react";
+import {useRef, useEffect, useState} from "react";
 
-import Link from 'next/link';
-import Head from 'next/head';
 import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
+import styled from "styled-components";
 import cx from 'clsx';
 
+import { isMagicEnabled, toggleMagic } from '@/lib/store/layoutSlice';
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import Terminal from '@/components/Content/Terminal';
-import utilsStyles from '@/styles/utils.module.scss';
+import styles from './index.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
-import SAVLogo from 'public/assets/SAV_logo.jpg';
+import { InternalLink } from "@/components/Link";
+
+import SAVLogo from 'public/assets/SAV_logo-light.jpg';
 import UKLogo from 'public/assets/UK_logo.png';
+import UKLogoDark from 'public/assets/UK_logo-dark.png';
 import FNSLogo from 'public/assets/UK_FNS_logo.png';
+import FNSLogoDark from 'public/assets/UK_FNS_logo-dark.png';
 import MSCALogo from 'public/assets/MSCA.png';
 
+
+const StyledPath = styled(motion.path)<{ $rotate?: number }>`
+  transform-origin: center;
+  rotate: ${props => props.$rotate || 0}deg;
+`;
 
 export default function Home() {
 
   const terminalRef = useRef(null);
   const terminalCodeRef = useRef(null);
   const isInView = useInView(terminalRef, { once: true, amount: 0.1 });
+  const magicEnabled = useAppSelector(isMagicEnabled);
+  const dispatch = useAppDispatch();
+
+  const variants = {
+    enabled: (degrees: number) => ({
+      rotate: degrees,
+      transition: {
+        type: "spring",
+        bounce: 0.3,
+        damping: 10,
+        mass: 4,
+        stiffness: 20,
+        delay: 0.5,
+      },
+    }),
+    disabled: (degrees: number) => ({
+      rotate: degrees,
+    })
+  };
 
   const code = [
     'curl -X GET \\',
@@ -57,33 +86,7 @@ export default function Home() {
     return;
   }, [htmlTypedCode]);
 
-
-  const [magicEnabled, setMagicEnabled] = useState(true);
-  const variants = {
-    enabled: (degrees) => ({
-      rotate: degrees,
-      transition: {
-        type: "spring",
-        bounce: 0.3,
-        damping: 10,
-        mass: 4,
-        stiffness: 20,
-        delay: 0.5,
-      }
-    }),
-    disabled: (degrees) => ({
-      rotate: degrees,
-    }),
-  };
-
   useEffect(() => {
-    const magic = sessionStorage.getItem('magicEnabled');
-    if (magic === 'false') setMagicEnabled(false);
-    return;
-  }, []);
-
-  useEffect(() => {
-
     const typeCode = (index, line) => {
       if (index === code.length) {
         return;
@@ -125,10 +128,9 @@ export default function Home() {
     };
 
     if (magicEnabled) {
+      dispatch(toggleMagic());
       if (isInView) {
         typeCode(0, code[0]);
-        setMagicEnabled(false);
-        sessionStorage.setItem('magicEnabled', 'false');
       }
     } else {
       setTypedCode(code.join('\n'));
@@ -138,47 +140,42 @@ export default function Home() {
 
   return (
   <>
-    <Head>
-      <title>mineralogy.rocks</title>
-    </Head>
-
     <header>
       <div className="max-w-6xl mx-auto">
         <div className="relative flex items-center mt-24 text-center justify-center">
-          <h1 className="max-w-md font-black text-6xl sm:text-7xl md:text-8xl mx-auto">
+          <h1 className="max-w-md font-black text-font-primary text-6xl sm:text-7xl md:text-8xl mx-auto">
             Explore.
             Extract.
             Research.
           </h1>
           <div className="absolute translate-x-2 lg:translate-x-5 translate-y-2 mx-1 sm:mx-10 -z-10">
-            <svg style={{ width: '100%', height: 640 }} viewBox="0 0 650 640" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_521_89)">
+            <svg style={{ width: '100%', height: 640 }} viewBox="0 0 650 640" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+              <g className={styles.wrapper} clipPath="url(#a)">
                 <motion.path custom={28}
                              variants={variants}
-                             animate={ magicEnabled ? 'enabled': '' }
-                             initial={ magicEnabled ? '' : 'disabled' }
+                             animate={magicEnabled ? 'enabled' : ''}
+                             initial={magicEnabled ? '' : 'disabled'}
                              d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
-                             fill="url(#paint0_linear_521_89)"
-                             fillOpacity="0.05" />
+                             fill="url(#b)" />
                 <motion.path custom={13}
                              variants={variants}
-                             animate={ magicEnabled ? 'enabled': '' }
-                             initial={ magicEnabled ? '' : 'disabled' }
+                             animate={magicEnabled ? 'enabled' : ''}
+                             initial={magicEnabled ? '' : 'disabled'}
                              d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
-                             fill="url(#paint1_linear_521_89)"
-                             fillOpacity="0.05" />
+                             fill="url(#c)" />
               </g>
               <defs>
-                <linearGradient id="paint0_linear_521_89" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#3800A8"/>
-                  <stop offset="1" stopColor="#F500AB"/>
+                <linearGradient id="b" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026" gradientUnits="userSpaceOnUse">
+                  <stop className={styles.gradientFrom} />
+                  <stop offset="1" className={styles.gradientTo} />
                 </linearGradient>
-                <linearGradient id="paint1_linear_521_89" x1="27.7238" y1="-32.7187" x2="529.686" y2="-32.7187" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#3800A8"/>
-                  <stop offset="1" stopColor="#F500AB"/>
+                <linearGradient id="c" x1="27.7238" y1="-32.7187" x2="529.686" y2="-32.7187" gradientUnits="userSpaceOnUse">
+                  <stop className={styles.gradientFrom} />
+                  <stop offset="1" className={styles.gradientTo} />
                 </linearGradient>
-                <clipPath id="clip0_521_89">
-                  <rect width="650" height="640" fill="white"/>
+                <clipPath id="a">
+                  <rect width="650" height="640" fill="white" />
                 </clipPath>
               </defs>
             </svg>
@@ -188,16 +185,17 @@ export default function Home() {
 
         <div className="relative mx-auto px-6 sm:px-8 mt-20 md:mt-28">
           <div className="flex justify-center">
-            <Link href="/explore">
-                <span className={cx(utilsStyles.link, 'group flex items-center font-bold text-base md:text-lg')}>Start Exploring
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                </svg>
-                </span>
-            </Link>
+            <InternalLink hasIcon={false} href="/explore" {...{ prefetch: true }}>
+              <span className='group link flex items-center text-base md:text-lg font-semibold'>Start Exploring
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2}
+                 stroke="currentColor" className="w-6 h-6 ml-2 group-hover:animate-[wiggleRight_1s_infinite]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
+              </svg>
+              </span>
+            </InternalLink>
           </div>
 
-          <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-left mt-7">
+          <p className="text-base md:text-lg leading-normal text-left mt-7">
             <strong>Mineralogy.rocks</strong> provide seamless and simple way to access and filter mineralogical and related data.
             Our platform is designed both for researchers and developers.
           </p>
@@ -206,28 +204,28 @@ export default function Home() {
     </header>
 
     <section>
-      <div className={cx(typographyStyles.Section, "")}>
-        <h3 className="text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-start mt-7">
+      <div className={typographyStyles.Section}>
+        <h3 className="text-font-primary text-start font-black text-3xl sm:text-4xl md:text-6xl mx-auto mt-4">Start with exploring the data</h3>
+        <p className="text-base md:text-lg leading-normal text-start mt-7">
             The platform is developed by the researchers for the researchers. Our goal is to provide data for scientific needs in a coherent fashion.
             Find the proper data subset and explore the relations between minerals.
         </p>
 
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start">
             <div className="md:col-span-6 flex flex-col">
-                <h4 className={typographyStyles.Subtitle}>Researchers</h4>
-                <p className="text-base md:text-lg text-font-secondary leading-normal text-left mt-5">
-                    Check out our filtering system at <Link href="/explore" className={utilsStyles.link}>mineralogy.rocks/explore</Link>.
+                <h4 className={typographyStyles.subtitle}>Researchers</h4>
+                <p className="text-base md:text-lg leading-normal text-left mt-5">
+                    Check out our filtering system at <InternalLink href="/explore" hasIcon={false}>mineralogy.rocks/explore</InternalLink>.
                     We are working towards a platform that would allow making complex queries, combining those and exploring the results.
                 </p>
             </div>
 
             <div className="md:col-span-6 flex flex-col">
-              <div className="flex flex-col gap-2 text-left text-base md:text-lg font-normal text-font-secondary leading-normal">
+              <div className="flex flex-col gap-2 text-left text-base md:text-lg font-normal leading-normal">
                 <div className="flex flex-wrap items-center">
                   <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">1</span>
-                  <p className="flex-1 text-font-secondary">
-                    <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-secondary">WHERE</code> discovery year <b>between</b> 1999 and 2001
+                  <p className="flex-1">
+                    <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">WHERE</code> discovery year <b>between</b> 1999 and 2001
                   </p>
                 </div>
                 <div className="flex flex-row">
@@ -235,8 +233,8 @@ export default function Home() {
                 </div>
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">2</span>
-                    <p className="flex-1 text-font-secondary">
-                      <code className="bg-slate-100 px-1 py-0.5 rounded text-font-secondary">AND</code> discovery country <b>in</b> EU
+                    <p className="flex-1">
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">AND</code> discovery country <b>in</b> EU
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -244,8 +242,8 @@ export default function Home() {
                 </div>
                 <div className="flex flex-wrap items-center">
                     <span className="bg-black/70 text-white w-6 h-6 rounded-full justify-center font-medium flex items-center mr-3">3</span>
-                    <p className="text-base md:text-lg leading-normal text-font-secondary">
-                      <code className="bg-slate-100 px-1 py-0.5 rounded text-font-secondary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
+                    <p className="text-base md:text-lg leading-normal">
+                      <code className="bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">AND</code> mineral formula <b>contains</b> As<sup>5+</sup>
                     </p>
                 </div>
                 <div className="flex flex-row">
@@ -257,10 +255,10 @@ export default function Home() {
 
         <div className="relative md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-start md:min-h-[200px]">
           <div className="md:col-span-6 flex flex-col">
-            <h3 className={typographyStyles.Subtitle}>Developers</h3>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              The data is accessible via <a className={utilsStyles.linkExternal} href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
-              through your favourite <code className="font-normal bg-slate-100 px-1 py-0.5 rounded text-font-secondary">http client</code>.
+            <h3 className={typographyStyles.subtitle}>Developers</h3>
+            <p className="text-base md:text-lg leading-normal mt-5">
+              The data is accessible via <a className="link external" href="https://api.mineralogy.rocks" target="_blank" rel="noopener noreferrer">api.mineralogy.rocks</a>{' '}
+              through your favourite <code className="font-normal bg-slate-500 px-1 py-0.5 rounded text-font-orange dark:text-font-primary">http client</code>.
               Reach out to us if you need an API key.
             </p>
           </div>
@@ -269,7 +267,7 @@ export default function Home() {
           <div className="relative md:col-span-6" ref={terminalRef}>
             <div className="md:absolute w-full h-full">
               <Terminal>
-                <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
+                <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold flex ligatures-none overflow-auto">
                   <code className="flex-none min-w-full p-5">
                     <span className="flex">
                       <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
@@ -304,8 +302,8 @@ export default function Home() {
 
     <section>
       <div className={typographyStyles.Section}>
-        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal text-left mt-5">
+        <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Extract the data</h3>
+        <p className="text-base md:text-lg leading-normal text-left mt-5">
           The platform makes the <strong>data extraction</strong> easy and simple. No matter <em>what</em> data you need -
           you can savely extract it to your local machine.
         </p>
@@ -313,18 +311,18 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-2 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14 items-center">
           <div className="md:col-span-6">
             <Terminal>
-              <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold text-gray-900 flex ligatures-none overflow-auto">
+              <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold flex ligatures-none overflow-auto">
                 <code className="flex-none min-w-full p-5">
                   <span className="flex">
                     <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
                       <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                     </svg>
                     <span className="flex-auto">
-                      <span className="text-indigo-600"><span className="text-violet-800">let</span> queryParams</span> = &#123;{'\n'}
-                      <span className="text-rose-700">   color</span>: &quot;blue&quot;,{'\n'}
-                      <span className="text-rose-700">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
-                      <span className="text-rose-700">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
-                      <span className="text-rose-700">   discovery_year_max</span>: 1998,{'\n'}
+                      <span className="text-indigo-600 dark:text-indigo-400"><span className="text-violet-800 dark:text-violet-200">let</span> queryParams</span> = &#123;{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   color</span>: &quot;blue&quot;,{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   cations__in</span>: [&quot;Cu2+&quot;],{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   anions__in</span>: [&quot;OH-&quot;, &quot;O2-&quot;],{'\n'}
+                      <span className="text-rose-700 dark:text-rose-300">   discovery_year_max</span>: 1998,{'\n'}
                       <span>   ...</span>{'\n'}
                       <span>&#125;</span>
                     </span>
@@ -337,16 +335,16 @@ export default function Home() {
 
           <div className="md:col-span-6 flex flex-col space-y-6 md:space-y-2">
             <div className="flex flex-col">
-              <h4 className={typographyStyles.Subtitle}>Flexible data fetching</h4>
-              <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+              <h4 className={typographyStyles.subtitle}>Flexible data fetching</h4>
+              <p className="text-base md:text-lg leading-normal mt-5">
                 Export the data in a preferred format or connect your application directly to our <b>API</b>.
                 We are updating our data services in order to meet the evolving demands of research community, please contact us in case of specific data format/output needs.
               </p>
             </div>
 
             <div className="flex flex-col">
-              <h4 className={typographyStyles.Subtitle}>Share the query</h4>
-              <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
+              <h4 className={typographyStyles.subtitle}>Share the query</h4>
+              <p className="text-base md:text-lg leading-normal mt-5">
                 All filtering systems are connected to the query params of the <b>URL string</b> - you’ll <em>never</em> loose your results once you obtained them.
               </p>
             </div>
@@ -357,8 +355,8 @@ export default function Home() {
 
     <section>
       <div className={typographyStyles.Section}>
-        <h3 className="font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4 text">Do research</h3>
-        <p className="text-base md:text-lg font-medium text-font-secondary leading-normal mt-7">
+        <h3 className="text-font-primary font-black text-3xl sm:text-4xl md:text-6xl text-start mt-4">Do research</h3>
+        <p className="text-base md:text-lg leading-normal mt-7">
           We will gladly assist you in finding the right data in a right format.
           We believe in open science and open source—things that make our lives better.
         </p>
@@ -366,21 +364,21 @@ export default function Home() {
         <div className="md:grid md:grid-cols-12 space-y-6 md:space-y-0 gap-2 sm:gap-3 md:gap-7 mt-10 md:mt-14">
           <div className="md:col-span-6">
             <div className="flex items-center">
-              <h4 className={typographyStyles.Subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
+              <h4 className={typographyStyles.subtitle}>Contribute<span className="mdi text-2xl md:text-3xl mdi-github ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              Join our computing community <a className={utilsStyles.linkExternal} href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
-              <a className={utilsStyles.linkExternal} href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
+            <p className="text-base md:text-lg leading-normal mt-5">
+              Join our computing community <a className="link external" href="https://github.com/mineralogy-rocks" target="_blank" rel="noreferrer">mineralogy-rocks</a> and start contributing as a member. For code-related threads and suggestions, visit our
+              <a className="link external" href="https://github.com/orgs/mineralogy-rocks/discussions" target="_blank" rel="noreferrer"> GitHub Discussions Channel</a>.
             </p>
           </div>
           <div className="md:col-span-6">
             <div className="flex items-center">
-              <h4 className={typographyStyles.Subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
+              <h4 className={typographyStyles.subtitle}>Core team<span className="mdi text-2xl md:text-3xl mdi-account-group ml-2"></span></h4>
             </div>
-            <p className="text-base md:text-lg text-font-secondary leading-normal mt-5">
-              The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className={utilsStyles.linkExternal} href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
-              <a className={utilsStyles.linkExternal} href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer">University of Bern (Switzerland) 🇨🇭</a>
-              and <a className={utilsStyles.linkExternal} href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
+            <p className="text-base md:text-lg leading-normal mt-5">
+              The core team includes world-class mineralogy, geochemistry, petrology and geology researchers from <a className="link external" href="https://uniba.sk" target="_blank" rel="noreferrer">Comenius University (Slovakia) 🇸🇰</a>,
+              <a className="link external" href="https://www.unibe.ch/index_eng.html" target="_blank" rel="noreferrer"> University of Bern (Switzerland) 🇨🇭</a>
+              and <a className="link external" href="https://www.oulu.fi/en" target="_blank" rel="noreferrer">University of Oulu (Finland) 🇫🇮</a>.
             </p>
           </div>
         </div>
@@ -389,10 +387,10 @@ export default function Home() {
 
     <section className="px-6 sm:px-8 mt-40 mx-auto max-w-6xl">
       <div className="flex flex-col">
-        <h2 className="font-black text-xl sm:text-4xl md:text-4xl text-start mt-4 text">Funding and Sponsors</h2>
+        <h2 className="text-font-primary font-black text-xl sm:text-4xl md:text-4xl text-start mt-4">Funding and Sponsors</h2>
 
          <div className="flex flex-col md:flex-row justify-between items-center mt-7 gap-10 md:gap-5">
-           <div className="max-w-md md:max-w-lg text-base md:text-lg text-font-secondary leading-normal">
+           <div className="max-w-md md:max-w-lg text-base md:text-lg leading-normal">
              <p className="">
                <strong>mineralogy.rocks</strong> is a non-profit outreach research project funded by academia since 2021. We always seek sponsors and donations to help us improve and evolve.
              </p>
@@ -645,39 +643,48 @@ export default function Home() {
                 </defs>
               </svg>
             </a>
-            <a href="https://sentry.io/" target="_blank" rel="noreferrer" className="h-20 md:h-24 p-4">
-              <svg width="100%" height="100%" viewBox="0 0 365 82" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_539_780)">
-                 <path d="M53.3584 4.63355C52.6035 3.38081 51.5377 2.34445 50.2643 1.62503C48.9909 0.905609 47.5532 0.527557 46.0906 0.527557C44.628 0.527557 43.1903 0.905609 41.9169 1.62503C40.6435 2.34445 39.5777 3.38081 38.8228 4.63355L26.8673 25.1105C36.0008 29.6705 43.7827 36.5402 49.4402 45.0377C55.0977 53.5351 58.4341 63.3646 59.1181 73.5502H50.7238C50.0411 64.8192 47.0904 56.4179 42.1636 49.1776C37.2369 41.9372 30.5049 36.1088 22.6339 32.2692L11.5687 51.4017C15.9935 53.3861 19.8484 56.4513 22.7789 60.3152C25.7094 64.1791 27.6214 68.7178 28.3391 73.5138H9.0613C8.83267 73.4977 8.61167 73.4248 8.41821 73.3019C8.22476 73.179 8.06494 73.0099 7.95317 72.8098C7.84141 72.6097 7.7812 72.3849 7.778 72.1557C7.77479 71.9266 7.82868 71.7002 7.9348 71.497L13.2766 62.4123C11.4668 60.9024 9.39845 59.7327 7.17168 58.9601L1.88438 68.0448C1.33394 68.989 0.976606 70.0331 0.833122 71.1165C0.689639 72.1999 0.762871 73.301 1.04856 74.3559C1.33426 75.4108 1.82672 76.3983 2.49733 77.2613C3.16795 78.1242 4.00335 78.8453 4.95501 79.3826C6.20888 80.089 7.62213 80.4642 9.0613 80.4727H35.4615C35.9518 74.4224 34.8713 68.348 32.3248 62.8379C29.7782 57.3277 25.8518 52.5686 20.9259 49.0215L25.1231 41.7537C31.3396 46.0234 36.3354 51.8403 39.6173 58.6303C42.8992 65.4204 44.3538 72.9488 43.8376 80.4727H66.2042C66.725 69.075 64.2454 57.7402 59.0132 47.601C53.781 37.4618 45.9795 28.8734 36.3881 22.694L44.8732 8.15842C45.0623 7.84162 45.3689 7.61234 45.7262 7.52046C46.0835 7.42858 46.4626 7.48155 46.781 7.66784C47.744 8.19475 83.6468 70.8429 84.3191 71.5697C84.4375 71.7821 84.4978 72.0219 84.4938 72.2651C84.4898 72.5082 84.4216 72.746 84.2962 72.9543C84.1709 73.1626 83.9927 73.3342 83.7798 73.4516C83.5668 73.569 83.3267 73.6281 83.0836 73.6229H74.4349C74.5439 75.9364 74.5439 78.244 74.4349 80.5454H83.1199C84.2227 80.5526 85.316 80.341 86.3366 79.9229C87.3571 79.5047 88.2845 78.8883 89.0652 78.1093C89.8459 77.3303 90.4643 76.4042 90.8847 75.3846C91.305 74.365 91.519 73.2722 91.5142 72.1693C91.5153 70.7126 91.1263 69.2822 90.3877 68.0267L53.3584 4.63355ZM226.549 51.9104L199.731 17.2795H193.045V63.7024H199.822V28.1266L227.403 63.7024H233.327V17.2795H226.549V51.9104ZM159.014 43.2981H183.052V37.2658H158.995V23.2935H186.122V17.2613H152.091V63.7024H186.468V57.6701H158.995L159.014 43.2981ZM130.742 37.4112C121.385 35.1582 118.768 33.3776 118.768 29.0533C118.768 25.165 122.202 22.5304 127.326 22.5304C131.992 22.6671 136.493 24.2903 140.172 27.1636L143.806 22.0217C139.148 18.3705 133.37 16.4445 127.453 16.5709C118.26 16.5709 111.846 22.0217 111.846 29.78C111.846 38.138 117.297 41.0269 127.217 43.4434C136.047 45.4784 138.755 47.368 138.755 51.6015C138.755 55.835 135.121 58.4514 129.506 58.4514C123.917 58.4258 118.539 56.3133 114.426 52.5282L110.338 57.4157C115.606 61.9422 122.325 64.4248 129.27 64.411C139.227 64.411 145.623 59.051 145.623 50.7657C145.568 43.7523 141.426 39.9913 130.742 37.4112ZM356.243 17.2795L342.27 39.0828L328.389 17.2795H320.285L338.618 45.3512V63.7205H345.595V45.1332L364.056 17.2795H356.243ZM238.814 23.5661H254.022V63.7205H260.999V23.5661H276.206V17.2795H238.832L238.814 23.5661ZM308.475 45.5874C315.489 43.6433 319.377 38.7376 319.377 31.7242C319.377 22.803 312.854 17.1886 302.334 17.1886H281.694V63.6842H288.598V47.0047H300.317L312.091 63.7205H320.158L307.44 45.8781L308.475 45.5874ZM288.58 41.0451V23.4207H301.607C308.403 23.4207 312.291 26.6367 312.291 32.2147C312.291 37.7928 308.13 41.0451 301.68 41.0451H288.58Z" fill="#362D59"/>
-                </g>
-                <defs>
-                  <clipPath id="clip0_539_780">
-                    <rect width="364" height="81" fill="white" transform="translate(0.680664 0.5)"/>
-                  </clipPath>
-                </defs>
-              </svg>
-            </a>
+          <a href="https://sentry.io/" target="_blank" rel="noreferrer" className="h-20 md:h-24 p-4">
+            <svg width="100%" height="100%" viewBox="0 0 365 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_539_780)">
+                <path d="M53.3584 4.63355C52.6035 3.38081 51.5377 2.34445 50.2643 1.62503C48.9909 0.905609 47.5532 0.527557 46.0906 0.527557C44.628 0.527557 43.1903 0.905609 41.9169 1.62503C40.6435 2.34445 39.5777 3.38081 38.8228 4.63355L26.8673 25.1105C36.0008 29.6705 43.7827 36.5402 49.4402 45.0377C55.0977 53.5351 58.4341 63.3646 59.1181 73.5502H50.7238C50.0411 64.8192 47.0904 56.4179 42.1636 49.1776C37.2369 41.9372 30.5049 36.1088 22.6339 32.2692L11.5687 51.4017C15.9935 53.3861 19.8484 56.4513 22.7789 60.3152C25.7094 64.1791 27.6214 68.7178 28.3391 73.5138H9.0613C8.83267 73.4977 8.61167 73.4248 8.41821 73.3019C8.22476 73.179 8.06494 73.0099 7.95317 72.8098C7.84141 72.6097 7.7812 72.3849 7.778 72.1557C7.77479 71.9266 7.82868 71.7002 7.9348 71.497L13.2766 62.4123C11.4668 60.9024 9.39845 59.7327 7.17168 58.9601L1.88438 68.0448C1.33394 68.989 0.976606 70.0331 0.833122 71.1165C0.689639 72.1999 0.762871 73.301 1.04856 74.3559C1.33426 75.4108 1.82672 76.3983 2.49733 77.2613C3.16795 78.1242 4.00335 78.8453 4.95501 79.3826C6.20888 80.089 7.62213 80.4642 9.0613 80.4727H35.4615C35.9518 74.4224 34.8713 68.348 32.3248 62.8379C29.7782 57.3277 25.8518 52.5686 20.9259 49.0215L25.1231 41.7537C31.3396 46.0234 36.3354 51.8403 39.6173 58.6303C42.8992 65.4204 44.3538 72.9488 43.8376 80.4727H66.2042C66.725 69.075 64.2454 57.7402 59.0132 47.601C53.781 37.4618 45.9795 28.8734 36.3881 22.694L44.8732 8.15842C45.0623 7.84162 45.3689 7.61234 45.7262 7.52046C46.0835 7.42858 46.4626 7.48155 46.781 7.66784C47.744 8.19475 83.6468 70.8429 84.3191 71.5697C84.4375 71.7821 84.4978 72.0219 84.4938 72.2651C84.4898 72.5082 84.4216 72.746 84.2962 72.9543C84.1709 73.1626 83.9927 73.3342 83.7798 73.4516C83.5668 73.569 83.3267 73.6281 83.0836 73.6229H74.4349C74.5439 75.9364 74.5439 78.244 74.4349 80.5454H83.1199C84.2227 80.5526 85.316 80.341 86.3366 79.9229C87.3571 79.5047 88.2845 78.8883 89.0652 78.1093C89.8459 77.3303 90.4643 76.4042 90.8847 75.3846C91.305 74.365 91.519 73.2722 91.5142 72.1693C91.5153 70.7126 91.1263 69.2822 90.3877 68.0267L53.3584 4.63355ZM226.549 51.9104L199.731 17.2795H193.045V63.7024H199.822V28.1266L227.403 63.7024H233.327V17.2795H226.549V51.9104ZM159.014 43.2981H183.052V37.2658H158.995V23.2935H186.122V17.2613H152.091V63.7024H186.468V57.6701H158.995L159.014 43.2981ZM130.742 37.4112C121.385 35.1582 118.768 33.3776 118.768 29.0533C118.768 25.165 122.202 22.5304 127.326 22.5304C131.992 22.6671 136.493 24.2903 140.172 27.1636L143.806 22.0217C139.148 18.3705 133.37 16.4445 127.453 16.5709C118.26 16.5709 111.846 22.0217 111.846 29.78C111.846 38.138 117.297 41.0269 127.217 43.4434C136.047 45.4784 138.755 47.368 138.755 51.6015C138.755 55.835 135.121 58.4514 129.506 58.4514C123.917 58.4258 118.539 56.3133 114.426 52.5282L110.338 57.4157C115.606 61.9422 122.325 64.4248 129.27 64.411C139.227 64.411 145.623 59.051 145.623 50.7657C145.568 43.7523 141.426 39.9913 130.742 37.4112ZM356.243 17.2795L342.27 39.0828L328.389 17.2795H320.285L338.618 45.3512V63.7205H345.595V45.1332L364.056 17.2795H356.243ZM238.814 23.5661H254.022V63.7205H260.999V23.5661H276.206V17.2795H238.832L238.814 23.5661ZM308.475 45.5874C315.489 43.6433 319.377 38.7376 319.377 31.7242C319.377 22.803 312.854 17.1886 302.334 17.1886H281.694V63.6842H288.598V47.0047H300.317L312.091 63.7205H320.158L307.44 45.8781L308.475 45.5874ZM288.58 41.0451V23.4207H301.607C308.403 23.4207 312.291 26.6367 312.291 32.2147C312.291 37.7928 308.13 41.0451 301.68 41.0451H288.58Z"
+                      className="fill-violet-900 dark:fill-white" />
+              </g>
+              <defs>
+                <clipPath id="clip0_539_780">
+                  <rect width="364" height="81" fill="white" transform="translate(0.680664 0.5)"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </a>
         </div>
 
         <div className="flex flex-row flex-wrap max-w-screen-xl mx-auto mt-5 gap-2 md:gap-5 lg:gap-10 items-center justify-evenly py-5 md:py-10">
           <a href="https://www.sav.sk/" target="_blank" rel="noreferrer">
-            <Image src={SAVLogo} alt="SAV" className="w-24 h-auto" />
+            <Image src={SAVLogo} alt="Slovak Academy of Sciences" className="w-24 h-auto"/>
           </a>
           <a href="https://uniba.sk" target="_blank" rel="noreferrer">
-            <Image src={UKLogo} alt="UK" className="w-52 h-auto" />
+            <picture>
+              <source srcSet={UKLogoDark.src} media="(prefers-color-scheme: dark)"/>
+              <Image src={UKLogo} alt="Comenius University" className="w-52 h-auto"/>
+            </picture>
           </a>
           <a href="https://fns.uniba.sk/" target="_blank" rel="noreferrer">
-            <Image src={FNSLogo} alt="PrifUK" className="w-60 h-auto" />
+            <picture>
+              <source srcSet={FNSLogoDark.src} media="(prefers-color-scheme: dark)"/>
+              <Image src={FNSLogo} alt="Faculty of Natural Sciences" className="w-60 h-auto"/>
+            </picture>
           </a>
           <a href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noreferrer">
-            <Image src={MSCALogo} alt="MSCA" className="w-14 h-auto" />
+            <Image src={MSCALogo} alt="Marie Sklodowska-Curie Actions" className="w-14 h-auto"/>
           </a>
         </div>
-        <p className="mt-10 text-font-secondary leading-normal">
-          This project&apos;s identification number is 3007/01/01 and it is funded from the European Union&apos;s Horizon 2020 research and innovation programme
+        <p className="mt-10 leading-normal">
+          This project&apos;s identification number is 3007/01/01 and it is funded from the European Union&apos;s
+          Horizon 2020 research and innovation programme
           under the Marie Skłodowska-Curie grant agreement No 945478.
         </p>
       </div>
     </section>
   </>
-  )};
+  )
+};

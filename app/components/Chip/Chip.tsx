@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import cx from 'clsx';
 
 import { getStyles } from './styles';
 
@@ -20,13 +20,13 @@ export default function Chip({ type = "default", className = "", isLoading = fal
   const { textColor, backgroundColor, borderColor } = getStyles(type.toLowerCase());
 
   return (
-    <div className={clsx("flex flex-wrap rounded px-1 py-0.5 transition-colors duration-300",
+    <div className={cx("flex flex-wrap rounded px-1 py-0.5 transition-colors duration-300",
                       backgroundColor,
                       borderColor,
                       className)}
          onClick={clickHandler}
          {...props}>
-      <div className={clsx("flex items-center space-x-0.5 text-xs font-light", textColor)}>
+      <div className={cx("flex items-center space-x-0.5 text-xs font-light", textColor)}>
         {children}
       </div>
     </div>

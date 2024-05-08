@@ -1,11 +1,16 @@
+import { useRef } from "react";
+
 import Spinner from '@/components/Spinner';
 
 
 export default function SearchInput({ placeholder="Search", isLoading=false, searchValue, onChange, onReset }:
   { placeholder?: string, isLoading?: boolean, searchValue: string, onChange: (value: string) => void, onReset: () => void }) {
+  const ref = useRef<HTMLInputElement>(null);
+
   return (
     <div className='group relative flex items-center justify-center w-full h-full'>
-      <input className='w-full h-10 px-8 py-2 text-gray-700 bg-white border border-gray-300 rounded focus:outline-none focus:border focus:border-gray-600 transition-colors ease-in-out duration-300'
+      <input className='w-full h-10 px-8 py-2 dark:text-slate-300 text-slate-700 dark:bg-slate-800 bg-white border border-gray-300 dark:border-slate-800 rounded focus:outline-none focus:border dark:focus:border-slate-500 focus:border-gray-600 transition-colors ease-in-out duration-300'
+             ref={ref}
              type='text'
              placeholder={placeholder}
              value={searchValue}
@@ -22,8 +27,8 @@ export default function SearchInput({ placeholder="Search", isLoading=false, sea
         </svg>
       {isLoading && <Spinner className="absolute right-10 bottom-2.5" />}
       {searchValue && (
-        <div className="absolute right-3 cursor-pointer" onClick={onReset}>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+        <div className="absolute right-3 cursor-pointer" onClick={(() => { onReset(); ref.current?.focus(); })}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="w-6 h-6 stroke-slate-800 hover:stroke-slate-600 dark:stroke-slate-300 dark:hover:stroke-slate-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>

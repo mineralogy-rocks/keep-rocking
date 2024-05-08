@@ -1,17 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 
-import cx from 'clsx';
-
 import { LogoCube } from '@/components/Logo';
-import utilsStyles from '@/styles/utils.module.scss';
 
 
 const ExternalLink = ({ href, children }) => (
-  <a className={utilsStyles.subtleLink} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+  <a className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 )
 
 const InternalLink = ({ href, children }) => (
-  <Link href={href} className={utilsStyles.subtleLink}>{children}</Link>
+  <Link href={href} className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out">{children}</Link>
 );
 
 export default function Footer() {
@@ -21,8 +20,31 @@ export default function Footer() {
       <div className="absolute bottom-0 w-full overflow-hidden">
         <svg width="100%" height="100%" viewBox="0 0 1728 400" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clipPath="url(#clip0_521_76)">
-            <path d="M0 127.5L77.5 99.5C125.5 90.0033 202 130.737 298 127.5C394 124.262 546.5 74.2408 642.5 80.5C738.5 86.5433 810.5 58.0041 906.5 48.2916C1002.5 38.5791 1093 3.1824 1189 14.4057C1285 25.4132 1344 41.1691 1440 48.2916C1536 55.4141 1632 28.219 1680 14.4057L1728 0.808228V428.158H1680C1632 428.158 1536 428.158 1440 428.158C1344 428.158 1248 428.158 1152 428.158C1056 428.158 960 428.158 864 428.158C768 428.158 672 428.158 576 428.158C480 428.158 384 428.158 288 428.158C192 428.158 96 428.158 48 428.158H0V127.5Z" fill="#B659B7" fillOpacity="0.05"/>
-            <path d="M0 267L143.5 290C254.5 323.5 315 262.252 411 267C507 271.533 556 228.363 652 227.5C748 226.853 820 245.093 916 252C1089.5 252 1078 221.4 1174 195.5C1379 130.5 1405 139 1405 139C1540 130 1526.5 203.223 1655 175L1728 160.525V428.158H1680C1632 428.158 1536 428.158 1440 428.158C1344 428.158 1248 428.158 1152 428.158C1056 428.158 960 428.158 864 428.158C768 428.158 672 428.158 576 428.158C480 428.158 384 428.158 288 428.158C192 428.158 96 428.158 48 428.158H0V267Z" fill="#4913B4" fillOpacity="0.05"/>
+            <style jsx>{`
+              path:first-child {
+                fill: #B659B7;
+                fill-opacity: 0.05;
+              }
+
+              path:last-child {
+                fill: #4913B4;
+                fill-opacity: 0.05;
+              }
+
+              @media (prefers-color-scheme: dark) {
+                path:first-child {
+                  fill: #2cedff;
+                  fill-opacity: 0.16;
+                }
+
+                path:last-child {
+                  fill: #f633c3;
+                  fill-opacity: 0.16;
+                }
+              }
+            `}</style>
+            <path d="M0 127.5L77.5 99.5C125.5 90.0033 202 130.737 298 127.5C394 124.262 546.5 74.2408 642.5 80.5C738.5 86.5433 810.5 58.0041 906.5 48.2916C1002.5 38.5791 1093 3.1824 1189 14.4057C1285 25.4132 1344 41.1691 1440 48.2916C1536 55.4141 1632 28.219 1680 14.4057L1728 0.808228V428.158H1680C1632 428.158 1536 428.158 1440 428.158C1344 428.158 1248 428.158 1152 428.158C1056 428.158 960 428.158 864 428.158C768 428.158 672 428.158 576 428.158C480 428.158 384 428.158 288 428.158C192 428.158 96 428.158 48 428.158H0V127.5Z" />
+            <path d="M0 267L143.5 290C254.5 323.5 315 262.252 411 267C507 271.533 556 228.363 652 227.5C748 226.853 820 245.093 916 252C1089.5 252 1078 221.4 1174 195.5C1379 130.5 1405 139 1405 139C1540 130 1526.5 203.223 1655 175L1728 160.525V428.158H1680C1632 428.158 1536 428.158 1440 428.158C1344 428.158 1248 428.158 1152 428.158C1056 428.158 960 428.158 864 428.158C768 428.158 672 428.158 576 428.158C480 428.158 384 428.158 288 428.158C192 428.158 96 428.158 48 428.158H0V267Z" />
           </g>
           <defs>
             <clipPath id="clip0_521_76">
@@ -68,7 +90,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="https://ko-fi.com/I2I43R998" target="_blank" rel="noreferrer" className="flex items-center">
-                    <span className={cx(utilsStyles.subtleLink, 'mr-2')}>Buy us a Coffee</span>
+                    <span className="dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-100 ease-in-out mr-2">Buy us a Coffee</span>
                   </a>
                 </li>
               </ul>

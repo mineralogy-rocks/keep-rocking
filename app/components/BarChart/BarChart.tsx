@@ -69,10 +69,9 @@ const BarChart: React.FC<Props> = (props) => {
                             borderColor: '#0a9181',
                             borderWidth: '0.1px',
                             position: "absolute"
-                          }}>
-              </motion.div>
+                          }} />
             </div>
-            <div className="mt-1 flex flex-1 shrink-0 flex-col px-2 justify-center text-center basis-[35px] w-[35px]">
+            <div className="mt-1 flex flex-1 shrink-0 flex-col px-2 justify-center text-center text-font-secondary basis-[35px] w-[35px]">
               <div className="text-xxs font-medium">{item.subLabel}</div>
               <div className={cx(" text-xs md:text-sm font-medium", highlightThreshold && item.value >= highlightThreshold ? "border-b border-b-violet-500" : "")}>{item.label}</div>
             </div>

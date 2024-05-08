@@ -2,8 +2,8 @@ import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { getStyles } from './styles';
-import utilsStyles  from '@/styles/utils.module.scss';
 import { getStatusColor } from '@/helpers/status.helpers';
+import styles from '@/components/Link/Link.module.scss';
 
 
 export default function RelationChip(
@@ -79,7 +79,7 @@ export default function RelationChip(
   return (
     <>
       {hasArrow && (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-400 shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-slate-400 dark:text-slate-200 shrink-0">
           <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
         </svg>
       )}
@@ -93,7 +93,7 @@ export default function RelationChip(
                   onMouseLeave={onMouseLeaveHandler}>
         <div className={cx("flex items-center space-x-0.5 text-xs font-light", textColor)}>
           <span className={cx("flex shrink-0 w-1.5 h-1.5 rounded mr-1", getStatusColor(statuses))}></span>
-          <span className={cx(utilsStyles.linkSmall, "cursor-default")}>{name}</span>
+          <span className={cx(styles.link, "font-medium cursor-default")}>{name}</span>
         </div>
 
 

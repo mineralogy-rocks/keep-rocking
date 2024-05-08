@@ -1,6 +1,48 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const ContentSecurityPolicy = `
+    default-src 'self' vercel.live;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com;
+    style-src 'self' 'unsafe-inline';
+    img-src * blob: data:;
+    media-src 'none';
+    connect-src *;
+    font-src 'self' data:;
+    frame-src 'self' vercel.live;
+`;
+
+const SecurityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: ContentSecurityPolicy.replace(/\n/g, ""),
+  },
+  {
+    key: 'Referrer-Policy',
+    value: 'origin-when-cross-origin',
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY',
+  },
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+  },
+  {
+    key: 'X-DNS-Prefetch-Control',
+    value: 'on',
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=31536000; includeSubDomains; preload',
+  },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=()',
+  },
+]
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -13,7 +55,15 @@ const nextConfig = {
 
     MINDAT_API_KEY: process.env.MINDAT_API_KEY,
     MINDAT_API_URL: process.env.MINDAT_API_URL,
-  }
+  },
+  headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: SecurityHeaders,
+      },
+    ];
+  },
 };
 
 

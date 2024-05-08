@@ -49,17 +49,19 @@ const BarcodeChart: React.FC<Props> = (props) => {
           items,
           {
             x: "value",
-            y: "key", strokeOpacity: 0.7
+            y: "key",
+            strokeOpacity: 0.7
           },
         ),
       ],
     });
+
     if (containerRef.current) containerRef.current.appendChild(plot);
     return () => plot.remove();
   }, [items]);
 
   return (
-    <div ref={containerRef}></div>
+    <div className='text-font-secondary' ref={containerRef}></div>
   )
 }
 

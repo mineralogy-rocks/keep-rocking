@@ -1,0 +1,26 @@
+.wrapper {
+  fill-opacity: 0.05;
+}
+
+.gradientFrom {
+  stop-color: #3800A8;
+}
+
+.gradientTo {
+  stop-color: #F500AB;
+}
+
+:global(.dark) {
+  .wrapper {
+    fill-opacity: 0.08;
+  }
+
+  .gradientFrom {
+    stop-color: #2cedff;
+  }
+
+  .gradientTo {
+    stop-color: #f633c3;
+  }
+}
+

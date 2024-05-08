@@ -1,30 +1,131 @@
-const { fontFamily } = require('tailwindcss/defaultTheme')
+const { fontFamily } = require('tailwindcss/defaultTheme');
+const themeSwapper = require('tailwindcss-theme-swapper');
+const colors = require('tailwindcss/colors');
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./helpers/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
+const themes = [
+  {
+    name: 'base',
+    selectors: [':root'],
+    theme: {
       colors: {
-        lilac: {
-          DEFAULT: '#F500AB',
-        },
         font: {
-          DEFAULT: '#1e293b',
+          DEFAULT: colors.slate[600],
           primary: '#0f172a',
           secondary: '#4d5c72',
           ternary: '#9ca3af',
-          blue: '#1d4ed8',
-          blueDark: '#1e3a8a',
+          blue: colors.sky[600],
+          blueDark: colors.sky[600],// '#1e3a8a',
           orange: '#f3ece9',
         },
         gray: {
           DEFAULT: '#f1f1f1',
         }
+      },
+    }
+  },
+  {
+    name: 'dark',
+		selectors: ['.dark'],
+    mediaQuery: '@media (prefers-color-scheme: dark)',
+    theme: {
+      colors: {
+        font: {
+          DEFAULT: colors.slate[400],
+          primary: '#f1f1f1',
+          secondary: colors.slate[300],
+          ternary: '#9ca3af',
+          blue: colors.sky[400],
+          blueDark: colors.blue[400],
+          orange: '#f3ece9',
+        },
+        gray: {
+          DEFAULT: '#f1f1f1',
+        }
+      },
+    }
+  }
+];
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./helpers/*.{js,ts,jsx,tsx}",
+  ],
+  // TODO: remove this after testing dark styles
+  // darkMode: 'selector',
+  theme: {
+    extend: {
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            maxWidth: 'none',
+            color: theme('colors.font.primary'),
+            pre: {
+              backgroundColor: theme('colors.neutral.50'),
+              padding: theme('padding.5'),
+              boxShadow: `0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
+                          0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
+                          0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);`,
+              display: 'flex',
+              marginTop: `${20 / 14}em`,
+              marginBottom: `${32 / 14}em`,
+            },
+            a: {
+              fontWeight: theme('fontWeight.medium'),
+              textDecoration: 'none',
+              borderBottom: `1px solid ${theme('colors.sky.500')}`,
+            },
+            'a:hover': {
+              borderBottomWidth: '2px',
+            },
+            'code span': {
+              fontWeight: theme('fontWeight.semibold'),
+            },
+            'pre code': {
+              flex: 'none',
+              minWidth: '100%',
+              lineHeight: theme('lineHeight.tight'),
+            },
+            p: {
+              lineHeight: theme('lineHeight.normal'),
+            }
+          }
+        },
+        dark: {
+          css: {
+            color: theme('colors.font.primary'),
+            pre: {
+              backgroundColor: theme('colors.slate.800'),
+              borderRadius: theme('borderRadius.sm'),
+              padding: theme('padding.5'),
+              boxShadow: `0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
+                          0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
+                          0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);`,
+              display: 'flex',
+              marginTop: `${20 / 14}em`,
+              marginBottom: `${32 / 14}em`,
+            },
+            a: {
+              fontWeight: theme('fontWeight.semibold'),
+              textDecoration: 'none',
+              borderBottom: `1px solid ${theme('colors.indigo.300')}`,
+            },
+            'a:hover': {
+              borderBottomWidth: '2px',
+            },
+          }
+        },
+      }),
+
+      colors: {
+        lilac: {
+          DEFAULT: '#F500AB',
+        },
       },
       maxWidth: {
         '8xl': '88rem',
@@ -98,27 +199,18 @@ module.exports = {
         }
       },
       boxShadow: ({ theme }) => ({
-        "surface-low": `
+        "gray-surface": `
           0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.18),
           0.4px 0.8px 1.1px -0.8px hsl(210deg 12% 67% / 0.25),
           0.9px 1.8px 2.5px -1.6px hsl(210deg 12% 67% / 0.31);
         `,
-        "surface-medium": `
-          0.3px 0.5px 0.7px hsl(210deg 12% 67% / 0.19),
-          0.9px 1.8px 2.5px -0.5px hsl(210deg 12% 67% / 0.24),
-          2px 4px 5.6px -1.1px hsl(210deg 12% 67% / 0.29),
-          4.6px 9.1px 12.8px -1.6px hsl(210deg 12% 67% / 0.35);
-        `,
-        "pink": `
-          0.1px 0.4px 0.5px hsl(285deg 40% 52% / 0.25),
-          0.4px 1.2px 1.5px -0.6px hsl(285deg 40% 52% / 0.27),
-          0.9px 2.8px 3.6px -1.3px hsl(285deg 40% 52% / 0.31),
-          2.1px 6.6px 8.4px -1.9px hsl(285deg 40% 52% / 0.34);
-        `
       })
     },
   },
   plugins: [
-    require('@tailwindcss/line-clamp'),
+    require('@tailwindcss/typography'),
+    themeSwapper({
+			themes: themes
+		}),
   ],
 }

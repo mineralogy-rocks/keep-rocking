@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { usePathname } from "next/navigation";
 import Link from 'next/link';
-import clsx from 'clsx';
+import cx from 'clsx';
 
 import NavPopover from '@/components/NavPopover';
 import { LogoCube } from '@/components/Logo';
-import utilsStyles from '@/styles/utils.module.scss';
 
 
 function NavItem({href, text}) {
@@ -16,7 +15,7 @@ function NavItem({href, text}) {
 
   return (
       <Link href={href}>
-        <span className={clsx({ "text-slate-600/80": isActive }, utilsStyles.NavBarLink, "transition-all duration-300 ease-in-out")}>{text}</span>
+        <span className={cx({ "text-slate-900 dark:text-slate-300": isActive }, "text-lg font-medium dark:hover:text-slate-300 hover:text-slate-900 cursor-pointer transition-all duration-300 ease-in-out")}>{text}</span>
       </Link>
   );
 }
@@ -35,21 +34,24 @@ export default function Navbar() {
                 <div className="mr-0.5">
                   <LogoCube isHovered={isHovered} />
                 </div>
-                <span className={clsx(utilsStyles.NavBarLink, "cursor-pointer hover:text-slate-600/80 transition-all duration-300 ease-in-out")}>ineralogy.rocks</span>
+                <span className="text-lg font-medium cursor-pointer dark:hover:text-slate-300 hover:text-slate-900 transition-all duration-300 ease-in-out">ineralogy.rocks</span>
               </div>
             </Link>
           </li>
         </ul>
-        <NavPopover className="text-black" display="md:hidden" />
+        <NavPopover display="md:hidden" />
         <ul className="hidden md:flex space-x-2 sm:space-x-6 md:space-x-10">
           <li>
-            <NavItem href="/explore" text="Explore" />
+            <NavItem href="/explore" text="Explore"/>
+          </li>
+          {/*<li>*/}
+          {/*  <NavItem href="/blog" text="Blog"/>*/}
+          {/*</li>*/}
+          <li>
+            <NavItem href="/about" text="About"/>
           </li>
           <li>
-            <NavItem href="/about" text="About" />
-            </li>
-          <li>
-            <NavItem href="/contact" text="Contact" />
+            <NavItem href="/contact" text="Contact"/>
           </li>
         </ul>
       </nav>

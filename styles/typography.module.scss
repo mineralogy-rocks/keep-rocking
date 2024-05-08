@@ -1,27 +1,27 @@
+.paragraph {
+  @apply text-sm md:text-base leading-snug text-left;
+}
+
+.list {
+  @apply list-[upper-latin] list-outside space-y-2 mt-2 pl-5 text-base sm:text-lg;
+}
+
+.listItem {
+  @apply pl-2 text-sm md:text-base;
+}
+
+.title {
+  @apply text-font-primary max-w-2xl font-bold text-2xl sm:text-3xl md:text-5xl;
+}
+
+.header {
+  @apply font-bold text-font-primary text-lg sm:text-xl mt-5 mb-3;
+}
+
 .Section {
   @apply mt-20 mx-auto max-w-6xl px-6 sm:px-8;
 }
 
-.Paragraph {
-  @apply text-base md:text-lg leading-relaxed text-left text-font-secondary;
-}
-
-.List {
-  @apply list-[upper-latin] list-outside space-y-2 mt-2 pl-5 text-base sm:text-lg;
-}
-
-.ListItem {
-  @apply pl-2 text-base md:text-lg;
-}
-
-.Header3 {
-  @apply font-bold text-font-blueDark text-lg sm:text-xl mt-5 mb-3;
-}
-
-.Header4 {
-  @apply font-bold text-font text-base sm:text-lg mt-2 mb-1;
-}
-
-.Subtitle {
-  @apply font-bold text-base md:text-lg text-font-blueDark;
+.subtitle {
+  @apply font-bold text-base md:text-lg text-font-blueDark dark:text-font-blue;
 }

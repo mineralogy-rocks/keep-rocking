@@ -2,8 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./utils.module.scss";
+:root {
+  --sh-class: #006442;
+  --sh-identifier: #354150;
+  --sh-sign: #354150;
+  --sh-property: #0550ae;
+  --sh-entity: #2d5e9d;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #2d9a4e;
+  --sh-keyword: #d73a49;
+  --sh-comment: #a19595;
+}
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sh-class: #4c97f8;
+    --sh-identifier: #ffefef;
+    --sh-keyword: #f47067;
+    --sh-string: #0fa295;
+    --sh-property: #cc0097;
+    --sh-sign: #c7bbbb;
+    --sh-entity: #4d9dff;
+  }
+}
+
+.prose pre {
+  @apply bg-slate-50 dark:bg-slate-800 rounded overflow-x-auto border border-slate-200 dark:border-slate-700 shadow-none p-4;
+}
+
+.prose pre code {
+  @apply p-0;
+  border: initial;
+  line-height: 1;
+}
+
+.prose h1 {
+  @apply font-semibold;
+}
+
+.prose h2, h3, h4 {
+  @apply font-medium tracking-tighter;
+}
 
 body {
   min-height: 100vh;
@@ -27,5 +66,5 @@ body {
     hsl(274deg 70% 96%) 97%,
     hsl(300deg 67% 96%) 100%
   );
-}
 
+}
