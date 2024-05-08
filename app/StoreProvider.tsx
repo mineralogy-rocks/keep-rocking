@@ -1,5 +1,7 @@
 'use client'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react';
+
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { Provider } from 'react-redux'
 import { makeStore, AppStore } from '@/lib/store'
 
@@ -12,6 +14,12 @@ export default function StoreProvider({
   if (!storeRef.current) {
     storeRef.current = makeStore()
   }
+
+  useEffect(() => {
+    if (storeRef.current != null) {
+      return setupListeners(storeRef.current.dispatch);
+    }
+  }, []);
 
   return <Provider store={storeRef.current}>{children}</Provider>
 }
