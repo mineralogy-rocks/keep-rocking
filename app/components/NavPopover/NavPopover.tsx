@@ -60,7 +60,7 @@ export default function NavPopover({ className, display = "md:hidden" }: { class
             <div className="flex flex-col space-y-4">
               <NavItem href="/" text="Home" />
               <NavItem href="/explore" text="Explore" />
-              {/*<NavItem href="/blog" text="Blog" />*/}
+              <NavItem href="/blog" text="Blog" />
               <NavItem href="/about" text="About" />
               <NavItem href="/contact" text="Contact" />
             </div>

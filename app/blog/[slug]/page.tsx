@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import {getBLogPost, getPostList} from '@/actions';
 import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
-import { slugify, getHeadings } from "@utils";
+import { getHeadings } from "@utils";
 
 import PostMetrics from '@/components/PostMetrics';
 import PostTableOfContents from "@/components/PostTableOfContents";
