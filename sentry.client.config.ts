@@ -21,7 +21,6 @@ Sentry.init({
   // in development and sample at a lower rate in production
   replaysSessionSampleRate: 0.1,
 
-  environment: process.env.APP_ENV,
 });
 
 if (process.env.NODE_ENV === 'development') {
