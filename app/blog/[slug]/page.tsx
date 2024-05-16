@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import {getBLogPost, getPostList} from '@/actions';
 import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
-import { slugify, getHeadings } from "@utils";
+import { getHeadings } from "@utils";
 
 import PostMetrics from '@/components/PostMetrics';
 import PostTableOfContents from "@/components/PostTableOfContents";
@@ -24,13 +24,18 @@ export async function generateMetadata({ params }): Promise<Metadata | undefined
   };
 }
 
+
+export const dynamicParams = true;
+
+
 export async function generateStaticParams() {
   const posts: postListApiResponse = await getPostList();
-
+  
   return posts.results.map(({ slug }) => ({
-    params: { slug }
+    slug
   }));
 };
+
 
 export default async function Blog({ params }) {
   const { slug } = params;
