@@ -81,6 +81,10 @@ module.exports = withSentryConfig(
     org: "mineralogy-rocks",
     project: "keep-rocking",
     authToken: process.env.SENTRY_AUTH_TOKEN,
+
+    deploy: {
+      env: process.env.APP_ENV,
+    }
   },
   {
     // For all available options, see:
