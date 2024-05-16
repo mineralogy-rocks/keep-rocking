@@ -47,7 +47,6 @@ const components = {
 };
 
 export default function CustomMDX(props) {
-  // @ts-ignore
   return (
     <MDXRemote {...props} components={{ ...components, ...(props.components || {}) }}/>
   );
