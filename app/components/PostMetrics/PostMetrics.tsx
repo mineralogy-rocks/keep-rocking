@@ -19,7 +19,7 @@ const defaultProps = {
 const PostMetrics = async function PostMetrics(props: Props) {
   noStore();
   const headersList = headers();
-  const isPrefetch = headersList.get('Next-Router-Prefetch') === '1';
+  const isPrefetch = headersList.get('Next-Url') === '/blog';
   const { slug } = { ...defaultProps, ...props};
 
   if (!isPrefetch) {
