@@ -58,7 +58,7 @@ const nextConfig = {
     MINDAT_API_KEY: process.env.MINDAT_API_KEY,
     MINDAT_API_URL: process.env.MINDAT_API_URL,
   },
-  
+
   headers() {
     return [
       {
