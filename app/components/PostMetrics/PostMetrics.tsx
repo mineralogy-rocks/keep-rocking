@@ -22,9 +22,9 @@ const PostMetrics = async function PostMetrics(props: Props) {
   const isPrefetch = headersList.get('Next-Url') === '/blog';
   const { slug } = { ...defaultProps, ...props};
 
-  if (!isPrefetch) {
-    await incrementViews(slug);
-  }
+  // if (!isPrefetch) {
+  await incrementViews(slug);
+  // }
   const views = await getViews(slug);
 
   return (<p className="text-xs md:text-sm text-font-secondary slashed-zero tabular-nums">{views?.count.toLocaleString()} views</p>);
