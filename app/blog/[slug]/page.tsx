@@ -24,6 +24,10 @@ export async function generateMetadata({ params }): Promise<Metadata | undefined
   };
 }
 
+
+export const dynamicParams = true;
+
+
 export async function generateStaticParams() {
   const posts: postListApiResponse = await getPostList();
 
@@ -31,6 +35,7 @@ export async function generateStaticParams() {
     params: { slug }
   }));
 };
+
 
 export default async function Blog({ params }) {
   const { slug } = params;
