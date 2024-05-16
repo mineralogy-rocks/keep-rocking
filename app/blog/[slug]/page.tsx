@@ -30,7 +30,7 @@ export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const posts: postListApiResponse = await getPostList();
-  
+
   return posts.results.map(({ slug }) => ({
     slug
   }));

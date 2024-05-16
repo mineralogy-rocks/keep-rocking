@@ -23,6 +23,15 @@ export const metadata: Metadata = {
   description: 'A service provides access to mineralogical and related data.',
   generator: 'Next.js',
   keywords: ['mineralogy', 'geology', 'minerals', 'rocks', 'earth', 'science'],
+
+  openGraph: {
+    title: 'mineralogy.rocks',
+    description: 'Open-source mineralogical and related data service.',
+    url: 'https://mineralogy.rocks',
+    siteName: 'mineralogy.rocks',
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export const viewport: Viewport = {

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
   <article className="relative flex flex-col rounded hover:bg-slate-50 dark:hover:bg-slate-800">
-    <Link href={`/blog/${slug}`} prefetch={true} className="p-4">
+    <Link href={`/blog/${slug}`} prefetch={false} className="p-4">
       <h1 className="text-font-primary text-lg font-semibold text-pretty">{name}</h1>
       <p className="text-sm mt-5 text-pretty">{description}</p>
 
