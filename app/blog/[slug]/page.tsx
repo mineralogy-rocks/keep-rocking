@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import {getBLogPost, getPostList} from '@/actions';
 import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
-import { getHeadings } from "@utils";
+import { getHeadings, timeSince } from "@utils";
 
 import PostMetrics from '@/components/PostMetrics';
 import PostTableOfContents from "@/components/PostTableOfContents";
@@ -70,7 +70,7 @@ export default async function Blog({ params }) {
 
       <div className="flex justify-between items-center mt-5 text-sm w-full">
         <p className="text-xs md:text-sm text-font-secondary slashed-zero tabular-nums">
-          {post.published_at}
+          {timeSince(post.published_at)}
         </p>
         <Suspense fallback={<LoadingDots isSmall={true} />}>
           <PostMetrics slug={slug} />
