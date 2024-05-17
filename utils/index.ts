@@ -1,3 +1,7 @@
+import { unstable_noStore as noStore } from 'next/cache';
+import moment from 'moment';
+
+
 export const camelize = (str: string): string => {
   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
     return index === 0 ? word.toUpperCase() : word.toLowerCase();
@@ -76,3 +80,11 @@ export const compareColors = [
 		base: '#22c55e',
 	}
 ];
+
+export const timeSince = (date: string): string => {
+  noStore();
+  let parsedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+  let fromNow = moment(parsedDate).fromNow();
+  let friendlyDate = moment(parsedDate).format('MMMM Do YYYY');
+  return friendlyDate + ' (' + fromNow + ')';
+}

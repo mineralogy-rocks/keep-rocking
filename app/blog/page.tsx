@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getPostList, getBlogCategories } from '@/actions';
 import { postListApiResponse } from "@/lib/types";
 import BlogCategory from "@/components/BlogCategory";
+import { timeSince } from "@utils";
 
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ const BlogCard = ({ slug, name, description, publishedAt, views, tags }) => (
 
       <div className="flex flex-col md:flex-row justify-between gap-1 mt-3">
         <div className="flex space-x-1 text-xs font-normal text-font-ternary">
-          <span className="slashed-zero tabular-nums">{publishedAt}</span>
+          <span className="slashed-zero tabular-nums">{timeSince(publishedAt)}</span>
           <span>&#183;</span>
           <span className="slashed-zero tabular-nums">{views} views</span>
         </div>
