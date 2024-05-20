@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   keywords: ['mineralogy', 'geology', 'minerals', 'rocks', 'earth', 'science'],
 
   openGraph: {
-    title: 'mineralogy.rocks',
-    description: 'Open-source mineralogical and related data service.',
+    title,
+    description: 'Open-source mineralogical and related data service built with Django, Next.js, and Tailwind CSS.',
     url: 'https://mineralogy.rocks',
     siteName: 'mineralogy.rocks',
     locale: 'en_US',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: createOgImage({ title: 'mineralogy.rocks', meta: 'Open-source mineralogical and related data service.' }),
+        url: createOgImage({ title, meta: 'Open-source mineralogical and related data service built with Django and Next.js.' }),
         width: 1600,
         height: 800,
         alt: 'mineralogy.rocks',

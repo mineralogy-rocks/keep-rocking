@@ -116,11 +116,11 @@ export const createOgImage = ({ title, meta, publishedAt = '' }: { title: string
 
       // TITLE
       `l_text:Karla_66_bold:${e(title)},co_rgb:ffe4e6,c_fit,w_1400,h_200`,
-      `fl_layer_apply,g_south_west,x_80,y_300`,
+      `fl_layer_apply,g_south_west,x_80,y_250`,
 
       // META
-      `l_text:Karla_42:${e(meta)},co_rgb:ffe4e680,c_fit,w_1400,h_200`,
-      `fl_layer_apply,g_south_west,x_80,y_120`,
+      `l_text:Karla_42:${e(meta)},co_rgb:ffe4e680,c_fit,w_1400,h_150`,
+      `fl_layer_apply,g_south_west,x_80,y_110`,
 
       // DATE
       date && [
