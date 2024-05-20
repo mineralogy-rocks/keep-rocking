@@ -18,9 +18,23 @@ export async function generateMetadata({ params }): Promise<Metadata | undefined
   const data = await getBLogPost(slug);
   if (!data) return;
 
+  let ogImage = 'https://mineralogy.rocks/api/og?title=' + data.name;
+
   return {
     title: data.name,
     description: data.description,
+    openGraph: {
+      title: data.name,
+      description: data.description,
+      url: `https://mineralogy.rocks/blog/${slug}`,
+      type: 'article',
+      images: [
+        {
+          url: ogImage,
+          alt: data.name,
+        },
+      ],
+    }
   };
 }
 
