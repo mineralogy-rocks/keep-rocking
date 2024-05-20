@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import {getBLogPost, getPostList} from '@/actions';
 import {postDetailApiResponse, postListApiResponse} from '@/lib/types';
-import { getHeadings, timeSince } from "@utils";
+import { createOgImage, getHeadings, timeSince } from "@utils";
 
 import PostMetrics from '@/components/PostMetrics';
 import PostTableOfContents from "@/components/PostTableOfContents";
@@ -21,6 +21,21 @@ export async function generateMetadata({ params }): Promise<Metadata | undefined
   return {
     title: data.name,
     description: data.description,
+    openGraph: {
+      title: data.name,
+      description: data.description,
+      url: `https://mineralogy.rocks/blog/${slug}`,
+      type: 'article',
+
+      images: [
+        {
+          url: createOgImage({ title: data.name, meta: data.description, publishedAt: data.published_at }),
+          width: 1600,
+          height: 800,
+          alt: data.name,
+        },
+      ],
+    }
   };
 }
 

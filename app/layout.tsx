@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import cx from 'clsx';
 
+import { createOgImage } from "@utils";
 import StoreProvider from "./StoreProvider";
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
@@ -25,12 +26,21 @@ export const metadata: Metadata = {
   keywords: ['mineralogy', 'geology', 'minerals', 'rocks', 'earth', 'science'],
 
   openGraph: {
-    title: 'mineralogy.rocks',
-    description: 'Open-source mineralogical and related data service.',
+    title,
+    description: 'Open-source mineralogical and related data service built with Django, Next.js, and Tailwind CSS.',
     url: 'https://mineralogy.rocks',
     siteName: 'mineralogy.rocks',
     locale: 'en_US',
     type: 'website',
+
+    images: [
+      {
+        url: createOgImage({ title, meta: 'Open-source mineralogical and related data service built with Django and Next.js.' }),
+        width: 1600,
+        height: 800,
+        alt: 'mineralogy.rocks',
+      },
+    ],
   },
 };
 
