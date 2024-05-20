@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import cx from 'clsx';
 
+import { createOgImage } from "@utils";
 import StoreProvider from "./StoreProvider";
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
@@ -31,6 +32,15 @@ export const metadata: Metadata = {
     siteName: 'mineralogy.rocks',
     locale: 'en_US',
     type: 'website',
+
+    images: [
+      {
+        url: createOgImage({ title: 'mineralogy.rocks', meta: 'Open-source mineralogical and related data service.' }),
+        width: 1600,
+        height: 800,
+        alt: 'mineralogy.rocks',
+      },
+    ],
   },
 };
 

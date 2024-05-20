@@ -8,15 +8,18 @@ export const camelize = (str: string): string => {
   }).replace(/\s+/g, ' ').replace(/_/g, ' ');
 };
 
+
 export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
 
 export const toArray = (value: any): any[] => {
   if (Array.isArray(value)) return value;
   if (value) return [value];
   return [];
 }
+
 
 export const getRange = (min: number|string, max: number|string): string|null => {
   if (!min || !max) return null;
@@ -28,6 +31,7 @@ export const getRange = (min: number|string, max: number|string): string|null =>
   return minStr === maxStr ? minStr : `${minStr}—${maxStr}`;
 };
 
+
 export const getNumeric = (value: number|string): string|null => {
   if (!value) return null;
   const matches = String(value).match(/(\d+\.?\d*)/);
@@ -35,9 +39,11 @@ export const getNumeric = (value: number|string): string|null => {
   return matches[0];
 };
 
+
 export const concatStrings = (values: string[], sep: string=" "): string => {
   return values.filter((v) => v).join(sep);
 };
+
 
 export const slugify = (str: string): string => {
   return str
@@ -49,6 +55,7 @@ export const slugify = (str: string): string => {
     .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
     .replace(/\-\-+/g, '-'); // Replace multiple - with single -
 };
+
 
 export const getHeadings = (content: string): any => {
     return content.match(/#{2,3} .+/g)?.map((heading) => {
@@ -62,6 +69,7 @@ export const getHeadings = (content: string): any => {
         }
     });
 };
+
 
 export const compareColors = [
 	{
@@ -81,6 +89,7 @@ export const compareColors = [
 	}
 ];
 
+
 export const timeSince = (date: string): string => {
   noStore();
   let parsedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
@@ -88,3 +97,38 @@ export const timeSince = (date: string): string => {
   let friendlyDate = moment(parsedDate).format('MMMM Do YYYY');
   return friendlyDate + ' (' + fromNow + ')';
 }
+
+
+const e = (str: string) => encodeURIComponent(encodeURIComponent(str));
+
+
+export const createOgImage = ({ title, meta, publishedAt = '' }: { title: string, meta: string, publishedAt?: string }): string => {
+  let date = '';
+  if (publishedAt) {
+    date = timeSince(publishedAt);
+    date = e(date).replace(/\(/g, '%28').replace(/\)/g, '%29');
+  }
+
+  return [
+      // ACCOUNT PREFIX
+      `https://res.cloudinary.com/dbz66bfnv/image/upload`,
+      'c_scale,h_800,w_1600,q_100',
+
+      // TITLE
+      `l_text:Karla_66_bold:${e(title)},co_rgb:ffe4e6,c_fit,w_1400,h_200`,
+      `fl_layer_apply,g_south_west,x_80,y_300`,
+
+      // META
+      `l_text:Karla_42:${e(meta)},co_rgb:ffe4e680,c_fit,w_1400,h_200`,
+      `fl_layer_apply,g_south_west,x_80,y_120`,
+
+      // DATE
+      date && [
+        `l_text:Karla_28:${date},co_rgb:ffe4e680,c_fit,w_1400`,
+        `fl_layer_apply,g_south_east,x_80,y_60`,
+      ],
+
+      // BG
+      `gradient-background.png`,
+  ].join('/')
+};
