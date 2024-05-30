@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: ['/'],
       },
     ],
-    // sitemap: 'https://api.mineralogy.rocks/sitemap.xml',
+    sitemap: 'https://api.mineralogy.rocks/sitemap.xml',
     host: 'https://mineralogy.rocks',
   };
 }
