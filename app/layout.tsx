@@ -4,7 +4,8 @@ import { Inter } from "next/font/google";
 import cx from 'clsx';
 
 import { createOgImage } from "@utils";
-import StoreProvider from "./StoreProvider";
+
+import Providers from './providers';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 
@@ -54,28 +55,26 @@ export default function RootLayout({ children }: {
   children: React.ReactNode
 }) {
   return (
-    <StoreProvider>
-      <html lang="en" className={cx(theme, inter.className)}>
-        <head>
-          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
-          <link rel="manifest" href="/site.webmanifest"/>
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
+    <html lang="en" className={cx(theme, inter.className)}>
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+        <link rel="manifest" href="/site.webmanifest"/>
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
 
-          <link rel="icon" href="/favicon.ico"/>
-        </head>
-        <body className="tracking-normal overscroll-y-none font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font dark:bg-slate-900 dark:bg-none"
-              suppressHydrationWarning={true}>
-        <main className="max-w-full mx-auto relative text-font">
-          <NavBar/>
-          <div className="min-h-[70vh] pt-10">
-            {children}
-          </div>
-          <Footer/>
-        </main>
-        </body>
-      </html>
-    </StoreProvider>
+        <link rel="icon" href="/favicon.ico"/>
+      </head>
+      <body className="tracking-normal overscroll-y-none font-normal antialiased selection:bg-sky-400 selection:text-white max-w-full mx-auto relative text-font dark:bg-slate-900 dark:bg-none"
+            suppressHydrationWarning={true}>
+      <main className="max-w-full mx-auto relative text-font">
+        <NavBar />
+        <div className="min-h-[70vh] pt-10">
+          <Providers>{children}</Providers>
+        </div>
+        <Footer />
+      </main>
+      </body>
+    </html>
   );
 }

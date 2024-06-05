@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import useSWR from 'swr';
+
+import {useQuery} from "@tanstack/react-query";
 
 import { From, CrystalSystem } from '@/lib/interfaces';
-import { getExplore } from "@/actions";
+import { getGroupingMembers } from "@/actions";
 
 import Button from './Button';
 import RelationChip from '@/components/RelationChip';
@@ -28,16 +29,17 @@ export default function CrystallographySnippet({ isGrouping, slug, data, from = 
     setSelectedId(id);
   };
 
-  const { data: _data, error, isLoading } = useSWR(
-    selectedId ? slug + '/grouping-members/?status=1&crystal_system=' + selectedId : null,
-    (url) => getExplore(url),
-    {
-      keepPreviousData: false,
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const params = {
+    status: 1,
+    crystal_system: selectedId
+  };
+
+  const { error, data: _data, isLoading } = useQuery({
+    queryKey: [slug, 'grouping-members', params],
+    queryFn: () => getGroupingMembers(slug, params),
+    enabled: Boolean(selectedId),
+  });
+
 
   if (!!data.length) {
     return (

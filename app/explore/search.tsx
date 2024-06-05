@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
 
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import filter from 'just-filter-object';
 
@@ -16,6 +17,7 @@ import Checkbox from '@/components/Checkbox';
 import MineralCard from '@/components/MineralCard';
 import { Paginator, SmallPaginator } from '@/components/Paginator';
 import TableOfContents from '@/components/TableOfContents';
+import { getExplore } from "@/actions";
 
 
 const additionalParams = [
@@ -31,12 +33,10 @@ const initialQueryParams: initialQuery = {
   ima_only: false
 };
 
-export default function Search({ data = null }: {
-  data?: any,
-}) {
+export default function Search() {
 
   noStore();
-  const error = null;
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -56,6 +56,13 @@ export default function Search({ data = null }: {
   const _persistantQueryParams: exploreApiRequest = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
   // remove cursor= and other stale filters from query params
   const _cleanQueryParams: exploreApiRequest = filter(debouncedQueryParams, (key, val) => val !== '' && val !== undefined);
+
+  const params = Object.fromEntries(searchParams);
+  const { error, data } = useQuery({
+    queryKey: ['explore', params],
+    queryFn: () => getExplore(params),
+    enabled: !!searchTerm,
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -185,19 +192,19 @@ export default function Search({ data = null }: {
   return (
     <>
       <div className="relative max-w-full mx-auto px-0 sm:px-10 md:px-5">
-        <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
+        <div className="max-w-[22rem] sm:max-w-md md:max-w-2xl mx-auto mt-10 lg:mt-20">
           <SearchInput placeholder='Start typing...'
                        isLoading={isSearching}
                        searchValue={searchTerm}
                        onChange={(value) => handleSearchTerm(value)}
-                       onReset={resetSearch} />
+                       onReset={resetSearch}/>
         </div>
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto px-1 mt-2 flex justify-between items-center">
           <Checkbox label="Subset to IMA-Approved species?"
                     name="ima_only"
                     value="ima_only"
                     checked={queryParams.ima_only}
-                    onChange={(e) => handleSearch({ ima_only: e.target.checked })} />
+                    onChange={(e) => handleSearch({ima_only: e.target.checked})}/>
         </div>
 
         <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto px-1 mt-2">
@@ -225,16 +232,13 @@ export default function Search({ data = null }: {
           <div
             className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
             {(!!error && !isSearching) && (
-              <div className="flex mt-5 text-red-500 justify-center items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
-                  <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
-                </svg>
-                <span>An error occurred. Please, contact the admin.</span>
+              <div className="flex mt-5 text-red-500 justify-center items-center text-sm mx-2">
+                <span>Hmmm...an error occurred. Please, be patient as we might be upgrading our services.</span>
               </div>)}
 
             {!!data && data.results?.length === 0 && (
-              <div className="flex mt-5 text-gray-500 justify-center items-center">
-                No results found.
+              <div className="flex mt-5 text-font-secondary justify-center items-center text-sm mx-2">
+                No results found. Please refine your query.
               </div>
             )}
             {isActive && data && data.results?.length > 0 && (
@@ -254,27 +258,27 @@ export default function Search({ data = null }: {
                                   type: 'spring',
                                   bounce: 0.2,
                                   duration: 1,
-                                  delay: 0.1*index
+                                  delay: 0.1 * index
                                 }}>
                       <MineralCard key={item.slug}
                                    index={index}
                                    mineral={item}
-                                   isVisible={(e) => handleVisibleItems(e, index)} />
+                                   isVisible={(e) => handleVisibleItems(e, index)}/>
                     </motion.div>
                   );
                 })}
               </div>
             )}
 
-            {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange} />}
+            {isActive && data && <Paginator previous={data.previous} next={data.next} pageChange={handlePageChange}/>}
           </div>
 
           <aside className="hidden xl:block xl:col-start-9 xl:col-span-2 self-start sticky top-20 right-0 p-3">
             {isActive && data?.results.length > 0 && (
               <>
-                <TableOfContents items={data.results} activeItems={inView} selectorId="mineralCard" />
+                <TableOfContents items={data.results} activeItems={inView} selectorId="mineralCard"/>
                 <div className="mt-1">
-                  <SmallPaginator previous={data.previous} next={data.next} pageChange={handlePageChange} />
+                  <SmallPaginator previous={data.previous} next={data.next} pageChange={handlePageChange}/>
                 </div>
               </>
             )}
