@@ -49,6 +49,7 @@ export default function Search({ data = null }: {
   const [isDeferred, setIsDeferred] = useState(false);
   // used to show the search results
   const [isActive, setIsActive] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   const debouncedQueryParams = useDebounce(queryParams, 200);
   const debouncedSearch = useDebounce(searchTerm, 600);
@@ -58,6 +59,12 @@ export default function Search({ data = null }: {
 
   useEffect(() => {
     setIsMounted(true);
+    try {
+      let _recentSearches = window.localStorage.getItem('recentSearches');
+      if (_recentSearches) {
+        setRecentSearches(JSON.parse(_recentSearches));
+      }
+    } catch (_) {}
   }, []);
 
   useEffect(() => {
@@ -148,6 +155,29 @@ export default function Search({ data = null }: {
   useEffect(() => {
     setIsSearching(false);
     setIsActive(true);
+    if (data && data.results && data.results.length > 0) {
+      try {
+        let storedSearches = JSON.parse(window.localStorage.getItem('recentSearches') || '[]');
+        console.log(storedSearches, searchTerm)
+        if (storedSearches) {
+          if (!storedSearches.includes(searchTerm)) {
+            storedSearches.unshift(searchTerm);
+            if (storedSearches.length > 10) {
+              storedSearches.pop();
+            }
+          } else {
+            // move the search term to the top of the list
+            storedSearches = storedSearches.filter(item => item !== searchTerm);
+            storedSearches.unshift(searchTerm);
+          }
+          window.localStorage.setItem('recentSearches', JSON.stringify(storedSearches));
+          setRecentSearches(storedSearches);
+        } else {
+          window.localStorage.setItem('recentSearches', JSON.stringify([searchTerm]));
+          setRecentSearches([searchTerm]);
+        }
+      } catch (_) {}
+    }
     return;
   }, [data, error,]);
 
@@ -170,8 +200,30 @@ export default function Search({ data = null }: {
                     onChange={(e) => handleSearch({ ima_only: e.target.checked })} />
         </div>
 
+        <div className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto px-1 mt-2">
+          <div className="flex flex-wrap items-center gap-0.5 md:gap-2">
+            {recentSearches.map((item, index) => {
+              return (
+                <div key={index} className="flex items-center justify-center text-font-blue">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                       stroke="currentColor" className="size-3">
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                          d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"/>
+                  </svg>
+                  <button key={index}
+                          className="text-xxs md:text-xs font-medium ml-0.5"
+                          onClick={() => handleSearchTerm(item)}>
+                    {item}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-1 mt-10">
-          <div className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
+          <div
+            className="col-span-1 lg:col-start-2 lg:col-span-8 xl:col-start-2 xl:col-span-7 2xl:col-start-3 2xl:col-span-6">
             {(!!error && !isSearching) && (
               <div className="flex mt-5 text-red-500 justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-1">
