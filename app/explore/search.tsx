@@ -61,7 +61,7 @@ export default function Search() {
   const { error, data } = useQuery({
     queryKey: ['explore', params],
     queryFn: () => getExplore(params),
-    enabled: !!searchTerm,
+    enabled: false,
   });
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Search() {
   }, []);
 
   useEffect(() => {
-    if(!router) return;
+    if (!router) return;
     if (searchParams.get('q') || searchParams.get('ima_only')) {
       setQueryParams({
         cursor: searchParams.get('cursor')?.toString() ?? '',
