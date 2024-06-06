@@ -9,10 +9,7 @@ export async function getExplore(params: Record<any, any>) {
   const cleanParams = filter(params, (key, value) => value !== '' && value !== null);
   let queryString = '?' + new URLSearchParams(cleanParams).toString();
 
-  if ('q' in cleanParams) {
-    return await clientFetcher('/mineral/' + queryString);
-  }
-  return null;
+  return await clientFetcher('/mineral/' + queryString);
 }
 
 export async function getGroupingMembers(slug, params: Record<any, any>) {

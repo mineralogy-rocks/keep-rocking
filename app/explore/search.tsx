@@ -7,10 +7,12 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import filter from 'just-filter-object';
+import cx from 'clsx';
 
 import { exploreApiRequest } from '@/lib/types';
 import { initialSearchQuery, initialQuery } from '@/lib/interfaces';
 import useDebounce from '@/hooks/use-debounce.hook';
+import useRecentSearches from "@/hooks/use-recent-searches.hook";
 
 import SearchInput from '@/components/SearchInput';
 import Checkbox from '@/components/Checkbox';
@@ -40,6 +42,14 @@ export default function Search() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const params = Object.fromEntries(searchParams);
+  const { error, data} = useQuery({
+    queryKey: ['explore', params],
+    queryFn: () => getExplore(params),
+    enabled: !!params.q,
+  });
+
   const [isMounted, setIsMounted] = useState(false);
   const [queryParams, setQueryParams] = useState({ ...initialQueryParams });
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,29 +59,18 @@ export default function Search() {
   const [isDeferred, setIsDeferred] = useState(false);
   // used to show the search results
   const [isActive, setIsActive] = useState(false);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
+  const recentSearches = useRecentSearches(params.q);
   const debouncedQueryParams = useDebounce(queryParams, 200);
   const debouncedSearch = useDebounce(searchTerm, 600);
   const _persistantQueryParams: exploreApiRequest = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
   // remove cursor= and other stale filters from query params
   const _cleanQueryParams: exploreApiRequest = filter(debouncedQueryParams, (key, val) => val !== '' && val !== undefined);
 
-  const params = Object.fromEntries(searchParams);
-  const { error, data } = useQuery({
-    queryKey: ['explore', params],
-    queryFn: () => getExplore(params),
-    enabled: false,
-  });
+
 
   useEffect(() => {
     setIsMounted(true);
-    try {
-      let _recentSearches = window.localStorage.getItem('recentSearches');
-      if (_recentSearches) {
-        setRecentSearches(JSON.parse(_recentSearches));
-      }
-    } catch (_) {}
   }, []);
 
   useEffect(() => {
@@ -162,29 +161,6 @@ export default function Search() {
   useEffect(() => {
     setIsSearching(false);
     setIsActive(true);
-    if (data && data.results && data.results.length > 0) {
-      try {
-        let storedSearches = JSON.parse(window.localStorage.getItem('recentSearches') || '[]');
-        console.log(storedSearches, searchTerm)
-        if (storedSearches) {
-          if (!storedSearches.includes(searchTerm)) {
-            storedSearches.unshift(searchTerm);
-            if (storedSearches.length > 10) {
-              storedSearches.pop();
-            }
-          } else {
-            // move the search term to the top of the list
-            storedSearches = storedSearches.filter(item => item !== searchTerm);
-            storedSearches.unshift(searchTerm);
-          }
-          window.localStorage.setItem('recentSearches', JSON.stringify(storedSearches));
-          setRecentSearches(storedSearches);
-        } else {
-          window.localStorage.setItem('recentSearches', JSON.stringify([searchTerm]));
-          setRecentSearches([searchTerm]);
-        }
-      } catch (_) {}
-    }
     return;
   }, [data, error,]);
 
@@ -211,7 +187,7 @@ export default function Search() {
           <div className="flex flex-wrap items-center gap-0.5 md:gap-2">
             {recentSearches.map((item, index) => {
               return (
-                <div key={index} className="flex items-center justify-center text-font-blue">
+                <div key={index} className={cx("flex items-center justify-center", searchTerm === item ? 'text-font-secondary pointer-events-none' : 'text-font-blue')}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                        stroke="currentColor" className="size-3">
                     <path strokeLinecap="round" strokeLinejoin="round"

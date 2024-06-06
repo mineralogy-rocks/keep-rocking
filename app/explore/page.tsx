@@ -7,12 +7,16 @@ import Search from './search';
 
 
 export default async function ExplorePage({ searchParams }: { searchParams: exploreApiRequest }) {
-  const queryClient = new QueryClient();
+  const q = searchParams.q || '';
 
-  await queryClient.prefetchQuery({
-    queryKey: ['explore', searchParams],
-    queryFn: () => getExplore(searchParams),
-  })
+  const queryClient = new QueryClient();
+  if (q) {
+    await queryClient.prefetchQuery({
+      queryKey: ['explore', searchParams],
+      queryFn: () => getExplore(searchParams),
+    })
+  }
+
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
