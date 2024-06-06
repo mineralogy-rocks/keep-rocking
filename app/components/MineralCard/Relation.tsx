@@ -1,9 +1,10 @@
-import { Relation } from '@/lib/interfaces';
-
 import { useState } from 'react';
-import useSWR from 'swr';
 
-import { getExplore } from "@/actions";
+import { useQuery } from "@tanstack/react-query";
+
+import { getRelations } from "@/actions";
+
+import { Relation } from '@/lib/interfaces';
 import Button from './Button';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
@@ -16,16 +17,13 @@ export default function RelationSnippet({ isGrouping, slug, data } : { isGroupin
     setRelation(getRelationEndpoint(newRelationId));
   };
 
-  const { data: relationData, error, isLoading } = useSWR(
-    relation ? slug + '/' + relation : null,
-    (url) => getExplore(url),
-    {
-      keepPreviousData: false,
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+
+  const { error, data: relationData, isLoading } = useQuery({
+    queryKey: [slug, relation],
+    queryFn: () => getRelations(slug, relation),
+    enabled: Boolean(relation),
+  });
+
 
   if (!!data.length) {
     return (

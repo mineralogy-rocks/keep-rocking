@@ -1,10 +1,11 @@
 'use client';
 
-import {useState} from 'react';
-import useSWR from 'swr';
-import clsx from 'clsx';
+import { useState } from 'react';
 
-import { getExplore } from '@/actions';
+import { useQuery } from "@tanstack/react-query";
+import cx from 'clsx';
+
+import { getGroupingMembers } from '@/actions';
 import Button from './Button';
 import Tooltip from './Tooltip';
 import NoData from './NoData';
@@ -18,16 +19,17 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
     setCountry(newCountry);
   };
 
-  const { data: countryData, error, isLoading } = useSWR(
-    country ? slug + '/grouping-members/?status=1&discovery_country=' + country : null,
-    (url) => getExplore(url),
-    {
-      keepPreviousData: false,
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const params = {
+    status: 1,
+    discovery_country: country
+  };
+
+  const { error, data: countryData, isLoading } = useQuery({
+    queryKey: [slug, 'grouping-members', params],
+    queryFn: () => getGroupingMembers(slug, params),
+    enabled: Boolean(country),
+  });
+
   const _fields = ['ima_year', 'approval_year', 'discovery_year', 'publication_year'];
 
 
@@ -75,7 +77,7 @@ export default function DiscoverySnippet({ isGrouping, slug, data } : { isGroupi
         </div>
       )}
       {(history?.discovery_year || history?.publication_year) && (
-        <div className={clsx("text-xs text-font-secondary", !!discoveryCountries.length ? 'mt-1': '')}>
+        <div className={cx("text-xs text-font-secondary", !!discoveryCountries.length ? 'mt-1': '')}>
           {history?.discovery_year && (<p>Discovered in <span className="font-medium">{history.discovery_year}</span></p>)}
           {history?.publication_year && (<p>Published in <span className="font-medium">{history.publication_year}</span></p>)}
         </div>
