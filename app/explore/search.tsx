@@ -60,7 +60,7 @@ export default function Search() {
   // used to show the search results
   const [isActive, setIsActive] = useState(false);
 
-  const recentSearches = useRecentSearches(params.q);
+  const recentSearches = useRecentSearches(data && !!data.results.length ? params.q : '');
   const debouncedQueryParams = useDebounce(queryParams, 200);
   const debouncedSearch = useDebounce(searchTerm, 600);
   const _persistantQueryParams: exploreApiRequest = filter(queryParams, (key, val) => !additionalParams.includes(key) && val !== '' && val !== undefined);
