@@ -58,7 +58,7 @@ export const STRUCTURAL_DATA_KEYS = [
   "volume",
 ];
 
-export const HISTORY_DATA_MAP = {
+export const HISTORY_DATA_KEYS = {
   discovery_year: "Discovery year",
   publication_year: "Publication year",
   ima_year: "IMA year",

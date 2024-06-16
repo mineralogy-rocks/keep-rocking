@@ -2,7 +2,7 @@ import groupBy from 'just-group-by';
 
 import { Formula, Inheritance, KeyVal } from '@/lib/interfaces';
 import {
-  HISTORY_DATA_MAP,
+  HISTORY_DATA_KEYS,
   PHYSICAL_DATA_CONTEXT_NAME,
   PHYSICAL_DATA_CONTEXT_ID
 } from '@/lib/constants';
@@ -36,9 +36,9 @@ export const prepareHistory = (data: any) => {
   const _data: KeyVal[] = [];
   data.map((item) => {
       Object.keys(item).forEach((key) => {
-        if (key in HISTORY_DATA_MAP && item[key]) {
+        if (key in HISTORY_DATA_KEYS && item[key]) {
           _data.push({
-            key: HISTORY_DATA_MAP[key],
+            key: HISTORY_DATA_KEYS[key],
             value: item[key],
           });
         }
