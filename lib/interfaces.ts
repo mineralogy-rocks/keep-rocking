@@ -41,7 +41,7 @@ export interface Crystallography {
   space_group?: BaseIdName;
 }
 
-export interface GroupingMember extends BaseIdName {
+export interface Member extends BaseIdName {
   slug : string;
   description: string;
   url: string;

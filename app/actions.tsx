@@ -25,6 +25,10 @@ export async function getMineralDetail(slug: string) {
   return await clientFetcher('/mineral/' + slug);
 }
 
+export async function getAllRelations(slug: string) {
+  return await clientFetcher('/relation/' + slug);
+}
+
 export async function getPostList(query?: string) {
   return await clientFetcher('/blog/post/' + (query ? '?' + query : ''));
 }

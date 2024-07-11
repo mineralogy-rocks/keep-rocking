@@ -6,16 +6,21 @@ import Head from 'next/head';
 import clone from 'just-clone';
 import groupBy from 'just-group-by';
 import get from 'just-safe-get';
-import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_MAP, DATA_CONTEXT_TYPES } from '@/lib/constants';
+import { useQuery } from '@tanstack/react-query';
+
+import { getAllRelations } from "@/actions";
+import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_KEYS, DATA_CONTEXT_TYPES } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { KeyVal } from '@/lib/interfaces';
 import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
+import RelationTree from "@/components/RelationTree";
 import Card from '@/components/Card';
 import { ContextController } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
 import BarcodeChart from '@/components/BarcodeChart';
+
 
 
 const Section = ({ title, children }) => (
@@ -57,14 +62,40 @@ const CrystallographyNode = ({ item = null, isInherited = true, ...props }: {
   </Card>);
 
 
-const CrystallographyCards = ({ structures, members }) => {
+const StructuralData = ({ structures, selectedStructure = null }) => {
+  let localStructure = selectedStructure || structures[0];
+
+  return (
+    <div className="p-2 text-xs sm:text-sm">
+      {localStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {
+          let _equal = localStructure ? (localStructure.min[key] === localStructure.max[key] && localStructure.min[key] === localStructure.avg[key]) : false;
+          return (
+            <div key={index} className="flex">
+              <span className="px-2 py-1 font-semibold">{key}</span>
+              {_equal ? (
+                <span className="px-2 py-1 text-font-secondary">{localStructure.min[key]}</span>
+              ) : (
+                <span
+                  className="px-2 py-1 text-font-secondary">{localStructure.min[key]}—{localStructure.max[key]} ({localStructure.avg[key]})</span>
+              )}
+            </div>
+          )
+        }
+      )}
+      <br/>
+      {localStructure.count > 0 && <span className="ml-2 text-xs text-font-secondary">Based on <b>{localStructure.count}</b> measurements</span>}
+    </div>
+  );
+}
+
+
+const CrystallographyCards = ({structures, members}) => {
 
   const localStructures = useMemo(() => clone(structures).map((item, index) => {
     item._members = members.filter(_member => {
       if (item.crystal_system) return _member.crystal_system == item.crystal_system;
       return _member.crystal_system === null;
     });
-    // item._offset = Math.random() * 0.2 + 0.2;
     item._offset = (1 / structures.length * index) * 0.2 + 0.2;
     item._crystalSystem = item.crystal_system ? CRYSTAL_SYSTEM_CHOICES[item.crystal_system] + ' System' : 'Unclassified';
     return item;
@@ -106,19 +137,7 @@ const CrystallographyCards = ({ structures, members }) => {
         )}
       </div>
       <div className="grid sm:grid-cols-2 mt-7 gap-10 mx-1">
-        <div className="p-2 text-xs sm:text-sm">
-          {chosenStructure.min && STRUCTURAL_DATA_KEYS.map((key, index) => {
-            let _allEqual = chosenStructure.min[key] === chosenStructure.max[key] === chosenStructure.avg[key];
-            return (
-              <div key={index} className="flex">
-                <span className="px-2 py-1 font-semibold">{key}</span>
-                {_allEqual ? (
-                  <span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}</span>
-                ) : (<span className="px-2 py-1 text-font-secondary">{chosenStructure.min[key]}—{chosenStructure.max[key]} ({chosenStructure.avg[key]})</span>)}
-              </div>
-            )}
-          )}
-        </div>
+        <StructuralData structures={chosenStructure} selectedStructure={chosenStructure} />
         <div className="flex flex-wrap justify-start items-start gap-1 p-2 w-full h-min">
            {chosenMembers.map((item) => (
              <RelationChip key={item.id} className="flex-none" name={item.name} statuses={item.statuses} hasArrow={false} />
@@ -128,7 +147,8 @@ const CrystallographyCards = ({ structures, members }) => {
     </div>)
 };
 
-export default function MineralPage({ data }) {
+
+export default function MineralPage({ data, slug }) {
 
   let {
     name,
@@ -146,6 +166,11 @@ export default function MineralPage({ data }) {
     inheritance_chain: inheritanceChain,
     contexts: _contexts,
   } : mineralDetailApiResponse = data;
+
+  const { data: relations } = useQuery({
+    queryKey: ['relation', slug],
+    queryFn: () => getAllRelations(slug),
+  });
 
   if (inheritanceChain) {
     // TODO: improve this backend-wise
@@ -179,10 +204,12 @@ export default function MineralPage({ data }) {
   let contexts: any;
   let conclusiveHistory: KeyVal[];
 
+  let _history: any = [];
+  if (history) _history.push(history);
+  if (members) members.map(item => { if (item.history) _history.push(item.history) });
+
+  conclusiveHistory = prepareHistory(_history);
   if (isGrouping) {
-    conclusiveHistory = prepareHistory(
-      members?.map(item => item.history).filter(item => item !== null) || []
-    );
     contexts = {};
     _contexts.map((item) => {
       contexts[DATA_CONTEXT_TYPES[item.context]] = item;
@@ -198,7 +225,10 @@ export default function MineralPage({ data }) {
       structures.push({ crystal_system: null, count: 0 })
     }
   } else {
-    conclusiveHistory = history ? prepareHistory([history]) : [];
+    if (crystallography) {
+      let _structure = structures.find(item => item.crystal_system === crystallography.crystal_system.id);
+      if (_structure) Object.assign(_structure, { crystal_class: crystallography.crystal_class, space_group: crystallography.space_group });
+    }
     contexts = getConclusiveContext(contextGroups);
   }
 
@@ -228,25 +258,30 @@ export default function MineralPage({ data }) {
         {!!conclusiveHistory.length && (
           <Section title="History">
             <h3 className="text-sm font-medium text-font-blue">Activities related to discovery and approval of the group members</h3>
-            <BarcodeChart items={conclusiveHistory} labelX="Year" domainY={Object.values(HISTORY_DATA_MAP)} />
+            <BarcodeChart items={conclusiveHistory} labelX="Year" domainY={Object.values(HISTORY_DATA_KEYS)} />
           </Section>
         )}
 
         {hasCrystallography && (
           <Section title="Structural context">
-            <div className="flex flex-wrap gap-2">
-              {isGrouping && !!structures.length ? <CrystallographyCards structures={structures} members={members} /> : (
+            <div className="flex flex-col flex-wrap gap-2">
+              {isGrouping ? (!!structures.length && <CrystallographyCards structures={structures} members={members} />) : (
                 <>
                   {crystallography && (
-                    <CrystallographyNode isInherited={false}
-                                         item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
-                                         {...crystallography} />
+                      <CrystallographyNode isInherited={false}
+                                           item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
+                                           {...crystallography} />
                     )
                   }
                   {inheritanceChain?.map((item, index) => {
                     if (item.crystallography) return (
                       <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
                     )}
+                  )}
+                  {!!structures.length && (
+                    <div>
+                      <StructuralData structures={structures}/>
+                    </div>
                   )}
                 </>
               )}
@@ -334,6 +369,23 @@ export default function MineralPage({ data }) {
                   </div>
                 </div>
               )}
+          </Section>
+        )}
+
+        {relations && Object.keys(relations).length && (
+          <Section title="Relations Tree">
+            <h3 className="text-sm font-medium text-font-blue">Including historic and alternative names, related varieties and substances</h3>
+            <div className="mt-5">
+              {relations.minerals.filter(item => item.is_main).map((item, index) => {
+                  return (
+                    <RelationTree key={index}
+                                  item={item}
+                                  mineralScope={relations.minerals}
+                                  relations={relations.relations}/>
+                  )
+                }
+              )}
+            </div>
           </Section>
         )}
 

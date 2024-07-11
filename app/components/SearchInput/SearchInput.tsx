@@ -1,14 +1,29 @@
 import { useRef } from "react";
+import styled from "styled-components";
 
 import Spinner from '@/components/Spinner';
 
 
-export default function SearchInput({ placeholder="Search", isLoading=false, searchValue, onChange, onReset }:
-  { placeholder?: string, isLoading?: boolean, searchValue: string, onChange: (value: string) => void, onReset: () => void }) {
+interface Props {
+  placeholder?: string,
+  isLoading?: boolean,
+  searchValue: string,
+  onChange: (value: string) => void,
+  onReset: () => void
+};
+
+const defaultProps = {
+  placeholder: "Search",
+  isLoading: false
+};
+
+
+const SearchInput: React.FC<Props> = (props) => {
+  const { placeholder, isLoading, searchValue, onChange, onReset } = { ...defaultProps, ...props };
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <div className='group relative flex items-center justify-center w-full h-full'>
+    <Wrapper className='group relative flex items-center justify-center w-full h-full'>
       <input className='w-full h-10 px-8 py-2 dark:text-slate-300 text-slate-700 dark:bg-slate-800 bg-white border border-gray-300 dark:border-slate-800 rounded focus:outline-none focus:border dark:focus:border-slate-500 focus:border-gray-600 transition-colors ease-in-out duration-300'
              ref={ref}
              type='text'
@@ -34,6 +49,10 @@ export default function SearchInput({ placeholder="Search", isLoading=false, sea
         </div>
       )}
 
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div``;
+
+export default SearchInput;

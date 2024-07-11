@@ -1,5 +1,5 @@
-import { IMA_STATUS_CHOICES, COMPLEMENTING_STATUS_GROUPS } from '@/lib/constants';
-import { Status, StatusGroup, colorTuple } from '@/lib/interfaces';
+import { COMPLEMENTING_STATUS_GROUPS } from '@/lib/constants';
+import { Status, StatusGroup } from '@/lib/interfaces';
 
 
 export const getUniqueStatusGroups = (statuses: Status[]) => {
@@ -32,7 +32,8 @@ export const getStatusColor = (statuses: number[]): string => {
     let _status = Math.floor(status);
     if (_status === 0) return 'bg-green-700/70 dark:bg-green-500';
     else if (_status === 1) return 'bg-blue-700/70 dark:bg-green-500';
-    else if (_status in [2, 3, 4, 5, 6, 7, 8, 9, 10]) return 'bg-red-700/70 dark:bg-blue-500';
+    else if (_status === 2) return 'bg-slate-700/70 dark:bg-slate-500';
+    else if (_status in [3, 4, 5, 6, 7, 8, 9, 10]) return 'bg-red-700 dark:bg-blue-500';
     else return 'bg-slate-600/70 dark:bg-slate-400';
   }
   return 'bg-slate-600/70 dark:bg-slate-400';

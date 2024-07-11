@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getMineralDetail } from "@/actions";
+import {getMineralDetail} from "@/actions";
 import MineralPage from "./client";
 
 
@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <Suspense fallback={<div></div>}>
-      <MineralPage data={data} />
+      <MineralPage data={data} slug={slug} />
     </Suspense>
   );
 }

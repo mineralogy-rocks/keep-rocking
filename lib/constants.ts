@@ -25,8 +25,8 @@ export const INHERITANCE_PROP_CHOICES = {
 
 export const PHYSICAL_DATA_CONTEXT_ID = 1;
 export const OPTICAL_DATA_CONTEXT_ID = 2;
-export const PHYSICAL_DATA_CONTEXT_NAME = "Physical Properties";
-export const OPTICAL_DATA_CONTEXT_NAME = "Optical Properties";
+export const PHYSICAL_DATA_CONTEXT_NAME = "Physical properties";
+export const OPTICAL_DATA_CONTEXT_NAME = "Optical properties";
 
 export const DATA_CONTEXT_TYPES = {
   [PHYSICAL_DATA_CONTEXT_ID]: PHYSICAL_DATA_CONTEXT_NAME,
@@ -58,7 +58,7 @@ export const STRUCTURAL_DATA_KEYS = [
   "volume",
 ];
 
-export const HISTORY_DATA_MAP = {
+export const HISTORY_DATA_KEYS = {
   discovery_year: "Discovery year",
   publication_year: "Publication year",
   ima_year: "IMA year",
