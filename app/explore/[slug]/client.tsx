@@ -372,7 +372,7 @@ export default function MineralPage({ data, slug }) {
           </Section>
         )}
 
-        {relations && Object.keys(relations).length && (
+        {relations && !!Object.keys(relations).length && (
           <Section title="Relations Tree">
             <h3 className="text-sm font-medium text-font-blue">Including historic and alternative names, related varieties and substances</h3>
             <div className="mt-5">
