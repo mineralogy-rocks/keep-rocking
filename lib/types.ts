@@ -8,7 +8,7 @@ import {
   History,
   Link,
   Inheritance,
-  GroupingMember,
+  Member,
   PostTag,
   PostCategory
 } from './interfaces';
@@ -62,7 +62,7 @@ export type mineralDetailApiResponse = {
     count: number;
   }[],
   inheritance_chain?: Inheritance[];
-  members?: GroupingMember[];
+  members: Member[];
   contexts: any[];
 };
 

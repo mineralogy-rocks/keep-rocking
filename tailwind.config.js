@@ -14,8 +14,11 @@ const themes = [
           secondary: '#4d5c72',
           ternary: '#9ca3af',
           blue: colors.sky[600],
-          blueDark: colors.sky[600],// '#1e3a8a',
+          blueDark: colors.sky[600],
           orange: '#f3ece9',
+        },
+        chip: {
+          DEFAULT: '#FFF6F6',
         },
         gray: {
           DEFAULT: '#f1f1f1',
@@ -37,6 +40,9 @@ const themes = [
           blue: colors.sky[400],
           blueDark: colors.blue[400],
           orange: '#f3ece9',
+        },
+        chip: {
+          DEFAULT: '#224c60',
         },
         gray: {
           DEFAULT: '#f1f1f1',

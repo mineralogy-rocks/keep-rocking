@@ -8,7 +8,7 @@ export const getStyles= (type = "default"): Styles => {
 
   let defaultDarkStyles = {
     textColor: 'text-font-primary dark:text-slate-800',
-    backgroundColor: 'bg-red-50/60',
+    backgroundColor: 'bg-red-50',
     borderColor: 'border border-font-secondary dark:border-slate-600'
   };
 
