@@ -21,6 +21,7 @@ import UKLogoDark from 'public/assets/UK_logo-dark.png';
 import FNSLogo from 'public/assets/UK_FNS_logo.png';
 import FNSLogoDark from 'public/assets/UK_FNS_logo-dark.png';
 import MSCALogo from 'public/assets/MSCA.png';
+import UptimeRobotLogo from 'public/assets/uptimerobot-logo.svg';
 
 
 const StyledPath = styled(motion.path)<{ $rotate?: number }>`
@@ -655,6 +656,9 @@ export default function Home() {
                 </clipPath>
               </defs>
             </svg>
+          </a>
+          <a href="https://uptimerobot.com" target="_blank" rel="noreferrer">
+            <Image src={UptimeRobotLogo} alt="UptimeRobot" className="w-52 h-auto"/>
           </a>
         </div>
 
