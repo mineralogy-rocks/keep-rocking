@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require("@sentry/nextjs");
+// const withLinaria = require('next-with-linaria');
 
 const ContentSecurityPolicy = `
     default-src 'self' vercel.live;
@@ -71,6 +72,7 @@ const nextConfig = {
 
 
 module.exports = withSentryConfig(
+  // withLinaria(nextConfig),
   nextConfig,
   {
     // For all available options, see:

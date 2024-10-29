@@ -44,7 +44,7 @@ const RelationTree: React.FC<Props> = (props) => {
   return (
     <Wrapper>
       <div className={cx("flex mt-0.5")}>
-        <RelationChip key={crypto.randomUUID()} name={item.name} statuses={item.statuses} hasArrow={false} isHighlighted={item.is_current} {...localProp} />
+        <RelationChip name={item.name} statuses={item.statuses} hasArrow={false} isHighlighted={item.is_current} {...localProp} />
       </div>
 
       <div className={cx("tree relative flex flex-col ml-6 h-full")}>
