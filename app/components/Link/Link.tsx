@@ -4,7 +4,7 @@ import cx from 'clsx';
 
 import styles from './Link.module.scss';
 
-export function ExternalLink({ className='', href, isIcon=true, children, ...props } : {
+function ExternalLink({ className='', href, isIcon=true, children, ...props } : {
   className?: string,
   href: string,
   isIcon?: boolean,
@@ -21,7 +21,7 @@ export function ExternalLink({ className='', href, isIcon=true, children, ...pro
   )
 };
 
-export function InternalLink({ className='', href, hasIcon=false, children, ...props } : { className?: string, href: string, hasIcon?: boolean, children }) {
+function InternalLink({ className='', href, hasIcon=false, children, ...props } : { className?: string, href: string, hasIcon?: boolean, children }) {
   return (
     <Link href={href} className="inline group items-center" {...props}>
       <span className={cx(styles.link, "text-inherit font-semibold", className)}>{children}</span>
@@ -34,3 +34,4 @@ export function InternalLink({ className='', href, hasIcon=false, children, ...p
   )
 };
 
+export { InternalLink, ExternalLink };

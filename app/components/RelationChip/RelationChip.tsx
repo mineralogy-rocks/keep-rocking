@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import styled from 'styled-components';
+import { styled } from '@linaria/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Wrapper as TreeWrapper } from '@/components/RelationTree';

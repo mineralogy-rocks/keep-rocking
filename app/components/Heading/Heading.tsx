@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import styled from 'styled-components';
+import { styled } from '@linaria/react';
 
 
 interface Props {
