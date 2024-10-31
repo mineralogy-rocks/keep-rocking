@@ -4,7 +4,6 @@ import {useRef, useEffect, useState} from "react";
 
 import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
-import { styled } from '@linaria/react';
 import cx from 'clsx';
 
 import { setLocalStorageWithExpiry, getLocalStorageWithExpiry } from "@utils";
@@ -22,11 +21,6 @@ import FNSLogo from 'public/assets/UK_FNS_logo.png';
 import FNSLogoDark from 'public/assets/UK_FNS_logo-dark.png';
 import MSCALogo from 'public/assets/MSCA.png';
 
-
-const StyledPath = styled(motion.path)<{ $rotate?: number }>`
-  transform-origin: center;
-  rotate: ${props => props.$rotate || 0}deg;
-`;
 
 export default function Home() {
 
