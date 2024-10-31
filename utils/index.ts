@@ -135,7 +135,7 @@ export const createOgImage = ({ title, meta, publishedAt = '' }: { title: string
 
 
 export const setLocalStorageWithExpiry = (key: string, value: any, ttl: number) => {
-    if (!window) return;
+    if (typeof window === 'undefined') return;
 
     const now = new Date();
     const item = {
@@ -147,7 +147,7 @@ export const setLocalStorageWithExpiry = (key: string, value: any, ttl: number) 
 
 
 export const getLocalStorageWithExpiry = (key: string) => {
-  if (!window) return null;
+  if (typeof window === 'undefined') return;
 
 	const itemStr = window.localStorage.getItem(key);
 	if (!itemStr) {
