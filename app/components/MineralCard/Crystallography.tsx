@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import {useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { From, CrystalSystem } from '@/lib/interfaces';
 import { getGroupingMembers } from "@/actions";
@@ -13,7 +13,7 @@ import NoData from './NoData';
 
 function ButtonWithRelation(props: any) {
   return (
-    <div className="flex flex-wrap items-center gap-1 text-start cursor-default">
+    <div className="flex flex-wrap items-center text-start cursor-default">
       <Button {...props} />
       {props.from && (
         <RelationChip {...{ name: props.from.name, statuses: props.from.statuses}} />

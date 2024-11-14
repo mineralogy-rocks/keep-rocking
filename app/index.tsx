@@ -1,18 +1,16 @@
-'use client';
-
-import { useRef, useEffect, useState } from "react";
+'use client'
 
 import Image from 'next/image';
-import { motion, useInView } from "framer-motion";
-import cx from 'clsx';
 
-import { setLocalStorageWithExpiry, getLocalStorageWithExpiry } from "@utils";
+import { motion } from 'framer-motion';
 
+import { InternalLink } from "@/components/Link";
 import Terminal from '@/components/Content/Terminal';
+import TypingTerminal from "@/components/Content/TypingTerminal";
+
 import styles from './index.module.scss';
 import typographyStyles from '@/styles/typography.module.scss';
 
-import { InternalLink } from "@/components/Link";
 
 import SAVLogo from 'public/assets/SAV_logo-light.jpg';
 import UKLogo from 'public/assets/UK_logo.png';
@@ -24,14 +22,7 @@ import MSCALogo from 'public/assets/MSCA.png';
 
 export default function Home() {
 
-  const terminalRef = useRef(null);
-  const terminalCodeRef = useRef(null);
-  const isInView = useInView(terminalRef, { once: true, amount: 0.1 });
-
-  const isMagicEnabled = getLocalStorageWithExpiry('magicEnabled');
-  const [localMagicEnabled, setLocalMagicEnabled] = useState(isMagicEnabled === null ? true : isMagicEnabled);
-
-  const variants = {
+   const variants = {
     enabled: (degrees: number) => ({
       rotate: degrees,
       transition: {
@@ -40,106 +31,14 @@ export default function Home() {
         damping: 10,
         mass: 4,
         stiffness: 20,
-        delay: 0.5,
+        delay: 1,
       },
     }),
-    disabled: (degrees: number) => ({
-      rotate: degrees,
+    initial: (degrees: number) => ({
+      rotate: 0,
     })
   };
 
-  const code = [
-    'curl -X GET \\',
-    '-H "Content-type: application/json" \\',
-    '-H "Accept: application/json" \\',
-    '-d "offset=10" \\',
-    '-d "ordering=id" \\',
-    '"https://api.mineralogy.rocks/status"',
-  ];
-
-  const [typedCode, setTypedCode] = useState('');
-  const [contentHeight, setContentHeight] = useState(0);
-
-  const htmlTypedCode = typedCode.split('\n').map((line, index) => {
-    let _isLastLine = index === typedCode.split('\n').length - 1;
-    return (
-      <div key={index} className={cx('flex items-center', index > 0 && 'ml-[36px] sm:ml-[42px]')}>
-        {line}
-        {_isLastLine && (
-          <svg className="text-gray-400 animate-[blink_1s_ease-out_infinite]" width="5" height="15" viewBox="0 0 5 15" fill="currentColor">
-            <rect x="0" y="0" width="5" height="15" />
-          </svg>)}
-        {!_isLastLine && (<br />)}
-      </div>
-    );
-  });
-
-
-  useEffect(() => {
-    if (localMagicEnabled) {
-      setLocalStorageWithExpiry('magicEnabled', false, 3600 * 1000);
-    }
-    return;
-  }, []);
-
-
-  useEffect(() => {
-    if (terminalCodeRef.current) { // @ts-ignore
-      setContentHeight(terminalCodeRef.current.offsetHeight);
-    }
-    return;
-  }, [htmlTypedCode]);
-
-  useEffect(() => {
-    const typeCode = (index, line) => {
-      if (index === code.length) {
-        return;
-      }
-
-      const delay = Math.floor(Math.random() * 100); // Random delay between 0 and 100ms
-      let currentIndex = 0;
-
-      const typeNextCharacter = () => {
-        if (currentIndex === line.length) {
-          // Move to the next line of code after typing
-          setTimeout(() => {
-            setTypedCode(prevCode => prevCode + '\n');
-            typeCode(index + 1, code[index + 1]);
-          }, delay + Math.floor(Math.random() * 100) + 200);
-          return;
-        }
-
-        const char = line[currentIndex];
-
-        if (char === ' ') {
-          // Pause between words
-          setTimeout(() => {
-            setTypedCode(prevCode => prevCode + ' ');
-            currentIndex++;
-            typeNextCharacter();
-          }, Math.floor(Math.random() * 100) + 200); // Random pause between 100ms and 200ms
-        } else {
-          // Type the character with varying speed
-          setTimeout(() => {
-            setTypedCode(prevCode => prevCode + char);
-            currentIndex++;
-            typeNextCharacter();
-          }, delay + Math.floor(Math.random() * 100) + 10); // Random typing speed between 50ms and 150ms
-        }
-      };
-
-      typeNextCharacter();
-    };
-
-    if (localMagicEnabled) {
-      if (isInView) {
-        typeCode(0, code[0]);
-      }
-    } else {
-      setTypedCode(code.join('\n'));
-    }
-    return;
-  }, [isInView]);
 
   return (
   <>
@@ -157,23 +56,25 @@ export default function Home() {
               <g className={styles.wrapper} clipPath="url(#a)">
                 <motion.path custom={28}
                              variants={variants}
-                             animate={localMagicEnabled ? 'enabled' : ''}
-                             initial={localMagicEnabled ? '' : 'disabled'}
+                             animate='enabled'
+                             initial='initial'
                              d="M368.258 110.152C421.109 106.696 486.348 98.7746 509.39 125.905C532.345 153.084 512.967 215.277 497.689 265.478C482.411 315.678 471.098 353.849 450.144 398.965C429.189 444.08 398.592 496.141 351.893 516.882C305.144 537.536 242.341 526.957 187.87 497.582C133.312 468.255 87.1828 420.308 88.0845 370.987C88.9473 321.801 136.754 271.292 169.061 227.886C201.281 184.53 217.954 148.19 246.429 130.462C274.953 112.822 315.368 113.744 368.258 110.152Z"
-                             fill="url(#b)" />
+                             fill="url(#b)"/>
                 <motion.path custom={13}
                              variants={variants}
-                             animate={localMagicEnabled ? 'enabled' : ''}
-                             initial={localMagicEnabled ? '' : 'disabled'}
+                             animate='enabled'
+                             initial='initial'
                              d="M404.966 130.266C460.381 137.625 525.113 166.208 553.357 217.825C581.6 269.442 573.355 344.093 540.242 401.502C507.128 458.91 449.145 499.076 387.053 516.86C325.022 534.517 258.818 529.921 202.77 503.213C146.626 476.538 100.638 427.753 76.3293 367.906C51.8938 307.998 49.2002 236.901 82.9475 198.841C116.789 160.748 187.072 155.69 245.262 146.23C303.453 136.77 349.551 122.906 404.966 130.266Z"
-                             fill="url(#c)" />
+                             fill="url(#c)"/>
               </g>
               <defs>
-                <linearGradient id="b" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026" gradientUnits="userSpaceOnUse">
-                  <stop className={styles.gradientFrom} />
-                  <stop offset="1" className={styles.gradientTo} />
+                <linearGradient id="b" x1="29.7463" y1="-30.7026" x2="529.305" y2="-30.7026"
+                                gradientUnits="userSpaceOnUse">
+                  <stop className={styles.gradientFrom}/>
+                  <stop offset="1" className={styles.gradientTo}/>
                 </linearGradient>
-                <linearGradient id="c" x1="27.7238" y1="-32.7187" x2="529.686" y2="-32.7187" gradientUnits="userSpaceOnUse">
+                <linearGradient id="c" x1="27.7238" y1="-32.7187" x2="529.686" y2="-32.7187"
+                                gradientUnits="userSpaceOnUse">
                   <stop className={styles.gradientFrom} />
                   <stop offset="1" className={styles.gradientTo} />
                 </linearGradient>
@@ -266,39 +167,7 @@ export default function Home() {
             </p>
           </div>
 
-
-          <div className="relative md:col-span-6" ref={terminalRef}>
-            <div className="md:absolute w-full h-full">
-              <Terminal>
-                <pre className="text-xs sm:text-sm text-left leading-1 sm:leading-6 font-semibold flex ligatures-none overflow-auto">
-                  <code className="flex-none min-w-full p-5">
-                    <span className="flex">
-                      <svg viewBox="0 -9 3 24" aria-hidden="true" className="flex-none overflow-visible text-pink-400 w-auto h-4 sm:h-6 mr-3">
-                        <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>
-                      <motion.div className="flex-auto"
-                                  initial={{
-                                    height: 0,
-                                  }}
-                                  animate={{
-                                    height: contentHeight,
-                                  }}
-                                  transition={{
-                                    type: 'spring',
-                                    bounce: 0.4,
-                                    stiffness: 100,
-                                    damping: 20,
-                                  }}>
-                        <div ref={terminalCodeRef}>
-                          {htmlTypedCode}
-                        </div>
-                      </motion.div>
-                    </span>
-                  </code>
-                </pre>
-              </Terminal>
-            </div>
-          </div>
+          <TypingTerminal />
         </div>
       </div>
     </section>

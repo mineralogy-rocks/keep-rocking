@@ -98,7 +98,7 @@ export default function ClassificationSnippet({ data }) {
                   <span className="text-xs font-medium text-font-secondary">{group.name} of</span>
                   {group.minerals.map((mineral, id) => {
                     return (
-                      <RelationChip key={id} hasArrow={false} {...{ name: mineral.name, statuses: mineral.statuses }} />
+                      <RelationChip key={id} hasArrow={false} hasLink={true} {...{ name: mineral.name, slug: mineral.slug, statuses: mineral.statuses }} />
                     )
                   })}
                 </li>

@@ -147,7 +147,9 @@ export const setLocalStorageWithExpiry = (key: string, value: any, ttl: number) 
 
 
 export const getLocalStorageWithExpiry = (key: string) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+    return;
+  }
 
 	const itemStr = window.localStorage.getItem(key);
 	if (!itemStr) {

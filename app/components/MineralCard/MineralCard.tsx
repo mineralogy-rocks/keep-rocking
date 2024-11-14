@@ -85,7 +85,7 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
                   {mineral.name}
                 </InternalLink>
               </div>
-              <div className="flex flex-wrap items-center gap-1">
+              <div className="flex flex-wrap items-center">
                 {!!formulas.length && (
                   <h2 className="break-words max-w-full text-font-primary" dangerouslySetInnerHTML={{ __html: getRelevantFormula(formulas).formula }}></h2>
                 )}

@@ -204,6 +204,8 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
       <aside className="order-first md:order-last md:col-start-8 flex flex-col gap-2">
         {minerals.map((item, index) => {
           let isHighlighted = selected.find(_item => _item.id === item.id);
+          // TODO: use the isClicked below
+          let icClicked = isHighlighted?.clicked;
 
           return (
             <div key={index} className="flex items-center justify-start">
