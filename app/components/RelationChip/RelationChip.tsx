@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 
 import cx from 'clsx';
 import { styled } from '@linaria/react';
@@ -8,7 +8,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { getStyles } from './styles';
 import { getStatusColor } from '@/helpers/status.helpers';
 import styles from '@/components/Link/Link.module.scss';
+import { ArrowIcon, CloseIcon, CheckIcon } from "./icons";
 
+
+type Action = 'toggle' | 'link';
 
 interface Props {
   name: string,
@@ -18,13 +21,14 @@ interface Props {
   description?: string | null,
   className?: string,
   hasArrow?: boolean,
-  hasClose?: boolean,
+  isActive?: boolean,
   hasLink?: boolean,
   onClick?: (event: React.MouseEvent) => void,
   onMouseEnter?: (event: React.MouseEvent) => void,
   onMouseLeave?: (event: React.MouseEvent) => void,
   onClose?: (event: React.MouseEvent) => void,
-  type?: string | null
+  type?: string | null,
+  actions?: Action[]
 };
 
 const defaultProps = {
@@ -32,14 +36,15 @@ const defaultProps = {
   description: null,
   className: "",
   isHighlighted: false,
-  hasArrow: true,
-  hasClose: false,
+  hasArrow: false,
+  isActive: false,
   hasLink: false,
   onClick: undefined,
   onMouseEnter: undefined,
   onMouseLeave: undefined,
   onClose: undefined,
-  type: null
+  type: null,
+  actions: []
 };
 
 const RelationChip: React.FC<Props> = (props) => {
@@ -51,13 +56,14 @@ const RelationChip: React.FC<Props> = (props) => {
     className,
     isHighlighted,
     hasArrow,
-    hasClose,
+    isActive,
     hasLink,
     onClick,
     onMouseEnter,
     onMouseLeave,
     onClose,
-    type
+    type,
+    actions
   } = {...defaultProps, ...props};
 
   const [isHovered, setIsHovered] = useState(false);
@@ -84,42 +90,9 @@ const RelationChip: React.FC<Props> = (props) => {
     setIsClicked(false);
   }
 
-
-  const motionVariants = {
-    hidden: {
-      pathLength: 0,
-      opacity: 0
-    },
-    visible: (i) => {
-      const delay = i * 0.1;
-      return {
-        pathLength: 1,
-        opacity: 1,
-        transition: {
-          pathLength: { delay, type: "spring", duration: 0.5, bounce: 0 },
-          opacity: { delay, duration: 0.01 }
-        }
-      };
-    },
-    exit: (i) => {
-      return {
-        pathLength: 0,
-        opacity: 0,
-        transition: {
-          duration: 0.1
-        }
-      }
-    }
-  };
-
   return (
     <Wrapper>
-      {hasArrow && (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"
-             className="w-4 h-4 text-slate-400 dark:text-slate-200 shrink-0">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/>
-        </svg>
-      )}
+      {hasArrow && <ArrowIcon />}
 
       <motion.div
           className={cx("text-xs flex flex-wrap rounded px-1 py-0.5 transition-colors duration-300 cursor-pointer max-w-xs",
@@ -144,66 +117,32 @@ const RelationChip: React.FC<Props> = (props) => {
         </div>
 
         {description && (
-          <div dangerouslySetInnerHTML={{__html: description}}
-               className="text-xxs w-full font-normal leading-tight mt-0.5 line-clamp-3"></div>
+          <>
+            <hr className="w-full mt-1" />
+            <div dangerouslySetInnerHTML={{__html: description}}
+                 className="text-xxs w-full font-normal leading-tight mt-1 line-clamp-3">
+            </div>
+          </>
         )}
 
-        {/*<AnimatePresence initial={false} mode="wait">*/}
-        {/*  {hasClose && (*/}
-        {/*    <motion.div className="flex items-center"*/}
-        {/*                initial={{ width: 0 }}*/}
-        {/*                animate={{ width: 'auto' }}*/}
-        {/*                exit={{*/}
-        {/*                  width: 0,*/}
-        {/*                  transition: {*/}
-        {/*                    delay: 0.2*/}
-        {/*                  }*/}
-        {/*                }}>*/}
-        {/*      <svg xmlns="http://www.w3.org/2000/svg"*/}
-        {/*           fill="none"*/}
-        {/*           viewBox="0 0 24 24"*/}
-        {/*           stroke="currentColor"*/}
-        {/*           strokeWidth={3}*/}
-        {/*           width={10}*/}
-        {/*           height={10}*/}
-        {/*           className="group ml-1 shrink-0"*/}
-        {/*           onClick={closeHandler}>*/}
-        {/*        <motion.line x1="0"*/}
-        {/*                     y1="100%"*/}
-        {/*                     x2="100%"*/}
-        {/*                     y2="0"*/}
-        {/*                     className="text-gray-400 group-hover:text-gray-500 transition-colors duration-300 cursor-pointer"*/}
-        {/*                     initial="hidden"*/}
-        {/*                     animate="visible"*/}
-        {/*                     exit="exit"*/}
-        {/*                     variants={motionVariants}*/}
-        {/*                     custom={2} />*/}
-        {/*        <motion.line x1="100%"*/}
-        {/*                     y1="100%"*/}
-        {/*                     x2="0"*/}
-        {/*                     y2="0"*/}
-        {/*                     initial="hidden"*/}
-        {/*                     animate="visible"*/}
-        {/*                     exit="exit"*/}
-        {/*                     className="text-gray-400 group-hover:text-gray-500 transition-colors duration-300 cursor-pointer"*/}
-        {/*                     variants={motionVariants}*/}
-        {/*                     custom={5} />*/}
-        {/*      </svg>*/}
-        {/*    </motion.div>*/}
-        {/*  )}*/}
-        {/*</AnimatePresence>*/}
+        {actions.includes('toggle') && (
+          <AnimatePresence initial={false} mode="wait">
+            {isActive ?
+              (<motion.div className="flex items-center"
+                           animate={{ width: 'auto' }}>
+                  <CloseIcon onClick={closeHandler} />
+                </motion.div>
+              ) : isHovered && (
+              <motion.div className="flex items-center"
+                          initial={{ width: 0 }}
+                          animate={{ width: 'auto' }}
+                          exit={{ width: 0 }}>
+                <CheckIcon />
+              </motion.div>)}
+
+          </AnimatePresence>
+        )}
       </motion.div>
-
-      {isHovered && (
-        <div className={cx("ml-1 w-4 h-4 flex items-center rounded-sm", backgroundColor)}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-            <path fillRule="evenodd"
-                  d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
-                  clipRule="evenodd"/>
-          </svg>
-        </div>)
-      }
-
     </Wrapper>
   )
 }
@@ -213,4 +152,4 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default RelationChip;
+export default memo(RelationChip);

@@ -213,13 +213,13 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
               <RelationChip name={item.name}
                             statuses={item.statuses}
                             className="flex-none"
-                            hasArrow={false}
-                            hasClose={isInteractive && isHighlighted && isHighlighted.clicked}
+                            isActive={isInteractive && isHighlighted && isHighlighted.clicked}
                             onMouseEnter={isInteractive ? () => { handleSelection(item.id, true) } : undefined}
                             onMouseLeave={isInteractive ? () => { handleSelection(item.id, false) } : undefined}
                             onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : undefined}
                             onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : undefined}
-                            type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
+                            type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}
+                            actions={['toggle']} />
             </div>)
         })}
       </aside>

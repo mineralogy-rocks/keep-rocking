@@ -91,7 +91,7 @@ export default function MineralCard({ index, mineral, isVisible } : { index: num
                 )}
                 {formulasFrom && (
                   <div className="flex flex-row items-center gap-x-1">
-                    <RelationChip {...{ name: formulasFrom.name, statuses: formulasFrom.statuses}} />
+                    <RelationChip {...{ name: formulasFrom.name, statuses: formulasFrom.statuses, hasArrow: true }} />
                   </div>
                 )}
               </div>
