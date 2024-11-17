@@ -1,27 +1,28 @@
 import { useState, memo } from 'react';
 
+import Link from 'next/link';
 import cx from 'clsx';
 import { styled } from '@linaria/react';
-import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { getStyles } from './styles';
 import { getStatusColor } from '@/helpers/status.helpers';
 import styles from '@/components/Link/Link.module.scss';
-import { ArrowIcon, CloseIcon, CheckIcon } from "./icons";
+import { ArrowIcon, CloseIcon, CheckIcon } from "./RelationChip.icons";
 
 
 type Action = 'toggle' | 'link';
 
 interface Props {
+  id: string,
   name: string,
   slug?: string,
   statuses: number[],
   isHighlighted?: boolean,
+  isActive?: boolean,
   description?: string | null,
   className?: string,
   hasArrow?: boolean,
-  isActive?: boolean,
   hasLink?: boolean,
   onClick?: (event: React.MouseEvent) => void,
   onMouseEnter?: (event: React.MouseEvent) => void,
@@ -32,12 +33,13 @@ interface Props {
 };
 
 const defaultProps = {
+  id: "",
   slug: null,
   description: null,
   className: "",
   isHighlighted: false,
-  hasArrow: false,
   isActive: false,
+  hasArrow: false,
   hasLink: false,
   onClick: undefined,
   onMouseEnter: undefined,
@@ -49,14 +51,15 @@ const defaultProps = {
 
 const RelationChip: React.FC<Props> = (props) => {
   const {
+    id,
     name,
     slug,
     statuses,
     description,
     className,
+    isActive,
     isHighlighted,
     hasArrow,
-    isActive,
     hasLink,
     onClick,
     onMouseEnter,
@@ -67,12 +70,10 @@ const RelationChip: React.FC<Props> = (props) => {
   } = {...defaultProps, ...props};
 
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const { textColor, backgroundColor, borderColor } = getStyles(type ?? 'default');
 
   const clickHandler = (event: React.MouseEvent) => {
     onClick && onClick(event);
-    setIsClicked(true);
   };
 
   const onMouseEnterHandler = (event: React.MouseEvent) => {
@@ -87,7 +88,6 @@ const RelationChip: React.FC<Props> = (props) => {
 
   const closeHandler = (event: React.MouseEvent) => {
     onClose && onClose(event);
-    setIsClicked(false);
   }
 
   return (
