@@ -14,7 +14,7 @@ import { initialSearchQuery, initialQuery } from '@/lib/interfaces';
 import useDebounce from '@/hooks/use-debounce.hook';
 import useRecentSearches from "@/hooks/use-recent-searches.hook";
 
-import SearchInput from '@/components/SearchInput';
+import { SearchInput } from '@/components/SearchInput';
 import Checkbox from '@/components/Checkbox';
 import MineralCard from '@/components/MineralCard';
 import { Paginator, SmallPaginator } from '@/components/Paginator';

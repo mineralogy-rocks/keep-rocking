@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useDeferredValue } from 'react';
 import Head from 'next/head';
 
 import clone from 'just-clone';
@@ -20,7 +20,8 @@ import { ContextController } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
 import BarcodeChart from '@/components/BarcodeChart';
-
+import SmallSearchInput from "@/components/SmallSearchInput";
+import { RelationTreeProvider } from "@/components/RelationTree";
 
 
 const Section = ({ title, children }) => (
@@ -148,6 +149,10 @@ const CrystallographyCards = ({structures, members}) => {
 };
 
 
+const getRelations = (relations, id) => {
+  return relations.filter(item => item.relation === id);
+}
+
 export default function MineralPage({ data, slug }) {
 
   let {
@@ -171,6 +176,24 @@ export default function MineralPage({ data, slug }) {
     queryKey: ['relation', slug],
     queryFn: () => getAllRelations(slug),
   });
+
+  const [search, setSearch] = useState('');
+  const deferredSearch = useDeferredValue(search);
+  const [filteredRelations, setFilteredRelations]: any = useState([]);
+
+  useEffect(() => {
+    if (!relations) return;
+
+    if (deferredSearch) {
+      relations.minerals.forEach((item) => {
+        item.is_match = item.name.toLowerCase().includes(deferredSearch.toLowerCase());
+        return item;
+      });
+    }
+  }, [deferredSearch, relations]);
+
+  console.log(relations.minerals)
+
 
   if (inheritanceChain) {
     // TODO: improve this backend-wise
@@ -375,16 +398,13 @@ export default function MineralPage({ data, slug }) {
         {relations && !!Object.keys(relations).length && (
           <Section title="Relations Tree">
             <h3 className="text-sm font-medium text-font-blue">Including historic and alternative names, related varieties and substances</h3>
-            <div className="mt-5">
-              {relations.minerals.filter(item => item.is_main).map((item, index) => {
-                  return (
-                    <RelationTree key={index}
-                                  item={item}
-                                  mineralScope={relations.minerals}
-                                  relations={relations.relations}/>
-                  )
-                }
-              )}
+            <div className="mt-5 space-y-4">
+              <SmallSearchInput placeholder='Find...' searchValue={search} onChange={setSearch} onReset={() => setSearch('')} />
+              <RelationTreeProvider mineralScope={relations.minerals} relations={filteredRelations}>
+                {relations.minerals.filter(item => item.is_main).map((item, index) =>
+                  <RelationTree key={index} item={item} />
+                )}
+              </RelationTreeProvider>
             </div>
           </Section>
         )}

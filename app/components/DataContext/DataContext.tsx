@@ -27,7 +27,7 @@ const colorEntitiesDefaultProps = {
 }
 
 const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
-  const { selection, activeSelection } = useSelectionContext();
+  const { activeSelection } = useSelectionContext();
   const { items, minerals, hoverClass } = { ...colorEntitiesDefaultProps, ...props};
 
   const _isHovered = (ids: string | string[]) => {
@@ -42,7 +42,6 @@ const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
   return (
     <div className="flex flex-col flex-wrap gap-2">
       {items.map((item, index) => {
-
           return (
             <div key={index} className="flex items-center">
               <div className="flex items-center">
@@ -207,8 +206,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
           return (
             <div key={index} className="flex items-center justify-start">
               <div className="w-2 h-2 mr-2 rounded-full flex-none" style={{ backgroundColor: item.color }}></div>
-              <RelationChip id={item.id}
-                            name={item.name}
+              <RelationChip name={item.name}
                             statuses={item.statuses}
                             className="flex-none"
                             isActive={isInteractive && isHighlighted && isHighlighted.clicked}
@@ -217,7 +215,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
                             onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : undefined}
                             onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : undefined}
                             type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}
-                            actions={['toggle']} />
+                            actions={isInteractive ? ['toggle'] : []} />
             </div>)
         })}
       </aside>

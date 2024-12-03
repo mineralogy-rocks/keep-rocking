@@ -129,5 +129,6 @@ export interface ExploreQuery extends initialQuery {
   q: string;
 }
 
-export interface PostTag extends BaseIdName {};
-export interface PostCategory extends BaseIdNameSlug {};
+
+export interface PostTag extends BaseIdName {}
+export interface PostCategory extends BaseIdNameSlug {}

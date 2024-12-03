@@ -1,50 +1,32 @@
+import { memo } from 'react';
+
 import { styled } from '@linaria/react';
 import cx from 'clsx';
 
+import { useRelationTreeContext } from "./RelationTreeContext";
 import RelationChip from "@/components/RelationChip";
 
+import { relation, Props } from "@/components/RelationTree/interfaces";
 
-interface mineral {
-  id: string;
-  name: string;
-  slug : string;
-  description: string;
-  url: string;
-  statuses: [number];
-  is_main: boolean;
-  is_current: boolean;
-};
-
-interface Props {
-  item: mineral | null,
-  mineralScope: mineral[],
-  relations: {
-      id: string;
-      mineral: string;
-      relation: string;
-    }[];
-};
 
 const defaultProps = {
   item: null,
-  mineralScope: [],
-  relations: [],
 };
 
-const getRelations = (relations : Props['relations'], id: string) => {
+const getRelations = (relations: relation[], id: string) => {
   return relations.filter(item => item.relation === id);
 }
 
 const RelationTree: React.FC<Props> = (props) => {
-  const { item, relations , mineralScope } = { ...defaultProps, ...props};
+  const { item } = { ...defaultProps, ...props};
+  const { mineralScope, relations } = useRelationTreeContext();
 
   if (!item) return null;
-  let localProp = item.is_main ? {} : { description: item.description } ;
 
   return (
     <Wrapper>
-      <div className={cx("flex mt-0.5")}>
-        <RelationChip name={item.name} statuses={item.statuses} hasArrow={false} isHighlighted={item.is_current} {...localProp} />
+      <div className="flex mt-0.5">
+        <RelationChip name={item.name} slug={item.slug} statuses={item.statuses} hasLink={true} hasArrow={false} isHighlighted={item.is_current} {...{ description: item.is_main ? null : item.description }} />
       </div>
 
       <div className={cx("tree relative flex flex-col ml-6 h-full")}>
@@ -56,9 +38,11 @@ const RelationTree: React.FC<Props> = (props) => {
           return (
             <div key={match.id} className={cx(match.is_current && 'py-5 px-1')}>
               {getRelations(relations, match.id).length ?
-                <RelationTree item={match} mineralScope={mineralScope} relations={relations}/> : (
+                <RelationTree item={match} /> : (
                   <div className="flex mt-0.5" key={match.id}>
                     <RelationChip hasArrow={false}
+                                  hasLink={true}
+                                  slug={match.slug}
                                   isHighlighted={match.is_current}
                                   name={match.name}
                                   statuses={match.statuses}
@@ -86,6 +70,6 @@ const RelationTree: React.FC<Props> = (props) => {
   )
 }
 
-const Wrapper = styled.div``;
+export const Wrapper = styled.div``;
 
-export {RelationTree, Wrapper};
+export default memo(RelationTree);

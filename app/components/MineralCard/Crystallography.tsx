@@ -16,7 +16,7 @@ function ButtonWithRelation(props: any) {
     <div className="flex flex-wrap items-center text-start cursor-default">
       <Button {...props} />
       {props.from && (
-        <RelationChip {...{ name: props.from.name, statuses: props.from.statuses, hasArrow: true }} />
+        <RelationChip {...{ name: props.from.name, slug: props.from.slug, hasLink: true, statuses: props.from.statuses, hasArrow: true }} />
       )}
     </div>
   )
