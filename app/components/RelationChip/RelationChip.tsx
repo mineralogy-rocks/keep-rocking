@@ -113,7 +113,6 @@ const RelationChip: React.FC<Props> = (props) => {
       <motion.div className={cx("relative text-xs flex flex-wrap rounded px-1 py-0.5 transition-colors duration-300 cursor-pointer max-w-xs",
                     backgroundColor,
                     borderColor,
-                    isLinkHovered && "blur-md",
                     isHighlighted && "border-t-2 border-t-font-blueDark dark:border-t-font-blue",
                     className)}
                   onClick={clickHandler}
