@@ -1,6 +1,7 @@
 import groupBy from 'just-group-by';
 
 import { Formula, Inheritance, KeyVal } from '@/lib/interfaces';
+import { Mineral, Relation } from '@/components/RelationTree/interfaces'
 import {
   HISTORY_DATA_KEYS,
   PHYSICAL_DATA_CONTEXT_NAME,
@@ -184,4 +185,26 @@ export const getConclusiveContext = (data) => {
   });
 
   return conclusiveData;
+};
+
+
+const getParents = (
+  id: string,
+  relations: Relation[],
+  visited = new Set<string>()
+) => {
+  if (visited.has(id)) return visited;
+  visited.add(id);
+
+  relations.filter((relation) => relation.mineral === id)
+           .forEach((parent) => getParents(parent.relation, relations, visited));
+  return visited;
+};
+
+
+export const getVisibleIds = (minerals: Mineral[], relations: Relation[], search: string) => {
+  const visibleIds = new Set<string>();
+  minerals.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+          .forEach((item) => getParents(item.id, relations, visibleIds));
+  return visibleIds;
 };

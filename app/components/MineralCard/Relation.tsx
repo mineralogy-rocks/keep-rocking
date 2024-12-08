@@ -44,9 +44,10 @@ export default function RelationSnippet({ isGrouping, slug, data } : { isGroupin
                      }>
               {relationData &&
                 (<div className="relative flex flex-col space-y-1 p-2">
-                  <div className="border-b">
-                    <p className="font-semibold pb-2 mr-5">Related {groupName}</p>
+                  <div>
+                    <p className="font-semibold mr-5">Related {groupName}</p>
                   </div>
+                  <hr />
                   <div className="w-auto max-h-[20vh] overflow-auto">
                     <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
                       {relationData.map((item_, i) => {

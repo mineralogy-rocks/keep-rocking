@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 
-import styled from 'styled-components';
+import { styled } from '@linaria/react';
+import { ElementType } from 'react';
 
 
 interface Props {
@@ -16,9 +17,14 @@ const defaultProps = {
   children: null,
 };
 
+interface WrapperProps {
+  as?: ElementType;
+  children?: React.ReactNode;
+}
+
 const Heading: React.FC<Props> = (props) => {
   const { level, href, children } = { ...defaultProps, ...props };
-  const tag = `h${level}`;
+  const tag = `h${level}` as keyof JSX.IntrinsicElements;
 
   return (
     <Wrapper as={tag}>
@@ -36,7 +42,7 @@ const Heading: React.FC<Props> = (props) => {
   );
 }
 
-const Wrapper = styled.h2`
+const Wrapper = styled.h2<WrapperProps>`
 `;
 
 export default Heading;

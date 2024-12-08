@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import {useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { From, CrystalSystem } from '@/lib/interfaces';
 import { getGroupingMembers } from "@/actions";
@@ -13,10 +13,10 @@ import NoData from './NoData';
 
 function ButtonWithRelation(props: any) {
   return (
-    <div className="flex flex-wrap items-center gap-1 text-start cursor-default">
+    <div className="flex flex-wrap items-center text-start cursor-default">
       <Button {...props} />
       {props.from && (
-        <RelationChip {...{ name: props.from.name, statuses: props.from.statuses}} />
+        <RelationChip {...{ name: props.from.name, slug: props.from.slug, hasLink: true, statuses: props.from.statuses, hasArrow: true }} />
       )}
     </div>
   )
@@ -64,11 +64,13 @@ export default function CrystallographySnippet({ isGrouping, slug, data, from = 
                      }>
               {_data &&
                 (<div className="relative flex flex-col space-y-1 p-2">
-                  <div className="border-b">
-                    <p className="font-semibold pb-2 mr-5">Minerals with {item.name} crystal system</p>
+                  <div>
+                    <p className="font-semibold mr-5">Minerals with {item.name} crystal system</p>
                   </div>
+                  <hr/>
                   <div className="w-auto max-h-[20vh] overflow-auto">
-                    <ul className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
+                    <ul
+                      className="flex flex-col space-y-1 list-decimal list-inside marker:text-slate-500 marker:font-normal">
                       {_data.map((item_, i) => {
                         return (
                         <li key={i} className="flex-wrap">

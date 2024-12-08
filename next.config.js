@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require("@sentry/nextjs");
+const withLinaria = require('next-with-linaria');
 
 const ContentSecurityPolicy = `
     default-src 'self' vercel.live;
@@ -71,7 +72,7 @@ const nextConfig = {
 
 
 module.exports = withSentryConfig(
-  nextConfig,
+  withLinaria(nextConfig),
   {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options

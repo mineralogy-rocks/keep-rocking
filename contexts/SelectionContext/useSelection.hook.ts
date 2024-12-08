@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 
-
-export default function useSelection(items: string[]): any {
-  const [selected, setSelected] = useState(items.map(item_ => {
+/**
+ * Hook to manage selection state for a list of items
+ * @param items - List of items with unique IDs
+ * @returns Tuple of selection state and selection handler
+ */
+export default function useSelection(items: Array<{ id: string | number }>): any {
+  const [selection, setSelected] = useState(() => items.map(item_ => {
     return {
-      id: item_,
+      id: item_.id,
       hovered: false,
       clicked: false
     }
   }));
 
-  const handleSelection = (id, hovered = false, clicked = false, reset = false) => {
+  const handleSelection = useCallback(
+    (id, hovered = false, clicked = false, reset = false) => {
     setSelected((prevHighlighted) => {
       if (clicked) {
         return prevHighlighted.map((item) => (item.id === id ? { ...item, clicked: true } : item));
@@ -29,7 +34,7 @@ export default function useSelection(items: string[]): any {
         });
       }
     });
-  };
+  }, []);
 
-  return [selected, handleSelection];
+  return [selection, handleSelection];
 };

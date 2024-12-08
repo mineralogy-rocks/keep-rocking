@@ -132,3 +132,37 @@ export const createOgImage = ({ title, meta, publishedAt = '' }: { title: string
       `gradient-background.png`,
   ].join('/')
 };
+
+
+export const setLocalStorageWithExpiry = (key: string, value: any, ttl: number) => {
+    if (typeof window === 'undefined') return;
+
+    const now = new Date();
+    const item = {
+        value: value,
+        expiry: now.getTime() + ttl,
+    };
+    window.localStorage.setItem(key, JSON.stringify(item));
+}
+
+
+export const getLocalStorageWithExpiry = (key: string) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+	const itemStr = window.localStorage.getItem(key);
+	if (!itemStr) {
+		return null;
+	}
+	const item = JSON.parse(itemStr);
+	const now = new Date();
+	if (!item.expiry) {
+		return item.value;
+	}
+	if (now.getTime() > item.expiry) {
+		window.localStorage.removeItem(key);
+		return null;
+	}
+	return item.value;
+}

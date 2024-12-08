@@ -8,6 +8,6 @@ export const metadata: Metadata = {
   description: 'Welcome to mineralogy.rocks - a resource for mineral computing and mineral informatics',
 }
 
-export default async function Page() {
+export default function Page() {
   return <Home />
 }

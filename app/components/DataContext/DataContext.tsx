@@ -1,15 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
-import Dot from "@/components/Dot";
+import cx from "clsx";
+
+import CellChart from "@/components/CellChart";
 import Collapse from "@/components/Collapse";
 import ColorChip from "@/components/ColorChip";
-import cx from "clsx";
-import useSelection from "@/hooks/use-selection.hook";
+import Dot from "@/components/Dot";
+import { SelectionProvider, useSelectionContext } from "@/contexts/SelectionContext";
 import { SECTION_FIELDS, FIELDS } from "@/lib/constants";
-import { Fragment } from "react";
 import RelationChip from "@/components/RelationChip";
-import CellChart from "@/components/CellChart";
 
 import styles from "./DataContext.module.scss";
 
@@ -17,23 +17,22 @@ import styles from "./DataContext.module.scss";
 interface colorEntitiesProps {
   items: any,
   minerals: any,
-  selected: any,
   hoverClass?: string,
 }
 
 const colorEntitiesDefaultProps = {
   items: [],
   minerals: [],
-  selected: [],
   hoverClass: "",
 }
 
 const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
-  const { items, minerals, selected, hoverClass } = { ...colorEntitiesDefaultProps, ...props};
+  const { activeSelection } = useSelectionContext();
+  const { items, minerals, hoverClass } = { ...colorEntitiesDefaultProps, ...props};
 
   const _isHovered = (ids: string | string[]) => {
     if (!Array.isArray(ids)) ids = [ids];
-    return selected.length > 0 && !ids.some(id => selected.includes(id));
+    return !!activeSelection.length && !ids.some(id => activeSelection.map(item => item.id).includes(id));
   };
 
   const _getColor = (id) => {
@@ -43,7 +42,6 @@ const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
   return (
     <div className="flex flex-col flex-wrap gap-2">
       {items.map((item, index) => {
-
           return (
             <div key={index} className="flex items-center">
               <div className="flex items-center">
@@ -54,7 +52,7 @@ const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
                     )}
                   )}
                 </div>
-                <ColorChip type={item.value} hasPadding={false} className={cx(hoverClass, _isHovered(item.ids) ? 'opacity-20' : '')}>
+                <ColorChip type={item.value} hasPadding={false} className={cx(hoverClass, _isHovered(item.ids) && 'opacity-20')}>
                 </ColorChip>
               </div>
               <ul className="flex flex-wrap mt-1 relative ml-2 list-none text-xs text-font-secondary">
@@ -68,7 +66,7 @@ const ColorEntities:  React.FC<colorEntitiesProps> = (props) => {
                         )}
                       )}
                     </div>
-                    <span className={cx("ml-2", hoverClass, _isHovered(child.ids) ? 'opacity-20' : '')}>{child.value}</span>
+                    <span className={cx("ml-2", hoverClass, _isHovered(child.ids) && 'opacity-20')}>{child.value}</span>
                   </li>
                 )}
                 )}
@@ -141,8 +139,8 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
   const { contextKey, minerals, items } = { ...mineralContextDefaultProps, ...props};
 
   // TODO: make it work with multiple contexts and use SECTION_FIELDS
-  const [selected, handleSelection] = useSelection(minerals.map(item_ => item_.id));
-  const selectedIds = selected.filter(item => item.hovered || item.clicked).map(item => item.id);
+  const { activeSelection, handleSelection } = useSelectionContext();
+  const activeIds = activeSelection.map(item => item.id);
   const isInteractive = minerals.length > 1;
 
   return (
@@ -152,7 +150,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
           if (!FIELDS.hasOwnProperty(key) || !items[key]) return null;
           let field = FIELDS[key];
 
-          let _isHovered = selectedIds.length && !items[key].some(item => item.ids.some(id => selectedIds.includes(id)));
+          let _isHovered = activeIds.length && !items[key].some(item => item.ids.some(id => activeIds.includes(id)));
           let hoverClass = 'transition-opacity duration-300 ease-in-out';
 
           // TODO: _isCollapsed is not connected yet. Connect it as we have more data.
@@ -163,26 +161,26 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
           let component: React.ReactNode = null;
           if (key === 'color' || key === 'streak') component = (
             <div className="ml-2 md:ml-1 col-span-3 p-2">
-              <ColorEntities items={items[key]} minerals={minerals} selected={selectedIds} hoverClass={hoverClass} />
+              <ColorEntities items={items[key]} minerals={minerals} hoverClass={hoverClass} />
             </div>
           );
 
           return (
             <Fragment key={index}>
               <div className={styles.propHeader}>
-                <span className={cx(styles.propTitle, hoverClass, _isHovered ? 'opacity-20' : '')}>{field.title}</span>
-                {field.subtitle && (<span className={cx(styles.propSubtitle, hoverClass, _isHovered ? 'opacity-20' : '')}>{field.subtitle}</span>)}
+                <span className={cx(styles.propTitle, hoverClass, _isHovered && 'opacity-20')}>{field.title}</span>
+                {field.subtitle && (<span className={cx(styles.propSubtitle, hoverClass, _isHovered && 'opacity-20')}>{field.subtitle}</span>)}
               </div>
               {component || (
                   <div className="ml-2 sm:ml-1 col-span-3 p-2 flex flex-col">
                     {Array.isArray(items[key]) ?
                       items[key].map((item, index) => {
-                        let _isHovered = selectedIds.length && !item.ids.some(id => selectedIds.includes(id));
+                        let _isHovered = activeIds.length && !item.ids.some(id => activeIds.includes(id));
                         return (
                           <div key={index} className="flex items-center">
                             <div className="flex flex-none w-[1.5rem]">
                               {item.ids.map((id) => {
-                                let _isHovered = selectedIds.length && !selectedIds.includes(id);
+                                let _isHovered = !!activeIds.length && !activeIds.includes(id);
                                 let _color = minerals.find(mineral => mineral.id === id)?.color;
 
                                 return (
@@ -190,7 +188,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
                                 )}
                               )}
                             </div>
-                            <span className={cx(styles.propItem, hoverClass, _isHovered ? 'opacity-20' : '')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
+                            <span className={cx(styles.propItem, hoverClass, _isHovered && 'opacity-20')} dangerouslySetInnerHTML={{ __html: item.value }}></span>
                           </div>
                         )
                       }) : (<span className={styles.propItem}>{items[key]}</span>)}
@@ -203,7 +201,7 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
 
       <aside className="order-first md:order-last md:col-start-8 flex flex-col gap-2">
         {minerals.map((item, index) => {
-          let isHighlighted = selected.find(_item => _item.id === item.id);
+          let isHighlighted = activeSelection.find(_item => _item.id === item.id);
 
           return (
             <div key={index} className="flex items-center justify-start">
@@ -211,19 +209,30 @@ const MineralDataContext: React.FC<mineralContextProps> = (props) => {
               <RelationChip name={item.name}
                             statuses={item.statuses}
                             className="flex-none"
-                            hasArrow={false}
-                            hasClose={isInteractive && isHighlighted && isHighlighted.clicked}
+                            isActive={isInteractive && isHighlighted && isHighlighted.clicked}
                             onMouseEnter={isInteractive ? () => { handleSelection(item.id, true) } : undefined}
                             onMouseLeave={isInteractive ? () => { handleSelection(item.id, false) } : undefined}
                             onClick={isInteractive ? () => { handleSelection(item.id, false, true) } : undefined}
                             onClose={isInteractive ? (e) => { e.stopPropagation(); handleSelection(item.id, false, false, true) } : undefined}
-                            type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}  />
+                            type={isInteractive && isHighlighted && isHighlighted.clicked ? 'highlighted' : null}
+                            actions={isInteractive ? ['toggle'] : []} />
             </div>)
         })}
       </aside>
     </div>
   )
 };
+
+const MineralDataWithSelection: React.FC<mineralContextProps> = (props) => {
+  const { minerals } = props;
+
+  return (
+    <SelectionProvider items={minerals}>
+      <MineralDataContext {...props} />
+    </SelectionProvider>
+  );
+};
+
 
 interface fieldProps {
   field: any,
@@ -350,7 +359,7 @@ const GroupedDataContext = ({ contextKey, data }) => {
 
 const ContextController = ({ isGrouping = false, context }) => {
   if (isGrouping) return <GroupedDataContext {...context} />;
-  return <MineralDataContext {...context} />;
+  return <MineralDataWithSelection {...context} />;
 };
 
 export { ContextController };

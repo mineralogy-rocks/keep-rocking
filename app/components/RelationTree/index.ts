@@ -1,2 +1,2 @@
-export * from './RelationTree';
-export { RelationTree as default, Wrapper } from './RelationTree';
+export { default } from './RelationTree';
+export { RelationTreeProvider, useRelationTreeContext } from './RelationTreeContext';

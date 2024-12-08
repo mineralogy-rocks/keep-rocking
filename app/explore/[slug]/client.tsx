@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useDeferredValue } from 'react';
 import Head from 'next/head';
 
 import clone from 'just-clone';
@@ -12,7 +12,7 @@ import { getAllRelations } from "@/actions";
 import { CRYSTAL_SYSTEM_CHOICES, STRUCTURAL_DATA_KEYS, HISTORY_DATA_KEYS, DATA_CONTEXT_TYPES } from '@/lib/constants';
 import { mineralDetailApiResponse } from '@/lib/types';
 import { KeyVal } from '@/lib/interfaces';
-import { mergeFormulas, prepareHistory, getConclusiveContext } from '@/helpers/data.helpers';
+import { mergeFormulas, prepareHistory, getConclusiveContext, getVisibleIds } from '@/helpers/data.helpers';
 import RelationChip from '@/components/RelationChip';
 import RelationTree from "@/components/RelationTree";
 import Card from '@/components/Card';
@@ -20,7 +20,8 @@ import { ContextController } from "@/components/DataContext";
 import Chip from '@/components/Chip';
 import BarChart from '@/components/BarChart';
 import BarcodeChart from '@/components/BarcodeChart';
-
+import SmallSearchInput from "@/components/SmallSearchInput";
+import { RelationTreeProvider } from "@/components/RelationTree";
 
 
 const Section = ({ title, children }) => (
@@ -172,6 +173,19 @@ export default function MineralPage({ data, slug }) {
     queryFn: () => getAllRelations(slug),
   });
 
+  const [search, setSearch] = useState('');
+  const deferredSearch = useDeferredValue(search);
+  const [visibleIds, setVisibleIds]: any = useState();
+
+
+  useEffect(() => {
+    if (!relations) return;
+    if (!deferredSearch) setVisibleIds(null);
+    const visibleIds = getVisibleIds(relations.minerals, relations.relations, deferredSearch);
+    if (visibleIds.size) setVisibleIds(visibleIds);
+  }, [deferredSearch, relations]);
+
+
   if (inheritanceChain) {
     // TODO: improve this backend-wise
     inheritanceChain = inheritanceChain.filter((item, index, self) => self.findIndex(t => t.id === item.id) === index);
@@ -251,9 +265,9 @@ export default function MineralPage({ data, slug }) {
         <title>mineralogy.rocks - {name}</title>
       </Head>
 
-      <div className="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto mt-10 px-5">
-        <h1 className="text-xl sm:text-3xl font-bold sm:font-extrabold ml-2 break-words text-font-blue">{name}</h1>
-        <div className="mt-10 px-2 text-sm font-normal text-font-secondary break-words" dangerouslySetInnerHTML={{ __html: description }}></div>
+      <div className="mx-auto mt-10 max-w-lg px-5 md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
+        <h1 className="ml-2 break-words text-xl font-bold text-font-blue sm:text-3xl sm:font-extrabold">{name}</h1>
+        <div className="mt-10 break-words px-2 text-sm font-normal text-font-secondary" dangerouslySetInnerHTML={{ __html: description }}></div>
 
         {!!conclusiveHistory.length && (
           <Section title="History">
@@ -265,22 +279,20 @@ export default function MineralPage({ data, slug }) {
         {hasCrystallography && (
           <Section title="Structural context">
             <div className="flex flex-col flex-wrap gap-2">
-              {isGrouping ? (!!structures.length && <CrystallographyCards structures={structures} members={members} />) : (
+              {isGrouping ? (
+                !!structures.length && <CrystallographyCards structures={structures} members={members} />
+              ) : (
                 <>
                   {crystallography && (
-                      <CrystallographyNode isInherited={false}
-                                           item={{ name: name, statuses: statuses.map((item) => item.status_id) }}
-                                           {...crystallography} />
-                    )
-                  }
-                  {inheritanceChain?.map((item, index) => {
-                    if (item.crystallography) return (
-                      <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} { ...item.crystallography } />
-                    )}
+                    <CrystallographyNode isInherited={false} item={{ name: name, statuses: statuses.map((item) => item.status_id) }} {...crystallography} />
                   )}
+                  {inheritanceChain?.map((item, index) => {
+                    if (item.crystallography)
+                      return <CrystallographyNode key={index} item={{ name: item.name, statuses: item.statuses }} {...item.crystallography} />;
+                  })}
                   {!!structures.length && (
                     <div>
-                      <StructuralData structures={structures}/>
+                      <StructuralData structures={structures} />
                     </div>
                   )}
                 </>
@@ -296,42 +308,42 @@ export default function MineralPage({ data, slug }) {
               <div className="flex gap-1">
                 {Object.keys(nrMinerals).map((key, index) => {
                   let items = nrMinerals[key];
-                  let sources = groupBy(items, item => item.source.name);
+                  let sources = groupBy(items, (item) => item.source.name);
                   return (
                     <div key={index} className="flex flex-col">
-                      <div className="flex mb-2">
+                      <div className="mb-2 flex">
                         <RelationChip name={items[0]?.mineral.name} statuses={items[0]?.mineral.statuses} hasArrow={false} />
                       </div>
                       {Object.keys(sources).map((key_, index_) => {
                         let _formulas = sources[key_].sort((a, b) => {
                           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                        })
+                        });
                         return (
-                          <div key={index_} className="flex flex-col text-sm pl-1">
+                          <div key={index_} className="flex flex-col pl-1 text-sm">
                             <div className="flex">
                               <Chip type="black" className="mt-1">
-                                <span className="font-medium text-xxs">{key_}</span>
+                                <span className="text-xxs font-medium">{key_}</span>
                               </Chip>
                             </div>
-                            <ul className="relative p-2 list-none max-w-lg">
+                            <ul className="relative max-w-lg list-none p-2">
                               {_formulas.map((item__, index__) => (
                                 <li key={index__} className="relative pb-2">
-                                  <div className="flex flex-col ml-3">
-                                    <span className="text-font-secondary font-normal text-xs">{item__.created_at}</span>
-                                    <span className="font-medium text-font-primary mt-2" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
-                                    {item__.note && (<span className="font-normal mt-2 text-xs" dangerouslySetInnerHTML={{ __html: item__.note }}></span>)}
+                                  <div className="ml-3 flex flex-col">
+                                    <span className="text-xs font-normal text-font-secondary">{item__.created_at}</span>
+                                    <span className="mt-2 font-medium text-font-primary" dangerouslySetInnerHTML={{ __html: item__.formula }}></span>
+                                    {item__.note && <span className="mt-2 text-xs font-normal" dangerouslySetInnerHTML={{ __html: item__.note }}></span>}
                                   </div>
                                   <style jsx>{`
                                     li::before {
                                       position: absolute;
                                       top: -0.25em;
-                                      left: calc(0.25rem*-1);
-                                      content: "•";
-                                      color: #1E40AF;
+                                      left: calc(0.25rem * -1);
+                                      content: '•';
+                                      color: #1e40af;
                                     }
                                     li::after {
                                       position: absolute;
-                                      content: " ";
+                                      content: ' ';
                                       top: 1em;
                                       left: calc(-0.1rem + 1px);
                                       bottom: 0;
@@ -341,64 +353,78 @@ export default function MineralPage({ data, slug }) {
                                     }
                                   `}</style>
                                 </li>
-                                )
-                              )}
+                              ))}
                             </ul>
                           </div>
-                        )
+                        );
                       })}
-                    </div>)
+                    </div>
+                  );
                 })}
               </div>
             </div>
 
             {!!elements.length && (
-                <div className="mt-7">
-                  <h3 className="text-sm font-medium text-font-blue">Elements recorded on EPMA</h3>
-                  <div className="flex flex-col mt-5">
-                    <BarChart className="h-16"
-                              isAnimated={true}
-                              items={elements.map((item, index) => {
-                                return {
-                                  id: index,
-                                  value: item.count,
-                                  label: item.element,
-                                  subLabel: item.count
-                                }
-                              })} />
-                  </div>
+              <div className="mt-7">
+                <h3 className="text-sm font-medium text-font-blue">Elements recorded on EPMA</h3>
+                <div className="mt-5 flex flex-col">
+                  <BarChart
+                    className="h-16"
+                    isAnimated={true}
+                    items={elements.map((item, index) => {
+                      return {
+                        id: index,
+                        value: item.count,
+                        label: item.element,
+                        subLabel: item.count,
+                      };
+                    })}
+                  />
                 </div>
-              )}
+              </div>
+            )}
           </Section>
         )}
 
         {relations && !!Object.keys(relations).length && (
           <Section title="Relations Tree">
             <h3 className="text-sm font-medium text-font-blue">Including historic and alternative names, related varieties and substances</h3>
-            <div className="mt-5">
-              {relations.minerals.filter(item => item.is_main).map((item, index) => {
-                  return (
-                    <RelationTree key={index}
-                                  item={item}
-                                  mineralScope={relations.minerals}
-                                  relations={relations.relations}/>
-                  )
-                }
-              )}
+            <div className="mt-5 space-y-4">
+              <div className="max-w-lg">
+                <SmallSearchInput placeholder="Find..." searchValue={search} onChange={setSearch} onReset={() => setSearch('')} />
+              </div>
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w- h-3">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                  />
+                </svg>
+                <span className="ml-1 text-xs">Start typing to filter the relations</span>
+              </div>
+
+              <RelationTreeProvider mineralScope={relations.minerals} relations={relations.relations} visibleIds={visibleIds}>
+                {relations.minerals
+                  .filter((item) => item.is_main)
+                  .map((item, index) => (
+                    <RelationTree key={index} item={item} />
+                  ))}
+              </RelationTreeProvider>
             </div>
           </Section>
         )}
 
-
-        {contexts && Object.keys(contexts).map((key, index) => {
-          let context = { contextKey: key, ...contexts[key] };
-          return (
-            <Section key={index} title={key}>
-              <ContextController isGrouping={isGrouping} context={context} />
-            </Section>
-          )
-        })}
+        {contexts &&
+          Object.keys(contexts).map((key, index) => {
+            let context = { contextKey: key, ...contexts[key] };
+            return (
+              <Section key={index} title={key}>
+                <ContextController isGrouping={isGrouping} context={context} />
+              </Section>
+            );
+          })}
       </div>
     </>
-  )
+  );
 };
