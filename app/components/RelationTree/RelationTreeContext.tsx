@@ -1,27 +1,30 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { mineral } from '@/components/RelationTree/interfaces';
+import { Mineral } from '@/components/RelationTree/interfaces';
 
 interface ContextType {
-  mineralScope: Array<mineral>;
+  mineralScope: Array<Mineral>;
   relations: Array<{ id: number, relation: string; mineral: string }>;
+  visibleIds: Set<string>;
 }
 
 interface ProviderProps {
-  mineralScope: Array<mineral>;
+  mineralScope: Array<Mineral>;
   relations: Array<{ id: number, relation: string; mineral: string }>;
+  visibleIds: Set<string>;
   children: React.ReactNode;
 }
 
 const RelationTreeContext = createContext<ContextType | null>(null);
 
-const RelationTreeProvider: React.FC<ProviderProps> = ({ mineralScope, relations, children }) => {
+const RelationTreeProvider: React.FC<ProviderProps> = ({ mineralScope, relations, visibleIds, children }) => {
   const value = useMemo(
     () => ({
       mineralScope,
+      visibleIds,
       relations,
     }),
-    [mineralScope, relations]
+    [mineralScope, visibleIds, relations]
   );
 
   return <RelationTreeContext.Provider value={value}>{children}</RelationTreeContext.Provider>;

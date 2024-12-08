@@ -1,4 +1,4 @@
-export interface mineral {
+export interface Mineral {
   id: string;
   name: string;
   slug : string;
@@ -8,14 +8,15 @@ export interface mineral {
   is_main: boolean;
   is_match: boolean;
   is_current: boolean;
+  is_visible?: boolean;
 };
 
-export interface relation {
+export interface Relation {
   id: number;
   mineral: string;
   relation: string;
 }
 
 export interface Props {
-  item: mineral | null,
+  item: Mineral | null,
 };
