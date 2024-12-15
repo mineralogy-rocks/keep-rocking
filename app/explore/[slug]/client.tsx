@@ -180,6 +180,7 @@ export default function MineralPage({ data, slug }) {
 
   useEffect(() => {
     if (!relations) return;
+    if (!relations.minerals?.length && !relations.relations?.length) return;
     if (!deferredSearch) setVisibleIds(null);
     const visibleIds = getVisibleIds(relations.minerals, relations.relations, deferredSearch);
     if (visibleIds.size) setVisibleIds(visibleIds);
